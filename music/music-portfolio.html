@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 4s ease infinite;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+            margin-top: 40px;
+            align-items: start;
+        }
+
+        .card-container {
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .music-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .music-card.vinyl-style {
+            border-radius: 50%;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, rgba(20, 20, 20, 0.9) 30%, rgba(40, 40, 40, 0.7) 70%, rgba(60, 60, 60, 0.5) 100%);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .vinyl-album-cover {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            animation: spin 10s linear infinite;
+            z-index: 1;
+        }
+
+        .vinyl-album-cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, transparent 25%, rgba(0, 0, 0, 0.1) 26%, transparent 27%, transparent 45%, rgba(0, 0, 0, 0.1) 46%, transparent 47%);
+            border-radius: 50%;
+        }
+
+        .music-card.waveform-style {
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(72, 61, 139, 0.1) 100%);
+            border-left: 5px solid #8A2BE2;
+            position: relative;
+        }
+
+        .music-card.waveform-style::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><rect x="2" y="8" width="2" height="4" fill="rgba(138,43,226,0.3)"/><rect x="6" y="6" width="2" height="8" fill="rgba(138,43,226,0.3)"/><rect x="10" y="10" width="2" height="2" fill="rgba(138,43,226,0.3)"/><rect x="14" y="4" width="2" height="12" fill="rgba(138,43,226,0.3)"/><rect x="18" y="7" width="2" height="6" fill="rgba(138,43,226,0.3)"/><rect x="22" y="9" width="2" height="3" fill="rgba(138,43,226,0.3)"/><rect x="26" y="5" width="2" height="10" fill="rgba(138,43,226,0.3)"/><rect x="30" y="8" width="2" height="4" fill="rgba(138,43,226,0.3)"/><rect x="34" y="6" width="2" height="8" fill="rgba(138,43,226,0.3)"/><rect x="38" y="10" width="2" height="2" fill="rgba(138,43,226,0.3)"/><rect x="42" y="4" width="2" height="12" fill="rgba(138,43,226,0.3)"/><rect x="46" y="7" width="2" height="6" fill="rgba(138,43,226,0.3)"/><rect x="50" y="9" width="2" height="3" fill="rgba(138,43,226,0.3)"/><rect x="54" y="5" width="2" height="10" fill="rgba(138,43,226,0.3)"/><rect x="58" y="8" width="2" height="4" fill="rgba(138,43,226,0.3)"/><rect x="62" y="6" width="2" height="8" fill="rgba(138,43,226,0.3)"/><rect x="66" y="10" width="2" height="2" fill="rgba(138,43,226,0.3)"/><rect x="70" y="4" width="2" height="12" fill="rgba(138,43,226,0.3)"/><rect x="74" y="7" width="2" height="6" fill="rgba(138,43,226,0.3)"/><rect x="78" y="9" width="2" height="3" fill="rgba(138,43,226,0.3)"/><rect x="82" y="5" width="2" height="10" fill="rgba(138,43,226,0.3)"/><rect x="86" y="8" width="2" height="4" fill="rgba(138,43,226,0.3)"/><rect x="90" y="6" width="2" height="8" fill="rgba(138,43,226,0.3)"/><rect x="94" y="10" width="2" height="2" fill="rgba(138,43,226,0.3)"/></svg>') repeat-x;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .music-card.note-style {
+            border-radius: 30px 30px 30px 5px;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+            border-top: 3px solid #ff6b6b;
+            position: relative;
+            transform: rotate(-2deg);
+        }
+
+        .music-card.note-style:hover {
+            transform: rotate(0deg) translateY(-10px) scale(1.02);
+        }
+
+        .music-card.note-style::after {
+            content: '♪';
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #ff6b6b;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .vinyl-center {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #333 30%, #666 70%, #333 100%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 3;
+            transition: all 0.3s ease;
+        }
+
+        .vinyl-center:hover {
+            /*transform: translate(-50%, -50%) scale(1.1);*/
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .vinyl-center::before {
+            content: '';
+            width: 15px;
+            height: 15px;
+            background: #000;
+            border-radius: 50%;
+        }
+
+        .vinyl-center .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .vinyl-center:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .vinyl-center .play-button {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vinyl-center .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 12px solid #333;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            margin-left: 3px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .vinyl-grooves {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .vinyl-grooves:nth-child(1) {
+            width: 240px;
+            height: 240px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .vinyl-grooves:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .vinyl-grooves:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .vinyl-info {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
+        }
+
+        .music-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .music-card:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        .music-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 30px rgba(138, 43, 226, 0.2);
+            border-color: rgba(138, 43, 226, 0.3);
+        }
+
+        .album-cover {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .album-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+
+        .album-cover:hover img {
+            transform: scale(1.1);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .album-cover:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-button {
+            width: 70px !important;
+            height: 70px !important;
+            border-radius: 50% !important;
+            background: white !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            animation: playPulse 2s ease-in-out infinite !important;
+        }
+
+        @keyframes playPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .play-button:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 20px solid white;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 5px;
+        }
+
+        .music-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .music-info p {
+            color: #b0b0b0;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .genre-tag {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(138, 43, 226, 0.3);
+            border-radius: 50%;
+            animation: float 20s linear infinite;
+        }
+
+        .yt-logo {
+            width: 70px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s ease !important;
+        }
+        .yt-logo:hover {
+            opacity: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .music-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .music-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-particles"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>HEEC MUSIC</h1>
+            <p class="subtitle">PORTFOLIO</p>
+        </div>
+
+        <div style="text-align: center; margin-top: -60px; position: relative; z-index: 999;">
+            <a href="https://www.youtube.com/@HEECTV/videos" target="_blank">
+                <img src="img/yt-logo.png" class="yt-logo" />
+            </a>
+        </div>
+
+        <div class="music-grid">
+
+            <!-- Vinyl Plak Tarzı Kart -->
+            <div class="card-container">
+                <div class="music-card vinyl-style"
+                    onclick="window.open('https://www.youtube.com/watch?v=zQfzu1BNbXw', '_blank')">
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-album-cover" style="background-image: url('img/suskun-bir-duranci-kapak.jpg')">
+                    </div>
+                    <div class="vinyl-center">
+                    </div>
+                </div>
+                <div class="music-info vinyl-info">
+                    <h3>Suskun Bir Durancı</h3>
+                    <p>HEEC Youtube</p>
+                    <span class="genre-tag">♬</span>
+                </div>
+            </div>
+
+            <!-- Vinyl Plak Tarzı Kart -->
+            <div class="card-container">
+                <div class="music-card vinyl-style"
+                    onclick="window.open('https://www.youtube.com/watch?v=NuoLb2CVOa4', '_blank')">
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-album-cover" style="background-image: url('img/hasas-terazi-kapak.jpg')"></div>
+                    <div class="vinyl-center">
+                    </div>
+                </div>
+                <div class="music-info vinyl-info">
+                    <h3>Hassas Terazi</h3>
+                    <p>HEEC Youtube</p>
+                    <span class="genre-tag">♬</span>
+                </div>
+            </div>
+
+            <!-- Vinyl Plak Tarzı Kart -->
+            <div class="card-container">
+                <div class="music-card vinyl-style"
+                    onclick="window.open('https://www.youtube.com/watch?v=fHbJYUQ0GJ4', '_blank')">
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-album-cover"
+                        style="background-image: url('img/daraldi-gonlumun-sokaklari-kapak.jpg')"></div>
+                    <div class="vinyl-center">
+                    </div>
+                </div>
+                <div class="music-info vinyl-info">
+                    <h3>Daraldı Gönlümün Sokakları</h3>
+                    <p>HEEC Youtube</p>
+                    <span class="genre-tag">♬</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Yüzen parçacık efekti
+        function createParticles() {
+            const particlesContainer = document.querySelector('.floating-particles');
+
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 20) + 's';
+                particlesContainer.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, 30000);
+            }
+
+            // İlk parçacıkları oluştur
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createParticle, i * 1000);
+            }
+
+            // Sürekli yeni parçacıklar oluştur
+            setInterval(createParticle, 2000);
+        }
+
+        // Sayfa yüklendiğinde parçacıkları başlat
+        window.addEventListener('load', createParticles);
+
+        // Vinyl plakları için özel hover efekti
+        document.querySelectorAll('.vinyl-style').forEach(vinyl => {
+            vinyl.addEventListener('mouseenter', function () {
+                const albumCover = this.querySelector('.vinyl-album-cover');
+                if (albumCover) {
+                    albumCover.style.animationDuration = '0.5s';
+                }
+            });
+
+            vinyl.addEventListener('mouseleave', function () {
+                const albumCover = this.querySelector('.vinyl-album-cover');
+                if (albumCover) {
+                    albumCover.style.animationDuration = '10s';
+                }
+            });
+        });
+
+        // Dalga formu animasyonu
+        document.querySelectorAll('.waveform-style').forEach(waveform => {
+            waveform.addEventListener('mouseenter', function () {
+                this.style.borderLeftWidth = '8px';
+            });
+
+            waveform.addEventListener('mouseleave', function () {
+                this.style.borderLeftWidth = '5px';
+            });
+        });
+
+        // Smooth scroll animasyonu
+        document.addEventListener('DOMContentLoaded', function () {
+            const cards = document.querySelectorAll('.music-card');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+
+</html>
