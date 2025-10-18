@@ -268,6 +268,41 @@
             height: 150px;
         }  
 
+        .back-button {
+            width: 48px;
+            height: 48px;
+            background: #111111;
+            border: 1px solid #222222;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background: #1a1a1a;
+            border-color: #333333;
+            transform: translateX(-4px);
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+            stroke-width: 2.5;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
         @media (max-width: 1024px) {
             .article-content {
                 gap: 2rem;
@@ -318,7 +353,17 @@
 <body>
     <header>
         <div class="container">
-            <h1>Blog Yazıları</h1>
+            <div class="header-content">
+            <a href="https://hcengiz.com" class="back-button" aria-label="Ana sayfaya dön">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </a>
+
+            <div>
+                <h1>Blog Yazıları</h1>
+            </div>
+        </div>
         </div>
     </header>
     <div class="header-safe"></div>
