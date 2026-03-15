@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hakan Cengiz — Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link type="image/x-icon" rel="shortcut icon" href="img/rss-img/blog-favicon.png" />
+  <style>
+    :root {
+      --ink: #0d0d0d;
+      --paper: #f5f0e8;
+      --paper-2: #ede7d8;
+      --accent: #c8442a;
+      --muted: #7a7260;
+      --card-bg: #faf7f2;
+      --border: rgba(13,13,13,0.1);
+      --shadow: rgba(13,13,13,0.08);
+    }
+    [data-theme="dark"] {
+      --ink: #f0ebe0;
+      --paper: #100f0e;
+      --paper-2: #1c1a17;
+      --card-bg: #161410;
+      --border: rgba(240,235,224,0.08);
+      --shadow: rgba(0,0,0,0.35);
+      --muted: #7a7260;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background 0.35s, color 0.35s;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      z-index: 1000; pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      background: var(--paper);
+      transition: background 0.35s;
+    }
+    .header-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px 48px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .profile-section { display: flex; align-items: center; gap: 20px; }
+    .author-avatar {
+      width: 88px; height: 88px; border-radius: 50%;
+      overflow: hidden; flex-shrink: 0;
+      border: 3px solid var(--paper-2);
+      box-shadow: 0 4px 20px var(--shadow);
+    }
+    .author-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .author-name {
+      font-family: 'Fraunces', serif;
+      font-size: 30px; font-weight: 700;
+      letter-spacing: -0.02em; line-height: 1.1;
+    }
+    .author-title { font-size: 15px; color: var(--muted); margin-top: 5px; font-family: 'Manrope', sans-serif; }
+    .linkedin-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 8px; text-decoration: none;
+      font-size: 13px; font-weight: 500; color: #0a66c2;
+      font-family: 'Manrope', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .linkedin-link:hover { opacity: 0.7; }
+
+    .header-controls { display: flex; align-items: center; gap: 10px; align-self: center; }
+    .search-wrap { position: relative; }
+    .search-wrap .ico-search {
+      position: absolute; left: 13px; top: 50%;
+      transform: translateY(-50%); color: var(--muted); pointer-events: none;
+    }
+    .search-wrap input {
+      background: var(--paper-2); border: 1px solid var(--border);
+      border-radius: 40px; padding: 9px 16px 9px 38px;
+      font-family: 'Manrope', sans-serif; font-size: 13px;
+      color: var(--ink); width: 196px; outline: none;
+      transition: width 0.3s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-wrap input:focus {
+      width: 230px; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200,68,42,0.1);
+    }
+
+    .theme-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--paper-2);
+      cursor: pointer; display: grid; place-items: center;
+      transition: background 0.2s, border-color 0.2s;
+      color: var(--ink); flex-shrink: 0;
+    }
+    .theme-btn:hover { border-color: var(--ink); }
+    .theme-btn .ico-moon { display: block; }
+    .theme-btn .ico-sun  { display: none; }
+    [data-theme="dark"] .theme-btn .ico-moon { display: none; }
+    [data-theme="dark"] .theme-btn .ico-sun  { display: block; }
+
+    /* ── MAIN ── */
+    main { max-width: 1320px; margin: 0 auto; padding: 52px 48px 100px; }
+
+    .section-label {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    }
+    .section-label span {
+      font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── HERO ROW ── */
+    .hero-row {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 22px;
+      margin-bottom: 52px;
+      align-items: stretch;
+    }
+
+    /* Featured card */
+    .featured-card {
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border); background: var(--card-bg);
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s, border-color 0.25s;
+    }
+    .featured-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 56px var(--shadow);
+      border-color: rgba(200,68,42,0.22);
+    }
+    .feat-img-wrap {
+      position: relative; overflow: hidden;
+      height: 220px; flex-shrink: 0;
+    }
+    /* Blurred bg layer to hide pixel issues */
+    .feat-img-bg {
+      position: absolute; inset: -12px;
+      background-size: cover; background-position: center;
+      filter: blur(22px) brightness(0.55) saturate(1.2);
+      z-index: 0;
+    }
+    .feat-img-wrap img {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
+      object-fit: contain; display: block;
+      transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
+    }
+    .featured-card:hover .feat-img-wrap img { transform: scale(1.04); }
+    .feat-img-wrap::after {
+      content: ''; position: absolute; inset: 0; z-index: 2;
+      background: linear-gradient(to bottom, transparent 50%, rgba(13,13,13,0.18));
+      pointer-events: none;
+    }
+    .feat-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 3;
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #fff;
+      background: var(--accent); border-radius: 40px; padding: 4px 10px;
+    }
+    .feat-body {
+      padding: 22px 24px 20px;
+      display: flex; flex-direction: column; flex: 1;
+    }
+    .feat-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 25px; font-weight: 700;
+      line-height: 1.3; letter-spacing: -0.02em; margin-bottom: 10px;
+      transition: color 0.2s;
+    }
+    .featured-card:hover .feat-title { color: var(--accent); }
+    .feat-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; color: var(--muted);
+      line-height: 1.65; flex: 1; margin-bottom: 16px;
+    }
+    .feat-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); padding-top: 14px;
+    }
+    .feat-date { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+    .read-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--ink);
+      border: 1.5px solid var(--ink); border-radius: 40px;
+      padding: 6px 16px; text-decoration: none;
+      transition: background 0.22s, color 0.22s;
+    }
+    .read-btn:hover { background: var(--ink); color: var(--paper); }
+    .read-btn svg { transition: transform 0.22s; }
+    .read-btn:hover svg { transform: translateX(3px); }
+
+    /* Side card */
+    .side-card {
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border); background: var(--card-bg);
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s, border-color 0.25s;
+    }
+    .side-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 56px var(--shadow);
+      border-color: rgba(200,68,42,0.22);
+    }
+    .side-img-wrap {
+      position: relative; overflow: hidden; height: 174px; flex-shrink: 0;
+    }
+    .side-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.55s cubic-bezier(0.23,1,0.32,1);
+    }
+    .side-card:hover .side-img-wrap img { transform: scale(1.06); }
+    .side-img-wrap::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(13,13,13,0.12));
+    }
+    .side-body { padding: 18px 20px 16px; display: flex; flex-direction: column; flex: 1; }
+    .side-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+    }
+    .side-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 20px; font-weight: 700;
+      line-height: 1.38; letter-spacing: -0.01em; margin-bottom: 8px;
+      transition: color 0.2s;
+    }
+    .side-card:hover .side-title { color: var(--accent); }
+    .side-desc { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--muted); line-height: 1.6; flex: 1; margin-bottom: 14px; }
+    .side-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); padding-top: 12px;
+    }
+    .side-date { font-size: 11px; color: var(--muted); }
+    .side-arrow {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 1px solid var(--border); display: grid; place-items: center;
+      color: var(--muted);
+      transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.22s;
+    }
+    .side-card:hover .side-arrow {
+      background: var(--accent); color: #fff;
+      border-color: var(--accent); transform: rotate(-45deg);
+    }
+
+    /* ── GRID ── */
+    .grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+
+    .card {
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border); background: var(--card-bg);
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s, border-color 0.25s;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 44px var(--shadow);
+      border-color: rgba(200,68,42,0.2);
+    }
+    .card-img-wrap { overflow: hidden; aspect-ratio: 3/2; position: relative; }
+    .card-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.55s cubic-bezier(0.23,1,0.32,1);
+    }
+    .card:hover .card-img-wrap img { transform: scale(1.06); }
+    .card-img-wrap::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 55%, rgba(13,13,13,0.1));
+      pointer-events: none;
+    }
+    .card-num {
+      position: absolute; top: 12px; right: 12px; z-index: 1;
+      font-family: 'Fraunces', serif; font-size: 10px; font-weight: 700;
+      color: rgba(255,255,255,0.9); background: rgba(13,13,13,0.42);
+      border-radius: 40px; padding: 3px 9px; letter-spacing: 0.07em;
+      backdrop-filter: blur(8px);
+    }
+    .hero-num {
+      position: absolute; top: 12px; right: 12px; z-index: 4;
+      font-family: 'Fraunces', serif; font-size: 10px; font-weight: 700;
+      color: rgba(255,255,255,0.9); background: rgba(13,13,13,0.42);
+      border-radius: 40px; padding: 3px 9px; letter-spacing: 0.07em;
+      backdrop-filter: blur(8px);
+    }
+    .card-body { padding: 18px 18px 14px; display: flex; flex-direction: column; flex: 1; }
+    .card-cat {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 7px;
+    }
+    .card-title {
+      font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 700;
+      line-height: 1.4; letter-spacing: -0.01em; margin-bottom: 7px;
+      transition: color 0.2s;
+    }
+    .card:hover .card-title { color: var(--accent); }
+    .card-desc { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 12px; }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; }
+    .card-date { font-size: 11px; color: var(--muted); }
+    .card-arrow {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 1px solid var(--border); display: grid; place-items: center;
+      color: var(--muted);
+      transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.22s;
+    }
+    .card:hover .card-arrow {
+      background: var(--accent); color: #fff;
+      border-color: var(--accent); transform: rotate(-45deg);
+    }
+
+    /* ── VIEW ALL BUTTON ── */
+    .view-all-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; text-decoration: none;
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      border-radius: 40px;
+      padding: 13px 32px;
+      transition: background 0.25s, color 0.25s;
+    }
+    .view-all-btn:hover {
+      background: var(--ink); color: var(--paper);
+    }
+    .view-all-btn svg { transition: transform 0.22s; }
+    .view-all-btn:hover svg { transform: translate(2px, -2px); }
+
+    /* ── INFINITE SCROLL ── */
+    #load-sentinel { height: 64px; display: flex; align-items: center; justify-content: center; margin-top: 8px; }
+    .spinner {
+      width: 22px; height: 22px;
+      border: 2.5px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .spinner.on { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── LOADER ── */
+    #loader {
+      text-align: center; padding: 80px 0;
+      font-family: 'Fraunces', serif; font-size: 18px;
+      color: var(--muted); font-style: italic;
+    }
+    .loader-dots { display: inline-flex; gap: 6px; margin-left: 8px; }
+    .loader-dots span {
+      width: 5px; height: 5px; background: var(--muted);
+      border-radius: 50%; display: inline-block;
+      animation: bounce 1s ease infinite;
+    }
+    .loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+    .loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.23,1,0.32,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 24px 48px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .hero-row { grid-template-columns: 1fr 1fr; }
+      .grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 760px) {
+      .hero-row { grid-template-columns: 1fr; }
+      .side-card { display: flex; }
+      .grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 860px) {
+      .header-inner, main, .footer-inner { padding-left: 24px; padding-right: 24px; }
+    }
+    @media (max-width: 640px) {
+      .header-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .header-controls { width: 100%; }
+      .search-wrap { flex: 1; }
+      .search-wrap input, .search-wrap input:focus { width: 100%; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <!-- Profile left -->
+      <div class="profile-section">
+        <div class="author-avatar">
+          <img src="img/rss-img/blog-logo.png" alt="Hakan Cengiz">
+        </div>
+        <div>
+          <div class="author-name">Hakan Cengiz</div>
+          <div class="author-title">Senior Software Developer</div>
+          <a href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener" class="linkedin-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            hakancengiz
+          </a>
+        </div>
+      </div>
+      <!-- Controls right -->
+      <div class="header-controls">
+        <div class="search-wrap">
+          <svg class="ico-search" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="search" type="search" placeholder="Yazılarda ara...">
+        </div>
+        <button id="themeBtn" class="theme-btn" title="Tema değiştir">
+          <svg class="ico-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="ico-sun"  width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="loader">
+      Yazılar derleniyor
+      <span class="loader-dots"><span></span><span></span><span></span></span>
+    </div>
+
+    <div id="content" style="display:none;">
+      <!-- HERO ROW -->
+      <div class="section-label"><span>Öne Çıkan</span></div>
+      <div class="hero-row">
+        <!-- Featured (1st article) -->
+        <a id="featured-card" href="#" target="_blank" rel="noopener" class="featured-card reveal">
+          <div class="feat-img-wrap">
+            <div class="feat-img-bg" id="feat-img-bg"></div>
+            <img id="feat-img" src="" alt="">
+            <div class="feat-badge">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Öne Çıkan
+            </div>
+            <div class="hero-num">01</div>
+          </div>
+          <div class="feat-body">
+            <h2 class="feat-title" id="feat-title"></h2>
+            <p class="feat-desc"  id="feat-desc"></p>
+            <div class="feat-footer">
+              <span class="feat-date" id="feat-date"></span>
+              <span class="read-btn">
+                Devamını Oku
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </span>
+            </div>
+          </div>
+        </a>
+        <!-- Side card (2nd article) -->
+        <a id="side-card" href="#" target="_blank" rel="noopener" class="side-card reveal">
+          <div class="side-img-wrap">
+            <img id="side-img" src="" alt="">
+            <div class="hero-num">02</div>
+          </div>
+          <div class="side-body">
+            <div class="side-label">Makale</div>
+            <h3 class="side-title" id="side-title"></h3>
+            <p class="side-desc"   id="side-desc"></p>
+            <div class="side-footer">
+              <span class="side-date" id="side-date"></span>
+              <span class="side-arrow">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- GRID -->
+      <div class="section-label"><span>Tüm Yazılar</span></div>
+      <div id="feed" class="grid"></div>
+      <div id="load-sentinel"><div class="spinner" id="spinner"></div></div>
+      <div id="view-all-wrap" style="display:none; text-align:center; margin-top:40px;">
+        <a href="https://medium.com/@hakancengiz" target="_blank" rel="noopener" id="view-all-btn" class="view-all-btn">
+          Tüm Yazıları Görüntüle
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span id="footer-copy"></span>
+    </div>
+  </footer>
+
+  <script>
+    // ── Dynamic footer year ──
+    document.getElementById('footer-copy').textContent = `© ${new Date().getFullYear()} Hakan Cengiz`;
+
+    const MEDIUM_USER = 'hakancengiz';
+    const API_URL     = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(`https://medium.com/feed/@${MEDIUM_USER}`)}`;
+    const PAGE_SIZE   = 9;
+
+    let allItems  = [];
+    let page      = 0;
+    let loading   = false;
+    let done      = false;
+
+    // ── Theme — persist across page loads ──
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const next = dark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // ── Image fallbacks ──
+    const FALLBACKS = [
+      'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80',
+      'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80',
+      'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&q=80',
+      'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&q=80',
+      'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80',
+      'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80',
+      'https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=800&q=80',
+      'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80',
+      'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&q=80',
+    ];
+
+    function getThumb(item, idx) {
+      if (item.thumbnail && item.thumbnail.startsWith('http')) return item.thumbnail;
+      if (item.enclosure && item.enclosure.link) return item.enclosure.link;
+      const d = document.createElement('div');
+      d.innerHTML = item.description || '';
+      const img = d.querySelector('img');
+      if (img && img.src) return img.src;
+      return FALLBACKS[idx % FALLBACKS.length];
+    }
+
+    function fmtDate(str, opts) {
+      return new Date(str).toLocaleDateString('tr-TR', opts);
+    }
+
+    // ── Reveal observer ──
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.06 });
+
+    // ── Render one page of grid cards ──
+    function renderPage() {
+      if (loading || done) return;
+      const start = page * PAGE_SIZE + 2; // hero uses items[0] and [1]
+      const slice = allItems.slice(start, start + PAGE_SIZE);
+      if (!slice.length) {
+        done = true;
+        document.getElementById('load-sentinel').style.display = 'none';
+        document.getElementById('view-all-wrap').style.display = 'block';
+        return;
+      }
+
+      loading = true;
+      document.getElementById('spinner').classList.add('on');
+
+      const feed = document.getElementById('feed');
+
+      slice.forEach((item, i) => {
+        const globalIdx = start + i;
+        const thumb = getThumb(item, globalIdx);
+        const desc  = item.description.replace(/<[^>]+>/g, '').slice(0, 105);
+        const date  = fmtDate(item.pubDate, { day: 'numeric', month: 'short' });
+        // Numbering: featured=01, side=02, grid starts at 03
+        const num   = String(globalIdx + 1).padStart(2, '0');
+
+        const a = document.createElement('a');
+        a.href      = item.link;
+        a.target    = '_blank';
+        a.rel       = 'noopener';
+        a.className = 'card reveal';
+        a.setAttribute('data-title', item.title.toLowerCase());
+        a.innerHTML = `
+          <div class="card-img-wrap">
+            <img src="${thumb}" alt="${item.title.replace(/"/g,'&quot;')}" loading="lazy">
+            <div class="card-num">${num}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-cat">Makale</div>
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-desc">${desc}…</p>
+            <div class="card-foot">
+              <span class="card-date">${date}</span>
+              <span class="card-arrow">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+              </span>
+            </div>
+          </div>`;
+        feed.appendChild(a);
+        setTimeout(() => revealObs.observe(a), i * 55);
+      });
+
+      page++;
+      // Done only when we've consumed all items
+      if (start + slice.length >= allItems.length) {
+        done = true;
+        setTimeout(() => {
+          document.getElementById('load-sentinel').style.display = 'none';
+          document.getElementById('view-all-wrap').style.display = 'block';
+        }, 300);
+      }
+
+      // Release loading lock, then re-check in case sentinel still visible
+      setTimeout(() => {
+        loading = false;
+        document.getElementById('spinner').classList.remove('on');
+        checkSentinel();
+      }, 200);
+    }
+
+    // ── Scroll-based fallback for infinite scroll ──
+    function checkSentinel() {
+      if (done || loading) return;
+      const sentinel = document.getElementById('load-sentinel');
+      if (!sentinel) return;
+      const rect = sentinel.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 300) renderPage();
+    }
+
+    window.addEventListener('scroll', checkSentinel, { passive: true });
+
+    // ── Initial fetch ──
+    async function init() {
+      try {
+        const res  = await fetch(API_URL);
+        const data = await res.json();
+        allItems   = data.items || [];
+
+        document.getElementById('loader').style.display  = 'none';
+        document.getElementById('content').style.display = 'block';
+        if (!allItems.length) return;
+
+        // Featured (item 0)
+        const f0    = allItems[0];
+        const f0img = getThumb(f0, 0);
+        const fc    = document.getElementById('featured-card');
+        fc.href     = f0.link;
+        fc.setAttribute('data-title', f0.title.toLowerCase());
+        document.getElementById('feat-img-bg').style.backgroundImage = `url(${f0img})`;
+        document.getElementById('feat-img').src    = f0img;
+        document.getElementById('feat-img').alt    = f0.title;
+        document.getElementById('feat-title').textContent = f0.title;
+        document.getElementById('feat-desc').textContent  = f0.description.replace(/<[^>]+>/g,'').slice(0,190) + '…';
+        document.getElementById('feat-date').textContent  = fmtDate(f0.pubDate, {day:'numeric',month:'long',year:'numeric'});
+
+        // Side card (item 1)
+        if (allItems[1]) {
+          const f1 = allItems[1];
+          const sc = document.getElementById('side-card');
+          sc.href  = f1.link;
+          sc.setAttribute('data-title', f1.title.toLowerCase());
+          document.getElementById('side-img').src   = getThumb(f1, 1);
+          document.getElementById('side-img').alt   = f1.title;
+          document.getElementById('side-title').textContent = f1.title;
+          document.getElementById('side-desc').textContent  = f1.description.replace(/<[^>]+>/g,'').slice(0,115) + '…';
+          document.getElementById('side-date').textContent  = fmtDate(f1.pubDate, {day:'numeric',month:'short'});
+        }
+
+        // Hero reveal
+        [document.getElementById('featured-card'), document.getElementById('side-card')].forEach((el, i) => {
+          setTimeout(() => el && el.classList.add('visible'), i * 120 + 80);
+        });
+
+        // First page of grid then watch sentinel
+        renderPage();
+        // Also observe sentinel with IntersectionObserver as primary trigger
+        const sentinelEl = document.getElementById('load-sentinel');
+        new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting) renderPage();
+        }, { rootMargin: '300px' }).observe(sentinelEl);
+
+      } catch (e) {
+        document.getElementById('loader').textContent = 'Yüklenirken bir sorun oluştu.';
+      }
+    }
+
+    // ── Search ──
+    document.getElementById('search').addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('[data-title]').forEach(el => {
+        el.style.display = el.getAttribute('data-title').includes(q) ? '' : 'none';
+      });
+    });
+
+    init();
+  </script>
+</body>
+</html>
