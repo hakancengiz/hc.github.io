@@ -55,6 +55,16 @@
     opacity: 0;
   }
 
+  /* Mobile-only left panel glow */
+  #mobile-glow {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(28px);
+    opacity: 0;
+    display: none;
+  }
+
   /* ── CARD ── */
   .card {
     width: 1080px;
@@ -608,7 +618,10 @@
 
   @media (max-width: 560px) {
     body { padding: 12px; }
-    .left { flex-direction: column; align-items: center; text-align: center; gap: 0; }
+    .left {
+      flex-direction: column; align-items: center; text-align: center; gap: 0;
+      background: transparent; /* let mobile canvas show through */
+    }
     .left-info { align-items: center; }
     .avatar-wrap { margin-bottom: 16px; }
     .role { margin-bottom: 20px; }
@@ -1062,6 +1075,7 @@
   }
 </script>
 <canvas id="bg-canvas"></canvas>
+<canvas id="mobile-glow"></canvas>
 
 <script>
   // ── Animated gaussian orbs ──────────────────────────
@@ -1080,7 +1094,7 @@
     let W, H, frame = 0;
     let globalAlpha = 0;
     const targetAlpha = 0.85;
-    const fadeFrames  = 180; // ~3s at 60fps
+    const fadeFrames  = 30; // ~0.5s at 60fps — fast ramp
 
     function resize() {
       W = canvas.width  = window.innerWidth;
@@ -1132,3 +1146,83 @@
     draw();
   })();
 </script>
+
+<script>
+  // ── Mobile-only left panel glow ───────────────────────
+  (function() {
+    const mc  = document.getElementById('mobile-glow');
+    const ctx = mc.getContext('2d');
+
+    let active = false;
+    let ow, oh, frame = 0, alpha = 0;
+
+    const orbs = [
+      // Top-left corner → drifts inward-right
+      { rx: 0.04, ry: 0.05, r: 0.55, color: '212,175,80',  a: 0.30, vx:  0.0006, vy:  0.0004, phase: 0.0 },
+      // Bottom-right corner → drifts inward-left
+      { rx: 0.96, ry: 0.92, r: 0.50, color: '200,155,60',  a: 0.24, vx: -0.0005, vy: -0.0007, phase: 2.1 },
+      // Top-right corner → drifts down-left
+      { rx: 0.94, ry: 0.06, r: 0.42, color: '232,201,122', a: 0.20, vx: -0.0004, vy:  0.0008, phase: 4.2 },
+    ];
+
+    function update() {
+      const isMobile = window.innerWidth <= 560;
+      if (!isMobile) { active = false; mc.style.display = 'none'; return; }
+
+      const left = document.querySelector('.left');
+      if (!left) return;
+      const r = left.getBoundingClientRect();
+      ow = r.width; oh = r.height;
+
+      mc.width  = ow;
+      mc.height = oh;
+      mc.style.left   = r.left + 'px';
+      mc.style.top    = r.top  + 'px';
+      mc.style.width  = ow + 'px';
+      mc.style.height = oh + 'px';
+      mc.style.display = 'block';
+      active = true;
+    }
+
+    function draw() {
+      requestAnimationFrame(draw);
+      frame++;
+      if (!active) return;
+
+      if (alpha < 1) { alpha = Math.min(1, alpha + 1/25); mc.style.opacity = alpha; }
+
+      ctx.clearRect(0, 0, ow, oh);
+
+      orbs.forEach(o => {
+        o.rx += o.vx; o.ry += o.vy;
+        if (o.rx < 0.04 || o.rx > 0.96) o.vx *= -1;
+        if (o.ry < 0.04 || o.ry > 0.96) o.vy *= -1;
+
+        const pulse  = 1 + 0.12 * Math.sin(frame * 0.022 + o.phase);
+        const cx     = o.rx * ow;
+        const cy     = o.ry * oh;
+        const radius = o.r * Math.min(ow, oh) * pulse;
+
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        g.addColorStop(0,    `rgba(${o.color}, ${o.a})`);
+        g.addColorStop(0.45, `rgba(${o.color}, ${(o.a * 0.35).toFixed(2)})`);
+        g.addColorStop(0.75, `rgba(${o.color}, ${(o.a * 0.08).toFixed(2)})`);
+        g.addColorStop(1,    `rgba(${o.color}, 0)`);
+
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    window.addEventListener('resize', update);
+    // Re-position on scroll too (mobile panel might shift)
+    window.addEventListener('scroll', update);
+    update();
+    draw();
+  })();
+</script>
+
+</body>
+</html>
