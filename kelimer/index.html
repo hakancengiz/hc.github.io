@@ -1882,7 +1882,7 @@ function tryPlaceWord(gridMatrix, placedWords, word) {
 function generateDensePuzzle() {
   const MIN_WORDS = 7;
   const MAX_WORDS = 8;
-  const MAX_ATTEMPTS = 350;
+  const MAX_ATTEMPTS = 1500; // Deneme sınırını 1500'e çıkararak başarı şansını maksimize ettik
 
   const allLongWords = DICTIONARY.filter(w => w.length === 6);
   if (usedBaseWords.size >= allLongWords.length) usedBaseWords.clear();
@@ -1892,6 +1892,10 @@ function generateDensePuzzle() {
 
     // ── 1. Rastgele 6-harfli taban kelime seç ──
     const baseWord = longWords[Math.floor(Math.random() * longWords.length)];
+    if (!baseWord) {
+      usedBaseWords.clear();
+      continue;
+    }
     const letters  = baseWord.split('');
 
     // ── 2. Taban harflerinden üretilebilen kelimeleri bul ──
@@ -1953,17 +1957,14 @@ function generateDensePuzzle() {
       ];
       for (const word of leftover) {
         if (placedWords.length >= MAX_WORDS) break;
-        if (tryPlaceWord(gridMatrix, placedWords, word)) {
-          // Başarıyla yerleşti
-        }
+        tryPlaceWord(gridMatrix, placedWords, word);
       }
     }
 
-    // ── 6. KESİN ÇÖZÜM: KÜRESEL BOYUT VE KALİTE FİLTRESİ ──
+    // ── 6. BOYUT VE KALİTE FİLTRESİ (GÜVENLİ VE KADEMELİ) ──
     if (placedWords.length >= MIN_WORDS) {
       const finalSelectedWords = placedWords.slice(0, MAX_WORDS);
 
-      // Oluşan nihai bulmacanın sınırlarını (bounding box) hesapla
       let minR = Infinity, maxR = -Infinity;
       let minC = Infinity, maxC = -Infinity;
 
@@ -1981,21 +1982,27 @@ function generateDensePuzzle() {
       const finalRows = (maxR - minR) + 1;
       const finalCols = (maxC - minC) + 1;
 
-      // KATI KALİTE KURALI: Eğer nihai matris mobilde yatayda veya dikeyde 8 kutuyu aşıyorsa
-      // bu yerleşimi tamamen REDDET ve sonraki denemeyle (başka taban kelimeyle) daha kompakt bir yapı ara.
-      // 8x8 sınırı, 6 harfli kelimeler barındıran bir bulmaca için mobil ekranda olabilecek en optimum, 
-      // en büyük ve en dolgun kutu görünümünü garanti eder.
-      if (finalRows > 8 || finalCols > 8) {
+      // Yeni 1500'lük limite göre optimize edilmiş kademeli esnetme:
+      let allowedLimit = 8; 
+      if (attempt > 400) {
+        allowedLimit = 9;  // İlk 400 denemede kusursuz 8x8 bulamazsa 9x9'a esne
+      }
+      if (attempt > 1000) {
+        allowedLimit = 10; // 1000 denemeden sonra hâlâ sıkışmadıysa maksimum 10x10'a izin ver
+      }
+
+      // Belirlenen dinamik boyuttan büyükse bu kombinasyonu reddet ve aramaya devam et
+      if (finalRows > allowedLimit || finalCols > allowedLimit) {
         continue; 
       }
 
-      // Filtreyi başarıyla geçen kompakt matrisi oyuna gönder
+      // Kriterleri başarıyla geçen süper kompakt bulmacayı oyuna fırlat
       usedBaseWords.add(baseWord);
       return { letters, words: finalSelectedWords };
     }
   }
 
-  // Aşırı katı kısıtlamadan dolayı 350 denemede bulunamazsa yedek havuzu kullan (Güvenlik önlemi)
+  // 1500 denemede de mucizevi şekilde eşleşme olmazsa güvenlik önlemi olarak yedek havuzu döndür
   return BACKUP_PUZZLES[backupIndex++ % BACKUP_PUZZLES.length];
 }
 
