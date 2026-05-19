@@ -1781,7 +1781,9 @@ function tryPlaceWord(gridMatrix, placedWords, word) {
           // Uç nokta = 0, tam orta = maksimum — her iki kelime için hesapla
           const depthOnExisting = Math.min(i, pw.text.length - 1 - i);
           const depthOnNew      = Math.min(j, word.length - 1 - j);
-          const score = depthOnExisting + depthOnNew;
+          // Yatay yerleşime +1 bonus: portre ekranlarda H yönü daha verimli
+          const hBonus = targetDir === 'H' ? 1 : 0;
+          const score = depthOnExisting + depthOnNew + hBonus;
           candidates.push({ r, c, dir: targetDir, score });
         }
       }
@@ -1960,8 +1962,27 @@ function initGame() {
   document.getElementById('modalStatsState').style.display = 'none';
   document.getElementById('modalSettingsState').style.display = 'none';
 
-  currentPuzzle = generateDensePuzzle();
-  
+   currentPuzzle = generateDensePuzzle();
+
+  // Izgara dikey uzunsa 90° döndür — yatay alan portre ekranda daha verimli
+  (function rotatePuzzleIfTall() {
+    const words = currentPuzzle.words;
+    let minR = Infinity, maxR = -Infinity, minC = Infinity, maxC = -Infinity;
+    words.forEach(w => {
+      const endR = w.dir === 'H' ? w.r : w.r + w.text.length - 1;
+      const endC = w.dir === 'H' ? w.c + w.text.length - 1 : w.c;
+      minR = Math.min(minR, w.r);  maxR = Math.max(maxR, endR);
+      minC = Math.min(minC, w.c);  maxC = Math.max(maxC, endC);
+    });
+    if ((maxR - minR) > (maxC - minC)) {
+      // Transpose: r↔c koordinatları yer değiştirir, H↔V yön tersine döner
+      words.forEach(w => {
+        [w.r, w.c] = [w.c, w.r];
+        w.dir = w.dir === 'H' ? 'V' : 'H';
+      });
+    }
+  })();
+
   currentLetters = [...currentPuzzle.letters];
   shuffleArray(currentLetters);
   
@@ -2015,12 +2036,23 @@ function buildGrid() {
   const szW = Math.floor((availW - (numCols - 1) * gap) / numCols);
   const szH = Math.floor((availH - (numRows - 1) * gap) / numRows);
 
-  // No minimum floor — cell size shrinks to whatever fits; cap at 44px
-  const sz = Math.min(szW, szH, 44);
+  // Minimum 26px; altına düşerse wrapper CSS scale ile sığdırılır
+  const MIN_SZ = 26;
+  const rawSz = Math.min(szW, szH, 44);
+  const sz = Math.max(rawSz, MIN_SZ);
   const step = sz + gap;
 
-  wrap.style.width = (numCols * step - gap) + 'px';
-  wrap.style.height = (numRows * step - gap) + 'px';
+  const gridW = numCols * step - gap;
+  const gridH = numRows * step - gap;
+  wrap.style.width  = gridW + 'px';
+  wrap.style.height = gridH + 'px';
+
+  // Izgara alanına sığmıyorsa orantılı küçült
+  const scaleX = rawSz < MIN_SZ ? availW / gridW : 1;
+  const scaleY = rawSz < MIN_SZ ? availH / gridH : 1;
+  const scale  = Math.min(scaleX, scaleY, 1);
+  wrap.style.transform = scale < 1 ? `scale(${scale.toFixed(4)})` : '';
+  wrap.style.transformOrigin = 'center center';
 
   const placedCells = {};
 
