@@ -1885,13 +1885,12 @@ function generateDensePuzzle() {
   const MAX_ATTEMPTS = 350;
 
   const allLongWords = DICTIONARY.filter(w => w.length === 6);
-  // Oturumda kullanılmamış kelimeleri tercih et; hepsi bittiyse seti sıfırla
   if (usedBaseWords.size >= allLongWords.length) usedBaseWords.clear();
   const longWords = allLongWords.filter(w => !usedBaseWords.has(w));
 
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
 
-    // ── 1. Rastgele 6-harfli taban kelime seç (daha önce kullanılmamış) ──
+    // ── 1. Rastgele 6-harfli taban kelime seç ──
     const baseWord = longWords[Math.floor(Math.random() * longWords.length)];
     const letters  = baseWord.split('');
 
@@ -1899,7 +1898,7 @@ function generateDensePuzzle() {
     const byLen = { 5: [], 4: [], 3: [] };
 
     for (const w of DICTIONARY) {
-      if (!byLen[w.length]) continue;          // sadece 3-4-5 harfli
+      if (!byLen[w.length]) continue;
       let pool = [...letters];
       let ok = true;
       for (const ch of w) {
@@ -1910,11 +1909,9 @@ function generateDensePuzzle() {
       if (ok) byLen[w.length].push(w);
     }
 
-    // Yeterli aday yoksa bir sonraki denemeye geç
     const totalCandidates = byLen[5].length + byLen[4].length + byLen[3].length;
     if (totalCandidates < MIN_WORDS - 1) continue;
 
-    // Her grubu karıştır → her oyun farklı kelime kombinasyonu
     shuffleArray(byLen[5]);
     shuffleArray(byLen[4]);
     shuffleArray(byLen[3]);
@@ -1929,13 +1926,11 @@ function generateDensePuzzle() {
     }
     placedWords.push({ text: baseWord, r: startR, c: startC, dir: 'H' });
 
-    // ── 4. Öncelikli pattern: 2×5-harf, 3×4-harf, 1×3-harf ──
-    // Her grup kendi kotasını doldurmaya çalışır.
-    // Eşleşme bulunamazsa adım atlanır; eksik slotlar 5. adımda doldurulur.
+    // ── 4. Öncelikli pattern yerleşimi ──
     const schedule = [
-      [byLen[5], 2],  // önce 2 adet 5-harfli
-      [byLen[4], 3],  // sonra 3 adet 4-harfli
-      [byLen[3], 1],  // son olarak 1 adet 3-harfli
+      [byLen[5], 2],
+      [byLen[4], 3],
+      [byLen[3], 1],
     ];
 
     for (const [group, quota] of schedule) {
@@ -1948,8 +1943,7 @@ function generateDensePuzzle() {
       if (placedWords.length >= MAX_WORDS) break;
     }
 
-    // ── 5. Pattern yeterli kelimeyi yerleştiremezse kalan listeden doldur ──
-    // Önce uzun kelimeler denenir (5→4→3), böylece kalite korunur.
+    // ── 5. Eksik kalan slotları tamamla ──
     if (placedWords.length < MIN_WORDS) {
       const usedSet  = new Set(placedWords.map(p => p.text));
       const leftover = [
@@ -1959,18 +1953,49 @@ function generateDensePuzzle() {
       ];
       for (const word of leftover) {
         if (placedWords.length >= MAX_WORDS) break;
-        tryPlaceWord(gridMatrix, placedWords, word);
+        if (tryPlaceWord(gridMatrix, placedWords, word)) {
+          // Başarıyla yerleşti
+        }
       }
     }
 
-    // ── 6. Başarı kontrolü ──
+    // ── 6. KESİN ÇÖZÜM: KÜRESEL BOYUT VE KALİTE FİLTRESİ ──
     if (placedWords.length >= MIN_WORDS) {
-      usedBaseWords.add(baseWord); // Bu taban kelimeyi oturumda tekrar kullanma
-      return { letters, words: placedWords.slice(0, MAX_WORDS) };
+      const finalSelectedWords = placedWords.slice(0, MAX_WORDS);
+
+      // Oluşan nihai bulmacanın sınırlarını (bounding box) hesapla
+      let minR = Infinity, maxR = -Infinity;
+      let minC = Infinity, maxC = -Infinity;
+
+      finalSelectedWords.forEach(w => {
+        const len = w.text.length;
+        if (w.dir === 'H') {
+          minR = Math.min(minR, w.r); maxR = Math.max(maxR, w.r);
+          minC = Math.min(minC, w.c); maxC = Math.max(maxC, w.c + len - 1);
+        } else {
+          minR = Math.min(minR, w.r); maxR = Math.max(maxR, w.r + len - 1);
+          minC = Math.min(minC, w.c); maxC = Math.max(maxC, w.c);
+        }
+      });
+
+      const finalRows = (maxR - minR) + 1;
+      const finalCols = (maxC - minC) + 1;
+
+      // KATI KALİTE KURALI: Eğer nihai matris mobilde yatayda veya dikeyde 8 kutuyu aşıyorsa
+      // bu yerleşimi tamamen REDDET ve sonraki denemeyle (başka taban kelimeyle) daha kompakt bir yapı ara.
+      // 8x8 sınırı, 6 harfli kelimeler barındıran bir bulmaca için mobil ekranda olabilecek en optimum, 
+      // en büyük ve en dolgun kutu görünümünü garanti eder.
+      if (finalRows > 8 || finalCols > 8) {
+        continue; 
+      }
+
+      // Filtreyi başarıyla geçen kompakt matrisi oyuna gönder
+      usedBaseWords.add(baseWord);
+      return { letters, words: finalSelectedWords };
     }
   }
 
-  // Tüm denemeler başarısız → yedek bulmaca
+  // Aşırı katı kısıtlamadan dolayı 350 denemede bulunamazsa yedek havuzu kullan (Güvenlik önlemi)
   return BACKUP_PUZZLES[backupIndex++ % BACKUP_PUZZLES.length];
 }
 
