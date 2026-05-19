@@ -1792,9 +1792,6 @@ function addStatGaveUp() {
  * Başarılıysa gridMatrix ve placedWords'ü günceller, true döner.
  */
 function tryPlaceWord(gridMatrix, placedWords, word) {
-  // Tüm geçerli yerleşim adaylarını topla ve iç kesişim skoruna göre sırala.
-  // Skor = (mevcut kelimedeki kesişim iç derinliği) + (yeni kelimedeki iç derinlik)
-  // Yüksek skor → kelimeler birbirinin ortasından kesişiyor → daha iç içe ızgara
   const candidates = [];
 
   for (const pw of placedWords) {
@@ -1807,12 +1804,47 @@ function tryPlaceWord(gridMatrix, placedWords, word) {
         const c = pw.dir === 'H' ? pw.c + i : pw.c - j;
 
         if (validatePlacement(gridMatrix, word, r, c, targetDir)) {
+          
+          // ── YENİ: UZAMSAL MATRİS SINIRLANDIRMA VE SIKIŞTIRMA MOTORU ──
+          // Bu kelime buraya yerleşirse oluşacak potansiyel yeni sınırları hesapla
+          let minR = r, maxR = r + (targetDir === 'V' ? word.length - 1 : 0);
+          let minC = c, maxC = c + (targetDir === 'H' ? word.length - 1 : 0);
+
+          // Mevcut yerleşmiş kelimelerin sınırlarını da hesaba kat
+          for (const extW of placedWords) {
+            const lenW = extW.text.length;
+            if (extW.dir === 'H') {
+              minR = Math.min(minR, extW.r); maxR = Math.max(maxR, extW.r);
+              minC = Math.min(minC, extW.c); maxC = Math.max(maxC, extW.c + lenW - 1);
+            } else {
+              minR = Math.min(minR, extW.r); maxR = Math.max(maxR, extW.r + lenW - 1);
+              minC = Math.min(minC, extW.c); maxC = Math.max(maxC, extW.c);
+            }
+          }
+
+          const numRows = (maxR - minR) + 1;
+          const numCols = (maxC - minC) + 1;
+
+          // KATI KURAL: Matrisin mobilde çok uzayıp kutuları küçültmesini engellemek için 
+          // portre ekran sınırı koyuyoruz (Maks 9 Sütun, 9 Satır).
+          // Eğer bu yerleşim matrisi 9x9'dan daha fazla büyütecekse bu adayı doğrudan eliyoruz.
+          if (numCols > 9 || numRows > 9) {
+            continue; 
+          }
+          // ────────────────────────────────────────────────────────────
+
           // Uç nokta = 0, tam orta = maksimum — her iki kelime için hesapla
           const depthOnExisting = Math.min(i, pw.text.length - 1 - i);
           const depthOnNew      = Math.min(j, word.length - 1 - j);
           // Yatay yerleşime +1 bonus: portre ekranlarda H yönü daha verimli
           const hBonus = targetDir === 'H' ? 1 : 0;
-          const score = depthOnExisting + depthOnNew + hBonus;
+          
+          // AKILLI SIKIŞTIRMA (Skor Modifikasyonu):
+          // Toplam kaplanan alan (numRows * numCols) büyüdükçe adaya küçük bir ceza puanı kesiyoruz.
+          // Böylece katı sınıra takılmasa bile algoritma her zaman en toplu duran alternatifi seçecektir.
+          const areaPenalty = (numRows * numCols) * 0.05;
+          const score = depthOnExisting + depthOnNew + hBonus - areaPenalty;
+
           candidates.push({ r, c, dir: targetDir, score });
         }
       }
