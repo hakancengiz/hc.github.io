@@ -143,7 +143,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: clamp(14px, 3.5vh, 28px) 22px clamp(8px, 1.5vh, 12px);
+      padding: 28px 22px 12px;
       flex-shrink: 0;
     }
 
@@ -213,7 +213,7 @@
 
     /* ── PROGRESS ── */
     .progress-wrap {
-      padding: 2px 22px clamp(8px, 1.8vh, 14px);
+      padding: 2px 22px 14px;
       flex-shrink: 0;
     }
 
@@ -257,7 +257,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: clamp(4px, 1.2vh, 10px) 16px;
+      padding: 10px 22px;
       overflow: hidden;
       min-height: 0;
     }
@@ -325,16 +325,16 @@
     /* ── BOTTOM AREA ── */
     .bottom {
       flex-shrink: 0;
-      padding: clamp(6px, 1.5vh, 10px) 22px clamp(16px, 4.5vh, 38px);
+      padding: 10px 22px 38px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: clamp(8px, 1.8vh, 14px);
+      gap: 14px;
       position: relative;
     }
 
     .word-preview {
-      height: clamp(32px, 4.5vh, 38px);
+      height: 38px;
       padding: 0 22px;
       background: var(--accent);
       color: #fff;
@@ -361,10 +361,8 @@
     /* ── DISC ── */
     .disc-container {
       position: relative;
-      /* Kısa ekranlarda disc küçülür → ızgara için daha fazla alan kalır.
-         clamp(min, ideal, max): ideal = ekran yüksekliğinden sabit alanlar çıkarılınca kalan */
-      width:  clamp(170px, min(54vw, calc(100dvh - 430px)), 248px);
-      height: clamp(170px, min(54vw, calc(100dvh - 430px)), 248px);
+      width: clamp(210px, 56vw, 252px);
+      height: clamp(210px, 56vw, 252px);
     }
 
     .disc {
@@ -2085,39 +2083,41 @@ function initGame() {
   failedWords = [];
   remainingJokers = 3;
 
+  buildGrid();
   buildDisc();
   updateProgress();
   updateJokerUI();
-
-  // İlk çizimi bir sonraki frame'e erteleyerek gridArea'nın
-  // kesin boyutunu (clientWidth/clientHeight) aldıktan sonra hesapla
-  requestAnimationFrame(() => {
-    buildGrid();
-    // gridArea boyutu değişirse (döndürme, resize) ızgarayı otomatik güncelle
-    initGridResizeObserver();
-  });
+  adjustGridSize();
 }
 
-// ── IZGARA ALANI REAKTİF YENİDEN BOYUTLANDIRMA ──────────────────────────
-// gridArea'nın boyutu her değiştiğinde (oryantasyon, resize, vb.) ızgarayı
-// otomatik olarak yeniden çizer.
-let _gridResizeObserver = null;
+function adjustGridSize() {
+  const gridContainer = document.getElementById('gridContainer'); // Izgara kapsayıcınızın ID'si
+  if (!gridContainer) return;
 
-function initGridResizeObserver() {
-  const area = document.getElementById('gridArea');
-  if (!area) return;
+  // Oyun alanınızın satır ve sütun sayıları (Örn: 5x5 veya kelime uzunluğuna göre dinamik)
+  // Eğer bu değerler dinamikse değişkenlerden çekebilirsin
+  const columns = 5; 
+  const rows = 5; 
 
-  if (_gridResizeObserver) _gridResizeObserver.disconnect();
+  // Kullanılabilir maksimum genişlik (Sağdan soldan 16px toplam 32px padding bırakıyoruz)
+  const availableWidth = window.innerWidth - 32; 
+  
+  // Kullanılabilir maksimum yükseklik 
+  // Mobil tarayıcılarda üst/alt barlar alanı daraltabileceği için güvenli bir alan bırakıyoruz (örn: ekranın %60'ı)
+  const availableHeight = window.innerHeight * 0.55; 
 
-  _gridResizeObserver = new ResizeObserver(entries => {
-    const rect = entries[0].contentRect;
-    // Yalnızca gerçek bir alan varsa ve mevcut bulmaca yüklüyse yeniden çiz
-    if (currentPuzzle && rect.height > 40 && rect.width > 40) {
-      buildGrid();
-    }
-  });
+  // Hücrelerin hem genişliğe hem yüksekliğe sığması için en uygun boyutu buluyoruz
+  const maxCellWidth = availableWidth / columns;
+  const maxCellHeight = availableHeight / rows;
+  
+  // Hangi boyut daha küçükse, hücrelerin kare kalması için onu baz alıyoruz (gap/boşluk payı düşülerek)
+  const gap = 8; // CSS'teki gap değeriyle aynı olmalı
+  const cellSize = Math.min(maxCellWidth, maxCellHeight) - gap;
 
-  _gridResizeObserver.observe(area);
+  // Hesaplanan boyutları CSS Variable (Değişken) olarak CSS'e gönderiyoruz
+  document.documentElement.style.setProperty('--cell-size', `${cellSize}px`);
+  document.documentElement.style.setProperty('--grid-cols', columns);
+  document.documentElement.style.setProperty('--grid-rows', rows);
 }
 
 function shuffleArray(array) {
@@ -2626,10 +2626,13 @@ function showToast(msg) {
 
 window.addEventListener('load', initGame);
 
-// Pencere resize olayı ResizeObserver tarafından zaten ele alınıyor.
-// Oryantasyon değişikliklerinde disc'i de yeniden oluştur.
+let resizeTimer;
 window.addEventListener('resize', () => {
-  if (currentPuzzle) buildDisc();
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    // Ekran boyutları değiştiğinde ızgarayı yeniden boyutlandır
+    adjustGridSize();
+  }, 150);
 });
 </script>
 </body>
