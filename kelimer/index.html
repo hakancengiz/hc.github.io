@@ -303,6 +303,15 @@
       box-shadow: 0 4px 14px var(--accent-glow), var(--shadow-sm);
     }
 
+    @keyframes cellEnter {
+      0%   { opacity: 0; transform: scale(0.72) translateY(8px); }
+      65%  { opacity: 1; transform: scale(1.04) translateY(-2px); }
+      100% { opacity: 1; transform: scale(1)    translateY(0); }
+    }
+    .cell.entering {
+      animation: cellEnter 0.46s cubic-bezier(0.34, 1.56, 0.64, 1) var(--enter-delay, 0ms) both;
+    }
+
     @keyframes cellPop {
       0%   { transform: scale(0.75); }
       55%  { transform: scale(1.12); }
@@ -2347,11 +2356,14 @@ function buildGrid() {
 
       if (!placedCells[key]) {
         const el = document.createElement('div');
-        el.className = 'cell';
+        // Köşegen dalgası: sol üstten sağ alta doğru hücreler sırayla belirir
+        const delay = (localR + localC) * 28;
+        el.className = 'cell entering';
         el.style.cssText = `
           width: ${sz}px; height: ${sz}px;
           left: ${localC * step}px; top: ${localR * step}px;
           font-size: ${Math.round(sz * 0.54)}px;
+          --enter-delay: ${delay}ms;
         `;
         el.textContent = letter;
         wrap.appendChild(el);
@@ -2508,7 +2520,7 @@ function checkWord(targetWord) {
 
         el._wiggleStartTimer = setTimeout(() => {
           if (el._wiggleEndTimer) clearTimeout(el._wiggleEndTimer);
-          el.classList.remove('wiggle', 'pop');
+          el.classList.remove('wiggle', 'pop', 'entering');
           void el.offsetWidth;                   // animasyonu sıfırla
           el.classList.add('wiggle');
           el._wiggleEndTimer = setTimeout(() => {
