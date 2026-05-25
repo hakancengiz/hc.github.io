@@ -3204,8 +3204,13 @@ function tryPlaceWord(gridMatrix, placedWords, word, substringFilter = true) {
           const endpointPenalty =
             ((i === 0 || i === pw.text.length - 1) ? 1.2 : 0) +
             ((j === 0 || j === word.length - 1) ? 1.0 : 0);
-          const areaPenalty = (numRows * numCols) * 0.05;
-          const squarenessPenalty = Math.abs(numRows - numCols) * 0.25;
+          const displayRows = Math.min(numRows, numCols);
+          const displayCols = Math.max(numRows, numCols);
+          const areaPenalty = Math.max(0, (numRows * numCols) - 54) * 0.025;
+          const squarenessPenalty = Math.abs(displayRows - displayCols) * 0.18;
+          const visualFitBonus =
+            (displayRows <= 6 ? 0.7 : displayRows === 7 ? 0.15 : -0.8) +
+            (displayCols >= 7 && displayCols <= 9 ? 0.35 : 0);
 
           const score =
             (depthOnExisting * 1.35) +
@@ -3215,6 +3220,7 @@ function tryPlaceWord(gridMatrix, placedWords, word, substringFilter = true) {
             endpointPenalty -
             areaPenalty -
             squarenessPenalty +
+            visualFitBonus +
             Math.random() * 0.35;
 
           candidates.push({ r, c, dir: targetDir, score });
@@ -3252,6 +3258,37 @@ function generateDensePuzzle() {
   let fallbackPuzzle = null;
   let fallbackScore = -Infinity;
 
+  const getVisualScore = (words) => {
+    const bounds = getPuzzleBounds(words);
+    const rows = Math.min(bounds.rows, bounds.cols);
+    const cols = Math.max(bounds.rows, bounds.cols);
+    const cellCount = new Set();
+
+    words.forEach(w => {
+      for (let i = 0; i < w.text.length; i++) {
+        const r = w.dir === 'H' ? w.r : w.r + i;
+        const c = w.dir === 'H' ? w.c + i : w.c;
+        cellCount.add(`${r},${c}`);
+      }
+    });
+
+    const fillRatio = cellCount.size / Math.max(1, bounds.rows * bounds.cols);
+    const rowScore = rows <= 6 ? 34 : rows === 7 ? 12 : -24;
+    const colScore = cols >= 7 && cols <= 9 ? 22 : -Math.abs(cols - 8) * 8;
+    const shapeScore = -Math.abs(cols - rows - 2) * 5;
+    const densityScore = fillRatio >= 0.42 && fillRatio <= 0.64 ? 10 : -Math.abs(fillRatio - 0.53) * 22;
+
+    return rowScore + colScore + shapeScore + densityScore;
+  };
+
+  const getFreshnessPenalty = (words) => {
+    const baseWord = words.find(w => w.text.length === 6)?.text;
+    return words.reduce((total, w) => {
+      if (w.text === baseWord) return total;
+      return total + recentWordPenalty(w.text);
+    }, 0);
+  };
+
   const getPatternScore = (words) => {
     const counts = words.reduce((acc, w) => {
       acc[w.text.length] = (acc[w.text.length] || 0) + 1;
@@ -3271,7 +3308,13 @@ function generateDensePuzzle() {
 
     return {
       isIdealPattern,
-      score: words.length * 100 + closeness * 10 - Math.abs((counts[3] || 0) - 2)
+      score:
+        (isIdealPattern ? 10000 : 0) +
+        words.length * 1000 +
+        closeness * 100 +
+        getVisualScore(words) -
+        getFreshnessPenalty(words) * 90 -
+        Math.abs((counts[3] || 0) - 2) * 20
     };
   };
 
@@ -3405,13 +3448,7 @@ function generateDensePuzzle() {
       const candidatePuzzle = { letters, words: finalSelectedWords };
       const pattern = getPatternScore(finalSelectedWords);
 
-      // İdeal dağılım: 1x6, 2x5, 3x4, 2x3.
-      if (finalSelectedWords.length >= TARGET_WORDS && pattern.isIdealPattern) {
-        usedBaseWords.add(baseWord);
-        return candidatePuzzle;
-      }
-
-      // İdeal dağılım yoksa en iyi adayı yedekte tut.
+      // İdeal dağılım görsel kaliteyle birlikte değerlendirilir.
       if (pattern.score > fallbackScore) {
         fallbackPuzzle = candidatePuzzle;
         fallbackScore = pattern.score;
