@@ -382,6 +382,89 @@
       height: clamp(210px, 56vw, 252px);
     }
 
+    .joker-word-wrap {
+      position: absolute;
+      left: 10px;
+      bottom: 38px;
+      min-width: 50px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 8;
+    }
+
+    .joker-word-badge {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      margin-bottom: -2px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--accent-glow);
+      border: 1.5px solid var(--surface);
+    }
+
+    .joker-word-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .joker-word-badge.reward-mode {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      color: var(--accent);
+      animation: jokerBadgeReward 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .joker-word-badge .reward-text {
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+      text-shadow: 0 3px 10px var(--accent-glow);
+    }
+
+    @keyframes jokerBadgeReward {
+      0%   { transform: scale(1); }
+      45%  { transform: scale(1.28); }
+      100% { transform: scale(1); }
+    }
+
+    .joker-word-wrap.active {
+      display: flex;
+    }
+
+    .joker-word-cell {
+      position: static;
+      width: var(--joker-word-cell-size, 42px);
+      height: var(--joker-word-cell-size, 42px);
+      transition: transform 0.2s, background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    @keyframes jokerWordEnter {
+      0%   { opacity: 0; transform: translateY(10px) scale(0.72); }
+      65%  { opacity: 1; transform: translateY(-2px) scale(1.08); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .joker-word-cell.entering {
+      animation: jokerWordEnter 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) var(--joker-enter-delay, 0ms) both;
+    }
+
+    .joker-word-cell.revealed {
+      transform: scale(1.04);
+    }
+
+    .joker-word-cell.pop {
+      animation: cellPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
     .disc {
       width: 100%;
       height: 100%;
@@ -459,6 +542,24 @@
       box-shadow: 0 6px 18px var(--accent-glow), 0 2px 6px rgba(0,0,0,0.15);
     }
 
+    @keyframes letterEnter {
+      0%   { opacity: 0; transform: scale(0.3); }
+      65%  { opacity: 1; transform: scale(1.15); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .letter-btn.entering {
+      animation: letterEnter 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) var(--letter-delay, 0ms) both;
+    }
+
+    @keyframes letterExit {
+      0%   { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.3); }
+    }
+    .letter-btn.exiting {
+      animation: letterExit 0.18s ease-in var(--letter-delay, 0ms) both;
+      pointer-events: none;
+    }
+
     /* ── SIDE ACTION BUTTONS ── */
     .side-actions {
       position: absolute;
@@ -492,6 +593,29 @@
 
     .action-btn:active { transform: scale(0.88); }
     .action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .joker-count {
+      position: relative;
+      overflow: visible;
+    }
+
+    .hint-gain {
+      position: absolute;
+      right: 6px;
+      top: -18px;
+      color: #16A34A;
+      font-size: 13px;
+      font-weight: 900;
+      pointer-events: none;
+      animation: hintGain 0.9s ease-out forwards;
+      text-shadow: 0 2px 8px rgba(22,163,74,0.25);
+    }
+
+    @keyframes hintGain {
+      0%   { opacity: 0; transform: translateY(8px) scale(0.75); }
+      25%  { opacity: 1; transform: translateY(0) scale(1.12); }
+      100% { opacity: 0; transform: translateY(-16px) scale(1); }
+    }
 
     /* ── TOAST ── */
     .toast {
@@ -580,12 +704,57 @@
       color: var(--text-muted);
       line-height: 1.65;
       margin-bottom: 22px;
-      text-align: left;
     }
 
     .modal-buttons {
       display: flex;
       gap: 10px;
+    }
+
+    .modal-check {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      margin: 2px 0 14px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-check input {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1.5px solid var(--cell-border);
+      background: var(--surface2);
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .modal-check input::before {
+      content: '';
+      width: 9px;
+      height: 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) scale(0);
+      transform-origin: center;
+      transition: transform 0.16s ease;
+    }
+
+    .modal-check input:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .modal-check input:checked::before {
+      transform: rotate(-45deg) scale(1);
     }
 
     .modal-btn {
@@ -694,32 +863,79 @@
     .stats-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 0;
       margin-bottom: 20px;
       text-align: left;
     }
 
     .stat-row {
-      background: var(--surface2);
-      border: 1px solid var(--cell-border);
-      padding: 12px 16px;
-      border-radius: 14px;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--cell-border);
+      padding: 12px 0;
+      border-radius: 0;
       display: flex;
       justify-content: space-between;
+      gap: 12px;
       align-items: center;
+      min-width: 0;
+      transition: border-color 0.3s;
+    }
+
+    .stat-row:first-child {
+      padding-top: 2px;
+    }
+
+    .stat-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 2px;
+    }
+
+    .stat-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border: 0;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .stat-icon svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .stat-copy {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-shrink: 0;
+      min-width: 92px;
     }
 
     .stat-label {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
+      line-height: 1.25;
+      min-width: 0;
     }
 
     .stats-val {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 900;
-      font-family: 'Bebas Neue', sans-serif;
-      letter-spacing: 1px;
+      font-family: 'Figtree', sans-serif;
+      letter-spacing: 0;
+      line-height: 1;
+      color: #6a584d;
+      white-space: nowrap;
+      text-align: right;
     }
 
     /* ── HISTORY ── */
@@ -926,7 +1142,7 @@
 
   <div class="progress-wrap">
     <div class="progress-label">
-      <span>Izgara</span>
+      <span id="i18nProgressLabel">Izgara</span>
       <span id="progressText">0 / 0 Kelime</span>
     </div>
     <div class="progress-track">
@@ -941,6 +1157,7 @@
 
   <div class="bottom">
     <div class="word-preview" id="wordPreview"></div>
+    <div class="joker-word-wrap" id="jokerWordWrap"></div>
 
     <div class="disc-container">
       <svg class="swipe-svg">
@@ -957,6 +1174,13 @@
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 3v14"/>
           <path d="M3 4h10l-3 4 3 4H3"/>
+        </svg>
+      </button>
+
+      <!-- Joker Word Button -->
+      <button class="action-btn" id="jokerWordBtn" title="Joker Kelime">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.8l2.7 5.47 6.04.88-4.37 4.26 1.03 6.01L12 16.58l-5.4 2.84 1.03-6.01-4.37-4.26 6.04-.88L12 2.8z"/>
         </svg>
       </button>
 
@@ -1003,10 +1227,31 @@
         <path d="M12 7v5l4 2"/>
       </svg>
     </div>
-    <div class="modal-title">Deneme Geçmişi</div>
+    <div class="modal-title" id="i18nHistoryTitle">Deneme Geçmişi</div>
     <div class="modal-desc" id="historyDesc" style="margin-bottom: 0;">Izgarada bulunamayan kelimeler:</div>
     <div class="answer-scroll" id="historyListContainer"></div>
     <button class="modal-btn btn-close" id="modalHistoryCloseBtn">Kapat</button>
+  </div>
+
+  <!-- Joker Word Info -->
+  <div class="modal-card" id="modalJokerWordState" style="display: none;">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2.8l2.7 5.47 6.04.88-4.37 4.26 1.03 6.01L12 16.58l-5.4 2.84 1.03-6.01-4.37-4.26 6.04-.88L12 2.8z"/>
+      </svg>
+    </div>
+    <div class="modal-title" id="i18nJokerWordTitle">Joker Kelime</div>
+    <div class="modal-desc" id="i18nJokerWordDesc" style="text-align: left; white-space: pre-line;">Joker kelime, ızgaradan bağımsız ek bir kelimedir. Doğru bilirsen bu oyun için +1 ipucu kazanırsın. Bu ipucu kullanıldığında istatistiklere yansımaz. Joker kelime bulunmadan ızgara tamamlanmış sayılmaz.
+
+Devam etmek istiyor musun?</div>
+    <label class="modal-check">
+      <input type="checkbox" id="jokerWordDontShowCheck">
+      <span id="i18nJokerWordDontShow">Bu mesajı tekrar gösterme.</span>
+    </label>
+    <div class="modal-buttons">
+      <button class="modal-btn btn-no" id="jokerWordNoBtn">Hayır</button>
+      <button class="modal-btn btn-yes" id="jokerWordYesBtn">Evet</button>
+    </div>
   </div>
 
   <!-- Confirm: Give Up? -->
@@ -1018,8 +1263,8 @@
         <line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
     </div>
-    <div class="modal-title">Pes mi ediyorsun?</div>
-    <div class="modal-desc">Eğer pes edersen, ızagaradaki cevap anahtarını görüntüleyecek ve eski oyuna dönemeyeceksin. Emin misin?</div>
+    <div class="modal-title" id="i18nConfirmTitle">Pes mi ediyorsun?</div>
+    <div class="modal-desc" id="i18nConfirmDesc" style="text-align: left;">Eğer pes edersen, ızagaradaki cevap anahtarını görüntüleyecek ve eski oyuna dönemeyeceksin. Emin misin?</div>
     <div class="modal-buttons">
       <button class="modal-btn btn-no" id="modalNoBtn">Hayır</button>
       <button class="modal-btn btn-yes" id="modalYesBtn">Evet</button>
@@ -1034,8 +1279,8 @@
         <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
       </svg>
     </div>
-    <div class="modal-title">Cevap Anahtarı</div>
-    <div class="modal-desc" style="margin-bottom: 0;">Kaçırdığın kelimeler kırmızı renkle işaretlendi.</div>
+    <div class="modal-title" id="i18nResultTitle">Cevap Anahtarı</div>
+    <div class="modal-desc" id="i18nResultDesc" style="margin-bottom: 0;">Kaçırdığın kelimeler kırmızı renkle işaretlendi.</div>
     <div class="answer-scroll" id="answerListContainer"></div>
     <button class="modal-btn btn-new-game" id="modalNewGameBtn">Yeni Oyun</button>
   </div>
@@ -1049,16 +1294,68 @@
         <line x1="6" y1="20" x2="6" y2="14"/>
       </svg>
     </div>
-    <div class="modal-title">İstatistikler</div>
-    <div class="modal-desc" style="margin-bottom: 16px;">Şimdiye kadarki oyun performansın:</div>
+    <div class="modal-title" id="i18nStatsTitle">İstatistikler</div>
+    <div class="modal-desc" id="i18nStatsDesc" style="margin-bottom: 16px;">Şimdiye kadarki oyun performansın:</div>
     <div class="stats-list">
       <div class="stat-row">
-        <span class="stat-label">Tamamlanan Izgara</span>
-        <span class="stats-val" id="statsCompleted" style="color: #16A34A;">0</span>
+        <span class="stat-label" id="i18nStatsCompletedLabel">Tamamlanan Izgara</span>
+        <div class="stat-copy">
+          <span class="stats-val" id="statsCompleted" style="color: #16A34A;">0</span>
+          <div class="stat-icon" style="color:#16A34A;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        </div>
       </div>
       <div class="stat-row">
-        <span class="stat-label">Pes Edilen Oyun</span>
-        <span class="stats-val" id="statsGaveUp" style="color: #DC2626;">0</span>
+        <span class="stat-label" id="i18nStatsGaveUpLabel">Pes Edilen Oyun</span>
+        <div class="stat-copy">
+          <span class="stats-val" id="statsGaveUp" style="color: #DC2626;">0</span>
+          <div class="stat-icon" style="color:#DC2626;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4v16"/>
+              <path d="M4 5h12l-3 4 3 4H4"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label" id="i18nStatsHintLabel">İpucu Kullanım Oranı</span>
+        <div class="stat-copy">
+          <span class="stats-val" id="statsHintRate">0.0</span>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18h6"/>
+              <path d="M10 22h4"/>
+              <path d="M8.5 14.5A6 6 0 1 1 15.5 14.5c-.9.6-1.5 1.6-1.5 2.5h-4c0-.9-.6-1.9-1.5-2.5z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label" id="i18nStatsJokerWordsLabel">Joker Kelimeler</span>
+        <div class="stat-copy">
+          <span class="stats-val" id="statsJokerWords">0</span>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2.8l2.7 5.47 6.04.88-4.37 4.26 1.03 6.01L12 16.58l-5.4 2.84 1.03-6.01-4.37-4.26 6.04-.88L12 2.8z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label" id="i18nStatsBestTimeLabel">Rekor Süre</span>
+        <div class="stat-copy">
+          <span class="stats-val" id="statsBestTime">-</span>
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="13" r="8"/>
+              <path d="M12 9v4l3 2"/>
+              <path d="M9 2h6"/>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
     <button class="modal-btn btn-close" id="modalStatsCloseBtn">Kapat</button>
@@ -1072,12 +1369,40 @@
         <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
       </svg>
     </div>
-    <div class="modal-title">Ayarlar</div>
-    <div class="modal-desc" style="margin-bottom: 16px;">Oyun tercihlerini buradan kişiselleştirebilirsin.</div>
+    <div class="modal-title" id="i18nSettingsTitle">Ayarlar</div>
+    <div class="modal-desc" id="i18nSettingsDesc" style="margin-bottom: 16px;">Oyun tercihlerini buradan kişiselleştirebilirsin.</div>
     <div class="settings-list">
+            <div class="setting-item">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; width:100%;">
+          <div class="setting-label" id="i18nSettingsResumeLabel">Izgarayı Hatırla</div>
+          <div class="theme-switch-group">
+            <button class="theme-btn active" id="resumeOnBtn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 8.5l3.5 3.5 8-8"/>
+              </svg>
+              <span id="i18nResumeOnText">Açık</span>
+            </button>
+            <button class="theme-btn" id="resumeOffBtn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="4" x2="12" y2="12"/>
+                <line x1="12" y1="4" x2="4" y2="12"/>
+              </svg>
+              <span id="i18nResumeOffText">Kapalı</span>
+            </button>
+          </div>
+        </div>
+        <div class="setting-sublabel">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;flex-shrink:0;margin-top:1px;">
+            <circle cx="8" cy="8" r="7"/>
+            <line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5" r="0.5" fill="currentColor" stroke="none"/>
+          </svg>
+          <span id="i18nSettingsResumeDesc">Açık olması durumunda oyun kaldığı yerden devam eder.</span>
+        </div>
+      </div>
       <div class="setting-item">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; width:100%;">
-          <div class="setting-label">Tema</div>
+          <div class="setting-label" id="i18nSettingsThemeLabel">Tema</div>
           <div class="theme-switch-group">
             <button class="theme-btn" id="themeLightBtn">
               <!-- Sun icon -->
@@ -1092,46 +1417,32 @@
                 <line x1="12.8" y1="3.2" x2="11.7" y2="4.3"/>
                 <line x1="4.3" y1="11.7" x2="3.2" y2="12.8"/>
               </svg>
-              Açık
+              <span id="i18nThemeLightText">Açık</span>
             </button>
             <button class="theme-btn" id="themeDarkBtn">
               <!-- Moon icon -->
               <svg viewBox="0 0 16 16" fill="currentColor">
                 <path d="M6 .278a.768.768 0 01.08.858 7.208 7.208 0 00-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 01.81.316.733.733 0 01-.031.893A8.349 8.349 0 018.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 016 .278z"/>
               </svg>
-              Koyu
+              <span id="i18nThemeDarkText">Koyu</span>
             </button>
           </div>
         </div>
       </div>
       <div class="setting-item">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; width:100%;">
-          <div class="setting-label">Izgarayı Hatırla</div>
+          <div class="setting-label" id="i18nSettingsLangLabel">Dil / Language</div>
           <div class="theme-switch-group">
-            <button class="theme-btn active" id="resumeOnBtn">
-              <!-- Checkmark / play icon for "on" -->
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 8.5l3.5 3.5 8-8"/>
-              </svg>
-              Açık
+            <button class="theme-btn active" id="langTrBtn">
+              TR
             </button>
-            <button class="theme-btn" id="resumeOffBtn">
-              <!-- X icon for "off" -->
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" y1="4" x2="12" y2="12"/>
-                <line x1="12" y1="4" x2="4" y2="12"/>
-              </svg>
-              Kapalı
+            <button class="theme-btn" id="langEnBtn">
+              EN
+            </button>
+            <button class="theme-btn" id="langFrBtn">
+              FR
             </button>
           </div>
-        </div>
-        <div class="setting-sublabel">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;flex-shrink:0;margin-top:1px;">
-            <circle cx="8" cy="8" r="7"/>
-            <line x1="8" y1="7" x2="8" y2="11"/>
-            <circle cx="8" cy="5" r="0.5" fill="currentColor" stroke="none"/>
-          </svg>
-          Açık olması durumunda oyun kaldığı yerden devam eder.
         </div>
       </div>
     </div>
@@ -1145,9 +1456,7 @@
 const initialTheme = localStorage.getItem('kelimer_theme') || 'light';
 if (initialTheme === 'dark') document.body.classList.add('dark-mode');
 
-// ══════════════════════════════════════════════════════════════
-//  GÜVENLİ VE TEKİLLEŞTİRİLMİŞ DEV SÖZLÜK HAVUZU
-// ══════════════════════════════════════════════════════════════
+// Türkçe kelime havuzu
 const DICTIONARY = [...new Set([
     // --- 6 HARFLİ ANA KELİMELER ---
   "ABDEST", "ACENTE", "ADALET", "AFRİKA", "AKARSU", "AKASYA", "AKRABA", "ALACAK",
@@ -1310,7 +1619,7 @@ const DICTIONARY = [...new Set([
   "OTOMAT", "OTURUM", "ÖDENEK", "ÖĞRETİ", "ÖĞÜTME", "ÖLÇÜLÜ", "ÖNCEKİ", "ÖNERME",
   "ÖNSEZİ", "ÖPÜCÜK", "ÖTÜŞME", "ÖYLECE", "ÖZENLİ", "PAHALI", "PANZER", "PARDON",
   "PARİTE", "PARKUR", "PARODİ", "PASTEL", "PATENT", "PATPAT", "PAYDAŞ", "PAYDOS",
-  "PEÇELİ", "PEKALA", "PELTEK", "PERHİZ", "PETROl", "PİDECİ", "PİKSEL", "PİNPON",
+  "PEÇELİ", "PEKALA", "PELTEK", "PERHİZ", "PETROL", "PİDECİ", "PİKSEL", "PİNPON",
   "PİŞKİN", "PİSTON", "PİYADE", "PLAKÇI", "PLANLI", "PLAZMA", "POLİÇE", "PONPON",
   "PORSUK", "PORTRE", "POSTER", "POSTİŞ", "PRATİK", "PROMİL", "PROTEZ", "PUSULA",
   "RAFİNE", "RAĞBET", "RAHMET", "REÇİNE", "REFORM", "REHİNE", "REPLİK", "RESMEN",
@@ -1341,6 +1650,35 @@ const DICTIONARY = [...new Set([
   "YASAMA", "YATILI", "YAYGIN", "YAYVAN", "YAZLIK", "YEGANE", "YETKİN", "YOKSUL",
   "YOLLUK", "YÜKLEM", "YÜZGEÇ", "YÜZYIL", "ZABITA", "ZAHMET", "ZANAAT", "ZEBANİ",
   "ZEVZEK", "ZEVKLİ", "ZİFİRİ", "ZIPKIN", "ZİRZOP", "ZİYNET", "ZORAKİ", "ZÜMRÜT",
+  "AFİŞÇİ", "AKINTI", "ALENEN", "ALEVLİ", "ALINTI", "AMORTİ", "ASETAT", "ATEŞLİ", 
+  "BENZER", "BİLSEL", "BİLİNÇ", "BİLYON", "BUZLUK", "BÜYÜCÜ", "CERRAH", "CİVARI", 
+  "ÇAYEVİ", "ÇINGAR", "ÇITÇIT", "ÇÖZÜCÜ", "DELİCE", "DİLSİZ", "DİNSEL", "DİŞSİZ", 
+  "ECNEBİ", "EGEMEN", "ERMENİ", "GADDAR", "GÖKSEL", "HALTER", "HAMİLE", "HARİCİ", 
+  "HASRET", "HASSAS", "HİZMET", "İKİNCİ", "İLGİLİ", "İNSANİ", "İŞARET", "İTİRAF", 
+  "İKİZLİ", "KAFKAS", "KANTİN", "KAPICI", "KARBON", "KATMAN", "KESKİN", "KIRBAÇ",  
+  "KOBALT", "KOMEDİ", "KOMİTE", "KONGRE", "KONTES", "KONTRA", "KOSTÜM", "KREMSİ", 
+  "KRİTER", "KRİTİK", "KUMRAL", "KURŞUN", "KURULU", "KUTSAL", "KUTULU", "KÜLLÜK", 
+  "KÜRKÇÜ", "KÜSTAH", "NALBUR", "NANKÖR", "NARKOZ", "NAVLUN", "NEBATİ", "NEBULA", 
+  "NEREDE", "NİTRAT", "NİZAMİ", "NÖTRON", "ODAKLI", "OKUMUŞ", "OLAYLI", "OLTACI", 
+  "OLUŞUM", "ONAYLI", "ONUNCU", "ORALIK", "ORANTI", "OTELCİ", "OTURAK", "OVALIK", 
+  "OYMALI", "ÖLÇÜCÜ", "ÖNERGE", "ÖRFSEL", "ÖRGÜLÜ", "ÖRTÜLÜ", "ÖZENTİ", "PARFÜM", 
+  "PATİKA", "PİYASA", "PLAKET", "PLANET", "PLATİN", "POETİK", "PRİZMA", "PROTON", 
+  "PULSUZ", "PÜSKÜL", "RADYAL", "RADYUM", "RAHMAN", "REKTÖR", "REZERV", "RİTMİK", 
+  "RİTÜEL", "RUHANİ", "RUMELİ", "SAATÇİ", "SAĞDIÇ", "SAĞLAM", "SAHİCİ", "SALKIM", 
+  "SAMİMİ", "SARKAÇ", "SARKIK", "SEÇİCİ", "SEÇİLİ", "SEFERİ", "SEYYAH", "SİNCAP", 
+  "SİYAMİ", "SOKRAT", "SORGUN", "STATİK", "SUNGUR", "SUYOLU", "ŞAKACI", "ŞALTER", 
+  "ŞEHVET", "ŞERİAT", "ŞEFKAT", "ŞERİFE", "ŞİMŞEK", "TABİAT", "TAHKİK", "TAHMİN", 
+  "TAHRİK", "TAHRİP", "TAKILI", "TANITI", "TAŞKIN", "TAVALI", "TECRİT", "TEDBİR", 
+  "TELAFİ", "ABAJUR", "AÇILIŞ", "AĞLAMA", "AĞRILI", "ALTLIK", "ANLATI", "ARAYIŞ", 
+  "ARITMA", "ARKALI", "ASKILI", "ASILLI", "AYIRMA", "AZALMA", "BASILI", "BENLİK", 
+  "BORÇLU", "BURKUK", "ÇAKILI", "ÇAPALI", "ÇATILI", "ÇENTİK", "ÇIKRIK", "ÇOKLUK",
+  "ÇÖMLEK", "DAĞEVİ", "EMEKÇİ", "EVLİYA", "FERACE", "FERSİZ", "FORMAL", "HAFIZA", 
+  "HALICI", "HALSİZ", "HAYRAT", "HİLELİ", "HİZALI", "ISIRIK", "ISIRMA", "İÇKİLİ", 
+  "İSİMLİ", "İŞLEME", "İŞYERİ", "KISACA", "KOLALI", "KUMSAL", "KÜSKÜN", "LİSELİ", 
+  "MAHSUL", "MANDAL", "MAZBUT", "MERCEK", "MERKEZ", "MEZHEP", "MİZAHİ", "NANELİ", 
+  "ÖDEVLİ", "ÖZVERİ", "PAKLIK", "PARALI", "PATLAK", "PİŞMAN", "PİSLİK", "SANSAR", 
+  "SÖYLEM", "TANIMA", "TATMİN", "TOPLAM", "UĞULTU", "UYANMA", "ÜÇÜNCÜ", "ÜZÜMLÜ", 
+  "VADELİ", "VANTUZ", "YAKICI", "YIKICI", "YÜZMEK", "ZAMANE", "ZIRHLI",
 
 
   // --- 5 HARFLİ TÜRETİLEN KELİMELER ---
@@ -1585,7 +1923,36 @@ const DICTIONARY = [...new Set([
   "YUFKA", "YÜKLÜ", "YÜREK", "YÜZME", "ZABIT", "ZAMİR", "ZARİF", "ZATEN",
   "ZEKAT", "ZEVAL", "ZERRE", "ZEVCE", "ZIBIN", "ZİFİR", "ZİNDE", "ZIRVA",
   "ZORBA", "ZORLA", "ZÜHRE", "ZÜLÜF", "ZULÜM", "ZURNA", "ASENA", "YAREN",
-  "ZİGON",
+  "ZİGON", "ACILI", "ACIMA", "BETER", "BİREY", "ÇIKIŞ", "ENAYİ", "EVVEL",
+  "FİZİK", "GAZAP", "GAZOZ", "GÜNAH", "GÜZEL", "HAKLI", "İKLİM", "KABİR",
+  "KAHVE", "KENAR", "KÖMÜR", "KÖYLÜ", "KURAL", "KURUL", "KURUM", "KÜTLE",
+  "KUZEY", "LÜGAT", "MAŞUK", "MÜZİK", "NİHAİ", "NİŞAN", "SAHTE", "SEVDA",
+  "SİLGİ", "SOĞAN", "SUCUK", "SURET", "SÜRAT", "ŞÖLEN", "TEKİL", "TESİS",
+  "TOZLU", "TÜMCE", "TÜTÜN", "VİDEO", "VİŞNE", "YARIM", "YAZGI", "YÜZEY",
+  "ZAHİR", "ABLAK", "AFAKİ", "AFİFE", "ALACA", "AMELİ", "ANCAK", "ANEMİ", 
+  "ANGUT", "ANTEN", "ANTET", "APRON", "ARABİ", "ARDIÇ", "ASILI", "ASİST", 
+  "AŞILI", "AŞLIK", "ATFEN", "ATICI", "AYMAZ", "AZADE", "BABUN", "BAKIŞ", 
+  "BALDO", "BALYA", "BASUR", "BEDİR", "BERİL", "BİLİR", "BOĞAÇ", "BÜZGÜ", 
+  "CAMİA", "CELİL", "CEMİL", "CİĞER", "CİRİM", "CİVİL", "ÇATMA", "ÇEKİŞ", 
+  "ÇELLO", "ÇİNCE", "ÇİVİT", "DEİZM", "DENET", "DERME", "DİLCİ", "DİYOT",
+  "DOĞUŞ", "DOLAY", "DÖNGÜ", "DÖNEL", "EDALI", "EVLAT", "EVCİL", "FELAH", 
+  "FERİK", "FETİH", "FETÜS", "FİGAN", "FİRAR", "FOSİL", "FRENK", "GAİLE", 
+  "GAMLI", "GAYRİ", "GEDİK", "GERÇİ", "GEYİK", "GIPTA", "GİYİM", "GÖBEK", 
+  "GÖLET", "GÜLLE", "GÜNCE", "GÜRUH", "HABBE", "HACET", "HACİZ", "HAKİR", 
+  "HALAY", "HALİÇ", "HARAP", "HERİF", "HIRLI", "HÖDÜK", "HÖYÜK", "HÜKMİ", 
+  "İÇLİK", "İHSAN", "İKBAL", "İLLET", "İLMİK", "İMLEÇ", "İNSAF", "İRİCE", 
+  "İSKAN", "İSYAN", "İZAFE", "JAPON", "KABİL", "KAÇIK", "KAKÜL", "KALAS", 
+  "KALIT", "KAMET", "KANİŞ", "KAPIŞ", "KATIK", "KATIR", "KATMA", "KEFEN", 
+  "KESAT", "KEYİF", "KIRMA", "KIYAK", "KIYAM", "KİLER", "KİSVE", "KLİMA", 
+  "KÖTEK", "KUBBE", "KUKLA", "KULAK", "KÜLÇE", "KÜLLİ", "KURAK", "KURAM",
+  "KURAN", "KURGU", "KURMA", "KUTLU", "KUYTU", "LAHİT", "LİFLİ", "LİRİK", 
+  "LODOS", "MACAR", "MALUM", "MAMUT", "MARUL", "MECAL", "MEMAT", "MENŞE", 
+  "METAL", "METİL", "MEVLA", "MEYİL", "MEZRA", "MİLAT", "MİLLİ", "MONTE",
+  "MORUK", "MUCUR", "MUŞTA", "MÜFİT", "MÜJDE", "MÜRİT", "NAKDİ", "NAZİK",
+  "NEFER", "NEŞİR", "NİKEL", "NİSPİ", "NİTEL", "NÖRON", "NURLU", "NÜKTE", 
+  "NÜSHA", "OĞLAK", "OKTAN", "ÖLÇER", "ÖNLÜK", "ÖZERK", "ÖZGÜL", "PALTO", 
+  "PARAF", "PAYET", "PENYE", "PİYAZ", "POLAT", "PÖTÜR", "RADDE", "RAKİP",
+  "SARIK", 
 
 
     // --- 4 HARFLİ TÜRETİLEN KELİMELER ---
@@ -1741,6 +2108,7 @@ const DICTIONARY = [...new Set([
   "TART", "TEFE", "TERK", "TEYP", "TRİP", "TUFA", "TUNÇ", "TURP",
   "TÜYO", "UÇAK", "UCUZ", "UHDE", "ULVİ", "UMMA", "ÜÇER", "ÜCRA",
   "ÜÇÜZ", "ÜMÜK", "VAAZ", "VİNÇ", "VOLE", "YAHU", "ZAAF", "ZİFT",
+  "ATAR", "İNİŞ", "UZUV",
 
 
     // --- 3 HARFLİ TÜRETİLEN KELİMELER ---
@@ -1805,7 +2173,588 @@ const DICTIONARY = [...new Set([
   "LAN", "LED", "MİM", "NİŞ", "PEY", "ROM", "ŞAD", "Şİİ",
   "ŞİŞ", "AUT", "TIN", "TIP", "TİK", "TİM", "TUT", "YAD",
   "BEJ", "BEZ", "BOL", "FAY", "GRİ", "HİN", "İLA", "KOY",
-  "NAS", "PAF", "PED", "RUJ", "TIĞ", "UFO", "UZİ"
+  "NAS", "PAF", "PED", "RUJ", "TIĞ", "UFO", "UZİ", "BOT", 
+  "DUT", "OTO", 
+])];
+
+// İngilizce kelime havuzu
+const DICTIONARY_EN = [...new Set([
+  // --- 6-LETTER WORDS ---
+  "ABROAD", "ABSENT", "ABSORB", "ACCEPT", "ACCESS", "ACCUSE", "ACROSS", "ACTION", "ACTIVE", "ACTING", 
+  "ACTUAL", "ADJUST", "ADMIRE", "ADVICE", "ADVISE", "AFFECT", "AFFAIR", "AFFORD", "AFRAID", "AGENCY", 
+  "AGENDA", "AGENTS", "ALBUMS", "ALIENS", "ALMOST", "ALPINE", "ALWAYS", "AMBUSH", "AMOUNT", "ANCHOR", 
+  "ANIMAL", "ANNUAL", "ANSWER", "ANYONE", "APPEAL", "APPEAR", "ARCADE", "ARCHER", "ARGUED", "ARISES", 
+  "ARMOUR", "AROUND", "ARRIVE", "ARTIST", "ASPECT", "ASSIST", "ASSUME", "ATTACK", "ATTEND", "AUBURN", 
+  "AUTHOR", "AUTUMN", "BACKUP", "BAKERY", "BALLET", "BANANA", "BANKER", "BANNER", "BARREL", "BATTLE", 
+  "BEACON", "BEAUTY", "BECOME", "BEFORE", "BEHALF", "BEHAVE", "BEHIND", "BELIEF", "BELONG", 
+  "BERLIN", "BETTER", "BEYOND", "BINARY", "BISHOP", "BLANKS", "BLEACH", "BLINDS", "BLOCKS", 
+  "BOARDS", "BOILER", "BORDER", "BORROW", "BOTHER", "BOTTLE", "BOTTOM", "BOUNCE", "BOWLER", "BOXING", 
+  "BRANCH", "BREACH", "BREEZE", "BRIDGE", "BRIGHT", "BROKEN", "BROKER", "BROWNS", "BUFFER", "BUNDLE", 
+  "BURGER", "BUTTON", "CABINS", "CAMERA", "CANDLE", "CANVAS", "CARBON", "CAREER", "CARGOS", "CARPET", 
+  "CARROT", "CASTLE", "CASUAL", "CAUGHT", "CAUSES", "CENTER", "CHANCE", "CHANGE", "CHARGE", 
+  "CHOICE", "CHOOSE", "CHOSEN", "CHURCH", "CIRCLE", "CLIENT", "CLOSED", "CLOSER", "COFFEE", "COLLAR", 
+  "COLONY", "COLUMN", "COMBAT", "COMEDY", "COMMIT", "COMMON", "COPPER", "CORNER", "COTTON", "COURSE", 
+  "CREATE", "CREDIT", "CRISIS", "CUSTOM", "DAMAGE", "DANGER", "DEBATE", "DEBRIS", "DECIDE", "DECREE", 
+  "DEFEND", "DEFEAT", "DEFINE", "DEGREE", "DEMAND", "DEMONS", "DEPEND", "DEPTHS", "DEPLOY", "DESERT", 
+  "DESIGN", "DESIRE", "DETAIL", "DEVICE", "DINNER", "DIRECT", "DOCTOR", "DOMAIN", "DOUBLE", "DRAGON", 
+  "DRAWER", "DREAMS", "DRIVER", "DURING", "EASILY", "EATING", "EDITOR", "EFFECT", "EFFORT", "EITHER", 
+  "ELEVEN", "EMBLEM", "ENABLE", "ENDING", "ENERGY", "ENGAGE", "ENGINE", "ENOUGH", "ENTIRE", "ESCAPE", 
+  "ESTATE", "ETHICS", "EVOLVE", "EXCEED", "EXCEPT", "EXCUSE", "EXPORT", "EXTEND", "FABRIC", "FACTOR", 
+  "FAILED", "FAIRLY", "FAMILY", "FAMOUS", "FARMER", "FATHER", "FELLOW", "FEMALE", "FIGURE", 
+  "FILTER", "FINALE", "FINDER", "FINGER", "FINISH", "FIRING", "FISHER", "FLIGHT", "FLOODS", "FLOWER", 
+  "FLUENT", "FLYING", "FOLLOW", "FORCED", "FOREST", "FORGET", "FORMAL", "FORMAT", "FORMER", "FRIEND", 
+  "FROZEN", "FUTURE", "GADGET", "GALAXY", "GARDEN", "GARLIC", "GATHER", "GENIUS", "GLOBAL", "GOLDEN", 
+  "GOVERN", "GRAVEL", "GROUND", "GROWTH", "GUITAR", "HANDLE", "HARBOR", "HARDLY", "HEADED", "HEADER", 
+  "HEALTH", "HEIGHT", "HELPER", "HIDDEN", "HONEST", "HUNGER", "HUNTER", "IGNORE", "IMPACT", "IMPORT", 
+  "INCOME", "INDEED", "INFANT", "INFORM", "INJURY", "INSIDE", "INTEND", "INVEST", "ISLAND", "JACKET", 
+  "JERSEY", "JUNGLE", "KIDNEY", "KITTEN", "KNIGHT", "LADDER", "LARGER", "LATEST", "LAUNCH", "LAWYER", 
+  "LEAGUE", "LEAVES", "LEGACY", "LEGEND", "LENGTH", "LETTER", "LIGHTS", "LIKELY", "LINEAR", "LIQUID", 
+  "LISTEN", "LITTLE", "LIVING", "LOCKER", "LONELY", "LOVELY", "MAGNET", "MANAGE", "MANNER", "MANUAL", 
+  "MARBLE", "MARKER", "MARKET", "MASTER", "MATTER", "MEADOW", "MEMBER", "MEMOIR", "MEMORY", "MENTAL", 
+  "MERELY", "METHOD", "MIDDLE", "MILLER", "MINING", "MINUTE", "MIRROR", "MOBILE", "MODERN", "MODULE", 
+  "MOMENT", "MONKEY", "MOTHER", "MOTION", "MOUNTS", "MUSEUM", "MUTUAL", "MYSELF", "NARROW", "NATION", 
+  "NATIVE", "NEARBY", "NEARER", "NEEDLE", "NERVES", "NOBODY", "NORMAL", "NOTICE", "NUMBER", "OBJECT", 
+  "OFFICE", "ONLINE", "OPTION", "ORANGE", "ORIGIN", "OUTPUT", "OXFORD", "PACKET", "PAINTS", "PALACE", 
+  "PARCEL", "PARENT", "PARKER", "PARROT", "PARTLY", "PASSED", "PEOPLE", "PERIOD", "PERSON", "PHRASE", 
+  "PICKED", "PILLOW", "PLANET", "PLAYER", "POCKET", "POLICE", "POLICY", "POLISH", "PORTAL", "POWDER", 
+  "PRETTY", "PRIEST", "PRINCE", "PRISON", "PROPER", "PUBLIC", "PUZZLE", "QUARTZ", "RANDOM", "RANGER", 
+  "RARELY", "RATHER", "READER", "REASON", "RECORD", "REDUCE", "REFORM", "REGION", "RELATE", "RELIEF", 
+  "REMAIN", "REMOTE", "REPAIR", "REPEAT", "REPORT", "RESCUE", "RESIST", "RESULT", "RETURN", "REVEAL", 
+  "RHYTHM", "RIBBON", "RIDDLE", "RIPPLE", "ROCKET", "ROLLER", "ROOFED", "ROSTER", "ROUTER", "RUBBER", 
+  "RULING", "RUNNER", "SAFETY", "SAILOR", "SALMON", "SAMPLE", "SAVING", "SCHEME", "SCHOOL", "SCREEN", 
+  "SCRIPT", "SEARCH", "SEASON", "SECOND", "SECRET", "SELECT", "SENIOR", "SERIES", "SERVER", "SHADOW", 
+  "SHARED", "SHIELD", "SHINER", "SHOULD", "SIGNAL", "SILENT", "SILVER", "SIMPLE", "SINGER", 
+  "SISTER", "SKETCH", "SOCCER", "SOCIAL", "SOCKET", "SOURCE", "SPIRIT", "SPREAD", "SPRING", "STABLE", 
+  "STANCE", "STAPLE", "STARTS", "STATUS", "STEADY", "STICKS", "STOLEN", "STREAM", "STREET", "STRIKE", 
+  "STRING", "STRONG", "STUDIO", "SUBMIT", "SUBWAY", "SUMMER", "SUPPLY", "SURELY", "SURVEY", "SWITCH", 
+  "SYMBOL", "SYSTEM", "TARGET", "TEMPLE", "TENNIS", "THANKS", "THEORY", "THRONE", "TICKET", "TIMBER", 
+  "TISSUE", "TOWARD", "TOWERS", "TRAVEL", "TREATY", "TUNNEL", "UNABLE", "UNIQUE", "UNITED", "UPDATE", 
+  "UPWARD", "URGENT", "USEFUL", "VACANT", "VALLEY", "VENDOR", "VERIFY", "VESSEL", "VICTIM", "VISION", 
+  "VISUAL", "VOYAGE", "WALNUT", "WEALTH", "WEAPON", "WEEKLY", "WEIGHT", "WINDOW", "WINNER", "WINTER", 
+  "WISDOM", "WITHIN", "WONDER", "WOODEN", "WORKER", "WRITER", "YELLOW", "ZEBRAS", "ZENITH", "BRONZE", 
+  "CEREAL", "COOKIE", "FOSSIL", "GARAGE", "GENTLE", "HAMMER", "LAGOON", "MARINE", "MUSCLE", "NATURE", 
+  "POTATO", "RABBIT", "SADDLE", "SPEECH", "SPIDER", "TOMATO", "TURTLE", "VELVET", "WIZARD", 
+
+
+  // --- 5-LETTER WORDS ---
+  "ABOUT", "ABOVE", "ACTOR", "ACUTE", "ADAPT", "ADMIT", "ADOPT", "ADORE", "ADULT", "AFTER", 
+  "AGAIN", "AGENT", "AGREE", "AHEAD", "ALARM", "ALBUM", "ALERT", "ALIEN", "ALIVE", "ALLOW", 
+  "ALONE", "ALONG", "ALTER", "AMBER", "AMONG", "ANGER", "ANGLE", "ANGRY", "APART", "APPLE", 
+  "APPLY", "ARENA", "ARGUE", "ARISE", "ARMOR", "ARROW", "ASIDE", "ASSET", "ATLAS", "AUDIO", 
+  "AVOID", "AWARD", "AWARE", "BADGE", "BAKER", "BALER", "BALMY", "BASIC", "BATCH", "BEACH", 
+  "BEGAN", "BEGIN", "BEING", "BELOW", "BENCH", "BERRY", "BIRTH", "BLACK", "BLAME", "BLAST", 
+  "BLEND", "BLESS", "BLIND", "BLOCK", "BLOOD", "BOARD", "BOOST", "BOOTH", "BOUND", "BRAIN", 
+  "BRAKE", "BRAND", "BRAVE", "BREAD", "BREAK", "BREED", "BRICK", "BRIDE", "BRIEF", "BRING", 
+  "BROAD", "BROKE", "BROWN", "BRUSH", "BUILD", "BURST", "BUYER", "CABLE", "CACHE", "CAMEL", 
+  "CANDY", "CANOE", "CARGO", "CARVE", "CATCH", "CAUSE", "CHAIN", "CHAIR", "CHALK", "CHANT", 
+  "CHAOS", "CHARM", "CHASE", "CHEAP", "CHECK", "CHEST", "CHIEF", "CHILD", "CHILL", "CHOIR", 
+  "CHOKE", "CHORD", "CIVIL", "CLAIM", "CLASS", "CLEAN", "CLEAR", "CLERK", "CLICK", "CLIMB", 
+  "CLOCK", "CLOSE", "CLOUD", "COACH", "COAST", "COLOR", "COMET", "COMIC", "COUNT", "COURT", 
+  "COVER", "CRACK", "CRAFT", "CRANE", "CRASH", "CRAWL", "CRAZY", "CREAM", "CREEK", "CRIME", 
+  "CROSS", "CROWD", "CROWN", "CRUDE", "CRUEL", "CURVE", "CYCLE", "DAILY", "DAIRY", "DANCE", 
+  "DATED", "DEALT", "DEATH", "DEBUT", "DECAY", "DELAY", "DEPTH", "DEVIL", "DIARY", "DINER", 
+  "DIRTY", "DOING", "DOUBT", "DOZEN", "DRAFT", "DRAMA", "DRAWN", "DREAM", "DRESS", "DRIFT", 
+  "DRILL", "DRINK", "DRIVE", "DROVE", "EARLY", "EARTH", "EIGHT", "ELBOW", "ELDER", "ELECT", 
+  "ELITE", "EMPTY", "ENJOY", "ENTER", "ENTRY", "EQUAL", "ERROR", "EVENT", "EVERY", "EXACT", 
+  "EXILE", "EXIST", "EXTRA", "FAITH", "FALSE", "FAULT", "FAVOR", "FEAST", "FENCE", "FEVER", 
+  "FIELD", "FIERY", "FIFTH", "FIFTY", "FIGHT", "FINAL", "FINER", "FIRST", "FLAME", "FLASH", 
+  "FLEET", "FLESH", "FLOAT", "FLOOD", "FLOOR", "FLOUR", "FLUID", "FOCUS", "FORCE", "FORTE", 
+  "FORTH", "FORTS", "FORTY", "FOUND", "FRAME", "FRAUD", "FRESH", "FRONT", "FROST", "FRUIT", 
+  "FUNNY", "GIANT", "GLASS", "GLOBE", "GLORY", "GLOVE", "GOING", "GOURD", "GRACE", "GRADE", 
+  "GRAIN", "GRAND", "GRANT", "GRASS", "GRAVE", "GREAT", "GREEN", "GREET", "GRIEF", "GRILL", 
+  "GROAN", "GROSS", "GROUP", "GROWN", "GUARD", "GUESS", "GUEST", "GUIDE", "HABIT", "HAPPY", 
+  "HARSH", "HASTE", "HATCH", "HAUNT", "HEART", "HEAVY", "HONEY", "HONOR", "HORSE", "HOTEL", 
+  "HOUSE", "HUMAN", "HUMOR", "HURRY", "IDEAL", "IMAGE", "INDEX", "INERT", "INNER", "INPUT", 
+  "INTER", "ISSUE", "IVORY", "JELLY", "JEWEL", "JOINT", "JOKER", "JUDGE", "JUICE", "KNIFE", 
+  "KNOWN", "LABEL", "LABOR", "LADEN", "LARGE", "LASER", "LATER", "LAUGH", "LAYER", "LEARN", 
+  "LEASE", "LEAST", "LEMON", "LEVEL", "LIGHT", "LIMES", "LIMIT", "LINER", "LIVER", "LOCAL", 
+  "LOGIC", "LOOSE", "LOVER", "LOWER", "LOYAL", "LUCKY", "LUNCH", "LYRIC", "MAGIC", "MAJOR", 
+  "MAKER", "MAPLE", "MARCH", "MARES", "MATCH", "MATES", "MAYBE", "MAYOR", "MEDAL", "MEDIA", 
+  "MERCY", "METAL", "METER", "MIGHT", "MILES", "MINER", "MINOR", "MODEL", "MONEY", "MONTH", 
+  "MORAL", "MOTOR", "MOUNT", "MOUSE", "MOUTH", "MOVIE", "MUSIC", "NAKED", 
+  "NEEDS", "NEVER", "NIGHT", "NOBLE", "NOISE", "NORTH", "NOVEL", "NURSE", "OASIS", "OCEAN", 
+  "OFFER", "OLIVE", "OPERA", "ORBIT", "ORDER", "ORGAN", "OTHER", "OUTER", "OWNER", "PADDLE", 
+  "PAINT", "PANEL", "PANIC", "PAPER", "PARTY", "PATCH", "PAUSE", "PEACE", "PEARL", "PENNY", 
+  "PETAL", "PHASE", "PHONE", "PHOTO", "PIANO", "PIECE", "PILOT", "PITCH", "PIZZA", "PLACE", 
+  "PLAIN", "PLANE", "PLANT", "PLATE", "PLEAT", "POINT", "POKER", "POLAR", "POLKA", "POUND", 
+  "POWER", "PRESS", "PRICE", "PRIDE", "PRIME", "PRINT", "PRIOR", "PRIZE", "PROOF", "PROUD", 
+  "PROVE", "QUEEN", "QUEST", "QUICK", "QUIET", "QUILT", "QUITE", "RADAR", "RADIO", "RAISE", 
+  "RAKED", "RANCH", "RANGE", "RAPID", "RATES", "RATIO", "RAVEL", "REACH", "REACT", "READY", 
+  "REALM", "REAMS", "REBEL", "REFER", "REIGN", "RELAX", "RELAY", "RENEW", "REPLY", "RHYME", 
+  "RIDER", "RIFLE", "RIGHT", "RIVAL", "RIVER", "ROAST", "ROBOT", "ROCKY", "ROGUE", "ROUGH", 
+  "ROUND", "ROUTE", "ROYAL", "RUGBY", "RULER", "RURAL", "SAFER", "SAINT", "SALAD", "SCALE", 
+  "SCENE", "SCOPE", "SCORE", "SCOUT", "SCREW", "SENSE", "SERVE", "SEVEN", "SHADE", "SHAKE", 
+  "SHALL", "SHAPE", "SHARE", "SHARK", "SHARP", "SHEEP", "SHEET", "SHELF", "SHELL", "SHIFT", 
+  "SHINE", "SHIRT", "SHOCK", "SHOOT", "SHORT", "SHOUT", "SHOWN", "SIGMA", "SILKY", 
+  "SMILE", "SMOKE", "SNORT", "SOLAR", "SOLID", "SOLVE", "SOUND", "SOUTH", "SPACE", "SPARE", 
+  "SPEAK", "SPEED", "SPELL", "SPEND", "SPICE", "SPIKE", "SPINE", "SPITE", "SPLIT", "SPORT", 
+  "SPRAY", "SQUAD", "STAFF", "STAGE", "STAIR", "STAKE", "STALE", "STAMP", "STAND", "START", 
+  "STATE", "STEAK", "STEAL", "STEAM", "STEEL", "STEEP", "STICK", "STILL", "STOCK", "STONE", 
+  "STORE", "STORM", "STORY", "STRIP", "STUCK", "STUDY", "STUFF", "STYLE", "SUGAR", "SUITE", 
+  "SUPER", "SWEET", "SWIFT", "SWING", "SWORD", "TABLE", "TAKEN", "TAKER", "TALES", "TAMES", 
+  "TASTE", "TEACH", "TEAMS", "TEARS", "TEMPO", "TENSE", "THANK", "THEME", "THERE", "THICK", 
+  "THING", "THINK", "THORN", "THOSE", "THREE", "THROW", "TIGER", "TIGHT", "TIMES", 
+  "TIRED", "TITLE", "TODAY", "TOKEN", "TONGS", "TONIC", "TOOLS", "TOOTH", "TOPIC", "TORCH", 
+  "TOTAL", "TOUCH", "TOUGH", "TOWER", "TRACE", "TRACK", "TRADE", "TRAIL", "TRAIN", "TREAT", 
+  "TREND", "TRIAL", "TRIBE", "TRICK", "TRUCK", "TRULY", "TRUNK", "TRUST", "TRUTH", "TULIP", 
+  "TUNER", "TUNES", "TWICE", "TWINE", "UNCLE", "UNDER", "UNION", "UNITY", "UPPER", "URBAN", 
+  "USAGE", "USUAL", "VAGUE", "VALID", "VALUE", "VAPOR", "VENOM", "VENUE", "VERSE", "VIDEO", 
+  "VIRUS", "VISIT", "VITAL", "VOICE", "VOTER", "WAGON", "WASTE", "WATCH", "WATER", "WEIGH", 
+  "WEIRD", "WHALE", "WHEAT", "WHEEL", "WHERE", "WHILE", "WHITE", "WHOLE", "WIDEN", "WIDTH", 
+  "WITCH", "WORLD", "WORRY", "WORTH", "WOULD", "WRIST", "WRITE", "WRONG", "YACHT", "YEARN", 
+  "YIELD", "YOUNG", "YOUTH", "ZEBRA", "BLADE", "GHOST", "GOOSE", "PEACH", "SNAKE", "SLEEP", 
+  "SMALL", 
+
+
+  // --- 4-LETTER WORDS ---
+  "ABLE", "ACID", "AGED", "AIDE", "AIMS", "AIRS", "ALLY", "ALTO", "AMEN", "AMID", 
+  "ARCH", "AREA", "ARMS", "ARMY", "ARTS", "ATOM", "AUNT", "AUTO", "BACK", "BAKE", 
+  "BALD", "BALL", "BAND", "BANK", "BARE", "BARK", "BARN", "BASE", "BATH", "BEAM", 
+  "BEAN", "BEAR", "BEAT", "BEEF", "BEEN", "BEER", "BELL", "BELT", "BEND", "BEST", 
+  "BIKE", "BIRD", "BITE", "BLOW", "BLUE", "BOAT", "BODY", "BOLD", "BOLT", "BOND", 
+  "BONE", "BOOK", "BOOM", "BOOT", "BORN", "BOSS", "BOTH", "BOWL", "BULK", "BURN", 
+  "BURY", "BUSH", "BUSY", "CALL", "CALM", "CAME", "CAMP", "CARD", "CARE", "CART", 
+  "CASE", "CASH", "CAST", "CAVE", "CELL", "CHAT", "CHEF", "CHEW", "CHIP", "CITY", 
+  "CLAM", "CLAY", "CLUB", "CLUE", "COAL", "COAT", "CODE", "COIN", "COLD", "COME", 
+  "COOK", "COOL", "COPE", "COPY", "CORD", "CORN", "COST", "CREW", "CROP", "CROW", 
+  "CUBE", "CURE", "CURB", "CURL", "DALE", "DARE", "DARK", "DARN", "DATA", "DAWN", 
+  "DAYS", "DEAL", "DEAN", "DEAR", "DEBT", "DECK", "DEED", "DEEP", "DEER", "DESK", 
+  "DIAL", "DICE", "DIET", "DIME", "DINE", "DISH", "DISK", "DOCK", "DOES", "DOLL", 
+  "DOOR", "DOSE", "DOWN", "DRAW", "DREW", "DROP", "DRUM", "DUAL", "DUCK", 
+  "DUNG", "DUST", "DUTY", "EACH", "EARL", "EARN", "EARS", "EASE", "EAST", "EASY", 
+  "EDGE", "ELSE", "ERAS", "EVEN", "EVER", "EVIL", "EXAM", "EXIT", "FACE", "FACT", 
+  "FADE", "FAIL", "FAIR", "FALL", "FAME", "FARM", "FAST", "FATE", "FEAR", "FEED", 
+  "FEEL", "FEET", "FELL", "FELT", "FERN", "FILE", "FILL", "FILM", "FIND", "FINE", 
+  "FIRE", "FIRM", "FISH", "FIST", "FIVE", "FLAG", "FLAT", "FLEW", "FLOW", "FOWL", 
+  "FOAM", "FOOD", "FOOL", "FOOT", "FORD", "FORE", "FORK", "FORM", "FORT", "FREE", 
+  "FROM", "FUEL", "FULL", "FUND", "GAIN", "GAME", "GATE", "GEAR", "GENE", "GIFT", 
+  "GIRL", "GIVE", "GLAD", "GOAL", "GOAT", "GOLD", "GOLF", "GONE", "GOOD", "GOWN", 
+  "GRAN", "GRAY", "GRID", "GRIN", "GRIP", "GROW", "GULF", "HAIR", "HALE", "HALF", 
+  "HALL", "HAND", "HANG", "HARD", "HARM", "HATE", "HAVE", "HEAD", "HEAL", "HEAR", 
+  "HEAT", "HELD", "HELL", "HELP", "HERB", "HERO", "HIDE", "HIGH", "HIKE", "HILL", 
+  "HINT", "HIRE", "HOLD", "HOLE", "HOLY", "HOME", "HONE", "HOOK", "HOPE", "HORN", 
+  "HOST", "HOUR", "HUGE", "HUNT", "HURT", "IDEA", "INCH", "IRON", "ISLE", "ITEM", 
+  "JAZZ", "JOIN", "JOKE", "JUMP", "JURY", "JUST", "KEEP", "KICK", "KIND", "KING", 
+  "KISS", "KITE", "KNEE", "KNIT", "LACE", "LACK", "LADY", "LAKE", "LAMB", "LAND", 
+  "LANE", "LAST", "LATE", "LAWN", "LEAD", "LEAF", "LEAN", "LEAP", "LEFT", "LEND", 
+  "LENS", "LESS", "LIFE", "LIFT", "LIKE", "LIME", "LINE", "LINK", "LION", "LIST", 
+  "LIVE", "LOAD", "LOAF", "LOAN", "LOCK", "LOGO", "LONE", "LONG", "LOOK", "LOOP", 
+  "LORD", "LORE", "LOSE", "LOSS", "LOUD", "LOVE", "LUCK", "LUNG", 
+  "MADE", "MAIL", "MAIN", "MAKE", "MALE", "MALL", "MANY", "MARE", "MARK", "MARS", 
+  "MASK", "MASS", "MATE", "MATH", "MEAL", "MEAN", "MEAT", "MELT", "MENU", "MERE", 
+  "MESH", "MICE", "MILD", "MILE", "MILK", "MIND", "MINE", "MINT", "MISS", "MODE", 
+  "MOOD", "MOON", "MORE", "MOST", "MOVE", "MUCH", "MULE", "MUST", "NAME", "NAVY", 
+  "NEAR", "NEAT", "NECK", "NEED", "NEWS", "NEWT", "NEXT", "NICE", "NICK", "NINE", 
+  "NODE", "NOSE", "NOTE", "OAKS", "OATH", "OBEY", "ODDS", "ONCE", "ONLY", "OPEN", 
+  "ORAL", "OVAL", "OVEN", "OVER", "OWLS", "PACE", "PACK", "PAGE", "PAID", "PAIL", 
+  "PAIN", "PAIR", "PALE", "PALM", "PANE", "PARK", "PART", "PASS", "PAST", "PATH", 
+  "PEAK", "PEAR", "PEAT", "PENS", "PICK", "PILE", "PINE", "PINK", "PIPE", "PLAN", 
+  "PLAY", "PLOT", "PLUG", "PLUS", "POEM", "POET", "POLE", "POOL", "POOR", "PORT", 
+  "POSE", "POST", "POUR", "PRAY", "PREP", "PURE", "RACE", "RAGE", "RAIL", "RAIN", 
+  "RAKE", "RAMP", "RANK", "RATE", "RAVE", "READ", "REAL", "REAM", "REAR", "REIN", 
+  "RENT", "REST", "RICE", "RICH", "RIDE", "RIFE", "RILE", "RING", "RISE", "RISK", 
+  "RITE", "ROAD", "ROAR", "ROCK", "ROLE", "ROLL", "ROOF", "ROOM", "ROOT", "ROPE", 
+  "ROSE", "ROTE", "ROTS", "ROWS", "RULE", "RUNG", "RUSH", "RUST", "SAFE", 
+  "SAIL", "SALE", "SALT", "SAME", "SAND", "SAVE", "SEAL", "SEAM", "SEAT", "SEED", 
+  "SEEK", "SEEM", "SEEN", "SELF", "SELL", "SEND", "SENT", "SHIP", "SHOP", "SHOT", 
+  "SHOW", "SHUT", "SICK", "SIDE", "SIGN", "SILK", "SING", "SITE", "SIZE", "SKIN", 
+  "SLIP", "SLIM", "SLOW", "SNOW", "SOFT", "SOIL", "SOLD", "SOLE", "SOME", "SONG", 
+  "SOON", "SORT", "SOUL", "SPIN", "SPOT", "STAR", "STAY", "STEM", "STEP", "STIR", 
+  "STOP", "SUCH", "SUIT", "SURE", "SWIM", "SYNC", "TAKE", "TALE", "TALK", "TALL", 
+  "TAME", "TANK", "TASK", "TEAM", "TEAR", "TECH", "TELL", "TEND", "TENT", "TERM", 
+  "TEST", "TEXT", "THAN", "THAT", "THEM", "THEN", "THEY", "THIN", "THIS", "TIDE", 
+  "TIED", "TIME", "TIRE", "TOLD", "TONE", "TONG", "TONS", "TOOK", "TOOL", "TORE", 
+  "TORN", "TOUR", "TOWN", "TRAM", "TRAP", "TREE", "TREK", "TRIM", "TRIP", "TRUE", 
+  "TUBE", "TUNE", "TURN", "TWIN", "TYPE", "UNIT", "UPON", "USED", "USER", "VALE", 
+  "VARY", "VEAL", "VEIL", "VERY", "VICE", "VIEW", "VILE", "VINE", "VOTE", "WAGE", 
+  "WAIT", "WAKE", "WALK", "WALL", "WANT", "WARM", "WARN", "WASH", "WAVE", "WEAK", 
+  "WEAR", "WEEK", "WELL", "WENT", "WEST", "WHAT", "WHEN", "WIDE", "WIFE", "WILD", 
+  "WILL", "WIND", "WINE", "WING", "WIRE", "WISE", "WISH", "WITH", "WOES", "WOLF", 
+  "WOOD", "WOOL", "WORD", "WORK", "WREN", "YARD", "YARN", "YEAR", "YELL", "YOUR", 
+  "ZERO", "ZONE", "BABY", "CAKE", "CAGE", "DOVE", "FROG", "LAMP", "NOON", "ROBE", 
+  "SOAP", "VASE", "VEIN", "WORM", 
+
+
+  // --- 3-LETTER WORDS ---
+  "ACE", "ACT", "ADD", "ADO", "AGE", "AGO", "AID", "AIM", "AIR", "ALE", "ALL", "AND", 
+  "ANT", "ANY", "APE", "APT", "ARC", "ARE", "ARK", "ARM", "ART", "ASH", "ASK", "ATE", 
+  "AWE", "BAD", "BAG", "BAN", "BAR", "BAT", "BAY", "BED", "BEE", "BEG", "BET", "BID", 
+  "BIG", "BIN", "BIT", "BOG", "BOO", "BOW", "BOX", "BOY", "BRA", "BUD", "BUG", "BUN", 
+  "BUS", "BUT", "BUY", "CAB", "CAN", "CAP", "CAR", "CAT", "COD", "COG", "CON", "COP", 
+  "COT", "COW", "CUP", "CUT", "DAM", "DAY", "DEN", "DEW", "DID", "DIG", "DIM", 
+  "DIN", "DIP", "DOG", "DON", "DOT", "DRY", "DUB", "DUE", "DUG", "DUO", "EAR", "EAT", 
+  "EEL", "EGG", "ELF", "ELK", "ELM", "END", "ERA", "EVE", "EWE", "EYE", "FAN", "FAR", 
+  "FAT", "FAX", "FED", "FEE", "FEW", "FIG", "FIN", "FIR", "FIT", "FIX", "FLY", "FOE", 
+  "FOG", "FOR", "FOX", "FUN", "FUR", "GAP", "GAS", "GEL", "GEM", "GET", "GIN", "GOD", 
+  "GOT", "GUM", "GUN", "GUT", "GUY", "GYM", "HAD", "HAM", "HAS", "HAT", "HAY", "HEM", 
+  "HEN", "HER", "HID", "HIM", "HIP", "HIS", "HIT", "HOG", "HOP", "HOT", "HOW", "HUB", 
+  "HUE", "HUG", "HUM", "HUT", "ICE", "ICY", "ILL", "INK", "INN", "ION", "IRK", "IVY", 
+  "JAM", "JAR", "JAW", "JET", "JOB", "JOG", "JOY", "JUG", "KEY", "KID", "KIN", "KIT", 
+  "LAB", "LAD", "LAG", "LAP", "LAW", "LAY", "LED", "LEG", "LET", "LID", "LIE", "LIP", 
+  "LIT", "LOG", "LOT", "LOW", "MAD", "MAN", "MAP", "MAR", "MAT", "MAX", "MAY", "MEN", 
+  "MET", "MIX", "MOB", "MOD", "MOM", "MOO", "MOP", "MUD", "MUG", "NAP", "NET", "NEW", 
+  "NIL", "NIP", "NOD", "NOR", "NOT", "NUN", "NUT", "OAK", "OAR", "OAT", "ODD", "OFF", 
+  "OHM", "OIL", "OLD", "ONE", "ORB", "ORE", "OUR", "OUT", "OWL", "OWE", "PAD", "PAL", 
+  "PAN", "PAR", "PAT", "PAW", "PAY", "PEA", "PEG", "PEN", "PET", "PIE", "PIG", "PIN", 
+  "PIT", "PLY", "POD", "POP", "POT", "PRO", "PUB", "PUG", "PUN", "PUP", "PUT", "RAG", 
+  "RAM", "RAN", "RAP", "RAT", "RAW", "RAY", "RED", "RIB", "RID", "RIG", "RIM", "RIP", 
+  "ROB", "ROD", "ROT", "ROW", "RUB", "RUG", "RUN", "RUT", "RYE", "SAD", "SAG", "SAP", 
+  "SAT", "SAW", "SAY", "SEA", "SEE", "SET", "SEW", "SHE", "SHY", "SIN", "SIP", "SIR", 
+  "SIT", "SKY", "SLY", "SON", "SOP", "SOW", "SOY", "SPA", "SPY", "SUM", "SUN", "TAB", 
+  "TAG", "TAN", "TAP", "TAX", "TEA", "TEN", "THE", "TIE", "TIN", "TIP", "TOE", "TON", 
+  "TOO", "TOP", "TOY", "TRY", "TUB", "TUG", "TWO", "URN", "USE", "VAN", "VAT", "VET", 
+  "VEX", "VIE", "WAR", "WAS", "WAY", "WEB", "WED", "WET", "WHO", "WHY", "WIN", "WIT", 
+  "WOE", "WON", "WOW", "YAK", "YAM", "YAP", "YES", "YET", "YOU", "ZAP", "ZIP", "ZOO",
+  "AXE"
+])];
+
+function getActiveDictionary() {
+  const lang = localStorage.getItem(LANG_KEY);
+  if (lang === 'en') return DICTIONARY_EN;
+  if (lang === 'fr') return DICTIONARY_FR;
+  return DICTIONARY;
+}
+
+// Fransızca kelime havuzu
+const DICTIONARY_FR = [...new Set([
+  // --- MOTS DE 6 LETTRES ---
+  "MONTRE", "PIRATE", "CINEMA", "CHALET", "SIMPLE", "PLANTE",
+  "RAPIDE", "MARCHE", "SOLEIL", "PAREIL", "CHEMIN", "TORCHE",
+  "ALERTE", "PALIER", "MORTEL", "CARNET", "TRISTE", "FORMES",
+  "CLAMER", "CAUSER", "REPOSE", "GARDER", "ACTEUR", "ACTION", 
+  "ADORER", "AGENDA", "AGNEAU", "AIMANT", "ANIMAL", "ANNEAU", 
+  "APPORT", "ARGENT", "ARRIVE", "ASTUCE", "ATTEND", "AUTOUR", 
+  "AVENIR", "AVIONS", "AVOCAT", "BAGAGE", "BALCON", 
+  "BANQUE", "BARRER", "BASKET", "BATEAU", "BATTRE", "BEAUTE", 
+  "BESOIN", "BEURRE", "BLONDE", "BLOUSE", "BOBINE", "BONBON", 
+  "BOSSER", "BOUCHE", "BOUCLE", "BOUGIE", "BOULOT", "BOUTON", 
+  "BOURRE", "BRIQUE", "BRONZE", "BROSSE", "BRUTAL", "BUREAU", 
+  "CABINE", "CACHET", "CACTUS", "CADEAU", "CAHIER", "CAISSE", 
+  "CALCUL", "CALMER", "CAMION", "CANAPE", "CANARD", "CANNES", 
+  "CANYON", "CAPTER", "CARAFE", "CARTES", "CARTON", "CASINO", 
+  "CASQUE", "CAVIAR", "CENTRE", "CERCLE", "CERISE", "CHAISE", 
+  "CHANCE", "CHANTE", "CHASSE", "CHATON", "CHAUDE", "CHAUVE", 
+  "CHEVAL", "CHEVEU", "CHIENS", "CHIMIE", "CHOSES", "CHROME", 
+  "CIMENT", "CIRQUE", "CITRON", "CIVILE", "CLASSE", 
+  "CLIENT", "CLIMAT", "CLOCHE", "CLOWNS", "COCHON", "COFFRE", 
+  "COLERE", "COLLER", "COMBAT", "COMITE", "COMPTE", "CONTES", 
+  "COPAIN", "COPIER", "CORDON", "CORNES", "COUCOU", "COUPER", 
+  "COUPLE", "COURGE", "COURIR", "COUSIN", "COUTER", "CRABES", 
+  "CRAYON", "CREMES", "CREPES", "CROIRE", "CUIVRE", "CYCLES", 
+  "DANGER", "DANSER", "DEBATS", "DEBOUT", "DEDANS", "DEFAUT", 
+  "DEGRES", "DEHORS", "DELICE", "DEMAIN", "DEPART", "DESSIN", 
+  "DEVOIR", "DICTEE", "DIESEL", "DINERS", "DICTON", "DIRECT", 
+  "DISQUE", "DOIGTS", "DONNER", "DORMIR", "DOUBLE", "DOUCHE", 
+  "DRAPES", "DROITE", "DROLES", "DURANT", "ECLAIR", "ECLUSE", 
+  "ECOUTE", "ECRANS", "ECRASE", "ECRIRE", "ECURIE", "EFFETS", 
+  "EFFORT", "EGLISE", "ELEVES", "EMAILS", "EMPIRE", "EMPLOI", 
+  "ENCORE", "ENFANT", "ENGINS", "ENLEVE", "ENNEMI", "ENTIER", 
+  "ENTREE", "ENVOYE", "EPAULE", "EPICES", "EPOQUE", "EQUIPE", 
+  "ERREUR", "ESCALE", "ESPOIR", "ESPRIT", "ESTIME", "ETAPES", 
+  "ETANGS", "ETOILE", "ETROIT", "ETUDES", "EVITER", "EVOLUE", 
+  "EXPERT", "FACILE", "FAIBLE", "FAISAN", "FARCES", "FARINE", 
+  "FAVEUR", "FEMMES", "FENDRE", "FERMER", "FESTIN", "FIANCE", 
+  "FIBRES", "FICHES", "FIERTE", "FIEVRE", "FIGURE", "FILLES", 
+  "FILMER", "FISCAL", "FLACON", "FLAIRE", "FLAMME", "FLEURS", 
+  "FLEUVE", "FLOCON", "FLUIDE", "FOIRES", "FONDRE", "FORCEE", 
+  "FORAGE", "FORETS", "FORGER", "FORMER", "FORTES", "FOSSES", 
+  "FOULES", "FOURMI", "FOYERS", "FRAISE", "FRAPPE", "FRERES", 
+  "FRICHE", "FRISES", "FROIDS", "FRUITS", "FUSEES", "FUSILS", 
+  "FUTURS", "GAGNER", "GAINES", "GALERE", "GAMMES", "GARAGE", 
+  "GARCON", "GAUCHE", "GAUFRE", "GEANTE", "GENOUX", "GENTIL", 
+  "GERMES", "GESTES", "GEYSER", "GIBIER", "GIFLES", "GIRAFE", 
+  "GLACES", "GLISSE", "GLOBES", "GLOIRE", "GOMMES", "GORGES", 
+  "GOUTER", "GOUTTE", "GRACES", "GRADES", "GRAINE", 
+  "GRAMME", "GRANDE", "GRANDS", "GRAPHE", "GRATIN", "GRAVES", 
+  "GREFFE", "GRESIL", "GRIFFE", "GRIGRI", "GRILLE", "GRIPPE", 
+  "GRISES", "GROTTE", "GROUPE", "GUERIR", "GUERRE", "GUIDES", 
+  "HABITS", "HACHER", "HACHES", "HANGAR", "HANTER", "HARPES", 
+  "HASARD", "HAUSSE", "HAUTES", "HERBES", "HEURES", "HIBOUX", 
+  "HOCKEY", "HOMMES", "HOTELS", "HUILES", "HUMAIN", "HUMEUR", 
+  "HUMIDE", "HYMNES", "MAISON", "JARDIN", "NATURE", "ORANGE", 
+  "TOMATE", "PAPIER", "OISEAU", "SOURIS", "RACINE", "SAVOIR", 
+  "PARLER", "MANGER", "POIVRE", "POULET", "VIOLET", "ROUTES",
+  "NUAGES", "SABLES", "POMMES", "LIVRES", "PLAGES", "ROCHER",
+
+
+  // --- MOTS DE 5 LETTRES ---
+  "MONTE", "NOTER", "TONER", "TENOR", "RENOM", "TAPIR", "PAIRE", "ANIME", 
+  "MANIE", "ECLAT", "LACHE", "LIMES", "PLANE", "PLATE", "PANEL", "AIDER", 
+  "ARCHE", "MAROC", "MINCE", "CHIEN", "NICHE", "ALTER", "PERIL", "PLIER", 
+  "PILER", "MOTEL", "TOTEM", "NACRE", "CRANE", "TRACE", "TIRES", "TRIES", 
+  "RITES", "SAUCE", "CAUSE", "SUCRE", "PROSE", "PORES", "ACHAT", "ACTIF", 
+  "ADIEU", "AGENT", "AGILE", "AIGLE", "AIMER", "AINSI", "ALBUM", "ALLEE", 
+  "ALLER", "ALORS", "AMANT", "AMBRE", "AMOUR", "AMPLE", "ANCRE", "ANGLE", 
+  "ANNEE", "APPEL", "APPUI", "ARBRE", "ARENE", "ARMEE", "ARMER", "ARRET", 
+  "ASSEZ", "ASSIS", "ASTRE", "ATOME", "ATOUT", "AUCUN", "AUDIO", "AUTEL", 
+  "AUTRE", "AVANT", "AVARE", "AVION", "AVOIR", "AVRIL", "BADGE", "BAGUE", 
+  "BAINS", "BALLE", "BANCS", "BANDE", "BANJO", "BARBE", "BARRE", "BASSE", 
+  "BATON", "BATTE", "BEAUX", "BELGE", "BELLE", "BETES", "BIBLE", "BIDON", 
+  "BIJOU", "BILLE", "BISON", "BLAME", "BLANC", "BLEUE", "BLEUS", 
+  "BLOCS", "BLOND", "BOIRE", "BOITE", "BOMBE", "BONTE", "BORDS", "BORNE", 
+  "BOSSE", "BOUDE", "BOUEE", "BOULE", "BOURG", "BRAVO", "BREFS", "BRIDE", 
+  "BRISE", "BRODE", "BRUIT", "BRUME", "BRUTE", "BUCHE", "BULLE", "CABLE", 
+  "CADRE", "CAFES", "CALME", "CAMPS", "CANAL", "CANNE", "CANOE", "CANON", 
+  "CANOT", "CAPOT", "CARTE", "CASSE", "CEDRE", "CELTE", "CENTS", "CESAR", 
+  "CHAMP", "CHANT", "CHAOS", "CHARS", "CHAUD", "CHEFS", "CHERE", "CHERI", 
+  "CHIPS", "CHOIX", "CHOSE", "CHUTE", "CIBLE", "CIEUX", "CIMES", "CIRER", 
+  "CITER", "CIVET", "CLAIR", "CLAMP", "CLANS", "CLEFS", "CLIPS",  
+  "CLORE", "CLOUS", "CLOWN", "COCHE", "COCON", "CODES", "COEUR", "COING", 
+  "COINS", "COLIS", "COLLE", "COLON", "COMME", "COMTE", "CONES", "CONGE", 
+  "CONTE", "COPIE", "COQUE", "CORDE", "CORNE", "CORPS", "COTES", "COTON", 
+  "COUPE", "COURS", "COURT", "COUTE", "CRABE", "CRAIE", "CREER", "CREME", 
+  "CREPE", "CRETE", "CREUX", "CRIME", "CRISE", "CROIX", "CRUEL", "CUBES", 
+  "CUIRE", "CUIRS", "CUITE", "CUITS", "CUVES", "CYCLE", "CYGNE", "DAMES", 
+  "DANSE", "DATER", "DEBAT", "DEBIT", "DEBUT", "DECOR", "DEFIS", "DEGRE", 
+  "DELAI", "DELIT", "DEMON", "DENTS", "DEPOT", "DEVOT", "DIETE", "DIEUX", 
+  "DIGNE", "DIGUE", "DINER", "DIODE", "DIVAN", "DIVIN", "DOIGT", "DOMES", 
+  "DONNE", "DOPER", "DORER", "DOSES", "DOTER", "DOUCE", "DOUER", "DOUTE", 
+  "DOUZE", "DRAME", "DRAPS", "DROIT", "DROLE", "DUNES", "DURCI", "DURER", 
+  "DUREE", "ECRAN", "ECRIT", "ECROU", "EFFET", "EGAUX", "EGOUT", "ELANS", 
+  "ELEVE", "ELITE", "EMAIL", "ENCRE", "ENFER", "ENFIN", "ENGIN", "ENVIE", 
+  "ENVOI", "EPAIS", "EPATE", "EPICE", "EPINE", "EPOUX", "ETAPE", "ETANG", 
+  "ETATS", "ETHER", "ETIRE", "ETRES", "ETUDE", "EVITE", "EXCES", "EXCLU", 
+  "EXILA", "EXILE", "EXILS", "EXIGE", "EXODE", "EXPOS", "FABLE", "FACES", 
+  "FACHE", "FACON", "FADES", "FAIRE", "FAITE", "FAITS", "FARCE", "FARDE", 
+  "FARTE", "FATAL", "FAUTE", "FAUVE", "FEMME", "FENDU", "FENTE", "FERIE", 
+  "FERME", "FETER", "FETES", "FIBRE", "FICHE", "FIERS", "FIGUE", "FILER", 
+  "FILLE", "FILMS", "FILON", "FINAL", "FINIE", "FINIR", "FINIS", "FIRME", 
+  "FIXER", "FIXES", "FLAIR", "FLANC", "FLASH", "FLEAU", "FLEUR", 
+  "FLORE", "FLOTS", "FLUTE", "FOYER", "FOIRE", "FONCE", "FONDA", 
+  "FONDE", "FONDS", "FONDU", "FORCE", "FORER", "FORET", "FORGE", "FORME", 
+  "FORTS", "FOSSE", "FOUET", "FOULE", "FOURS", "FRAIS", "FRANC", "FREIN", 
+  "FRERE", "FRIGO", "FRIME", "FRIPE", "FRIRE", "FRITE", "FROID", "FROLE", 
+  "FRONT", "FRUIT", "FUITE", "FUMEE", "FUMER", "FUSEE", "FUSIL", "FUTUR", 
+  "GAGES", "GAGNE", "GAINE", "GALAS", "GALET", "GAMER", "GAMME", "GANTS", 
+  "GARER", "GARDE", "GARES", "GATER", "GAULE", "GAZON", "GEANT", "GELEE", 
+  "GELER", "GEMME", "GENES", "GENIE", "GENOU", "GENRE", "GERER", "GERME", 
+  "GESTE", "GIBET", "GIFLE", "GIGOT", "GILET", "GIVRE", "GLACE", "GLAND", 
+  "GLOBE", "GOMME", "GONDS", "GORGE", "GOSSE", "GOUTE", "GOUTS", "GRAIN", 
+  "GRAND", "GRAVE", "GRECS", "GRELE", "GREVE", "GRIEF", "GRILL", "GRIME", 
+  "GRISE", "GRIVE", "GROIN", "GROOM", "GUEPE", "GUERE", "GUERI", "GUEUX", 
+  "GUIDE", "GUISE", "HABIT", "HACHE", "HAINE", "HALLE", "HARPE", "HAUTE", 
+  "HAUTS", "HERBE", "HEROS", "HEURE", "HIBOU", "HIVER", "HOMME", "HONTE", 
+  "HOTEL", "HUILE", "HYMNE", "IDEAL", "IDEES", "IDIOT", "IDOLE", "IMAGE", 
+  "INDEX", "IVRES", "JADIS", "JAMBE", "JANTE", "JARRE", "JASER", "JAUNE", 
+  "JETON", "JETTE", "JEUDI", "JEUNE", "JOINT", "JOKER", "JOLIS", "JOUER", 
+  "JOUET", "JOURS", "JOYAU", "JUGER", "JUGES", "JUIVE", "JUPES", "JURER", 
+  "JUSTE", "KILOS", "KOALA", "LACET", "LAINE", "LAMES", "LAMPE", "LANCE", 
+  "LAPIN", "LARGE", "LARME", "LARVE", "LASER", "LATIN", "LATTE", "LAVER", 
+  "LEGAL", "LEGER", "LEGUE", "LENTE", "LENTS", "LEPRE", "LEVRE", "LIENS", 
+  "LIEUX", "LIGNE", "LIGUE", "LIMER", "LINGE", "LIONS", "LISSE", "LISTE", 
+  "LITRE", "LIVRE", "LOCAL", "LOGER", "LOGIS", "LONGE", "LONGS", "LOUPE", 
+  "LOUPS", "LOURD", "LOVER", "LOYAL", "LOYER", "LUEUR", "LUGES", "LUIRE", 
+  "LUNES", "LUTIN", "LUTTE", "LUXES", "LYCEE", "MACHE", "MACON", "MAFIA", 
+  "MAGIE", "MAGMA", "MAGOT", "MAINS", "MAIRE", "MAJOR", "MALES", "MALIN", 
+  "MALLE", "MAMAN", "MAMIE", "MANDE", "MANGE", "MANIP", "MANNE", "MANTE", 
+  "MARDI", "MAREE", "MARGE", "MARIE", "MARIN", "MARIS", "MARRE", "MASSE", 
+  "MATCH", "MATER", "MATIN", "MATTE", "MAUVE", "MEDIA", "MELER", "MELES", 
+  "MELON", "MEMES", "MENER", "MENUS", "MERCI", "MERES", "MERLE", "MESSE", 
+  "METAL", "METEO", "METRE", "METRO", "MEULE", "MEUTE", "MICHE", "MICRO", 
+  "MIDIS", "MIELS", "MIENS", "MILLE", "MIMER", "MIMES", "MINER", "MINES", 
+  "MINET", "MIRER", "MIRES", "MISER", "MISES", "MISSE", "MITER", "MITES", 
+  "MITRE", "MIXER", "MIXTE", "MOCHE", "MODES", "MODEM", "MOINE", "MOINS", 
+  "MOISI", "MOITE", "MOLLE", "MOMIE", "MONDE", "MONTS", "MOQUE", "MORAL", 
+  "MORDS", "MORTE", "MORTS", "MORUE", "MORVE", "MOTIF", "MOTOS", "MOTTE", 
+  "MOUDS", "MOULE", "MOULU", "MOYEN", "MUETS", "MUGIR", "MULES", "MULTI", 
+  "MUNIR", "MUNIS", "MURAL", "MURES", "MURER", "MUSEE", "MUSES", "MUTER", 
+  "MUTES", "MUTIN", "MYTHE", "NAGER", "NAIFS", "NAINE", "NAINS", "NAPPE", 
+  "NASAL", "NATAL", "NATTE", "NAVAL", "NAVET", "NEANT", "NEIGE", 
+  "NEONS", "NERFS", "NETTE", "NEUFS", "NEUVE", "NEVEU", "NIECE", "NOBEL", 
+  "NOBLE", "NOCES", "NOEUD", "NOIRE", "NOIRS", "NONCE", "NONNE", "NORDS", 
+  "NORME", "NOTRE", "NOUER", "NOUES", "NOYAU", "NOYER", "NUAGE", "NUEES", 
+  "NUIRE", "NUITS", "NULLE", "NUQUE", "OASIS", "OBEIR", "OBJET", "OCEAN", 
+  "OCTET", "ODEUR", "OEUFS", "OFFRE", "OGIVE", "OISIF", "OLIVE", "OMBRE", 
+  "ONCLE", "ONDES", "ONGLE", "OPALE", "OPERA", "OPINE", "OPTER", "ORAGE", 
+  "ORDRE", "ORGIE", "ORGUE", "ORNER", "ORTIE", "OSCAR", "OTAGE", "OUATE", 
+  "OUBLI", "OUEST", "OURSE", "OUTIL", "OUTRE", "OUVRE", "OVALE", "OVNIS", 
+  "OZONE", "PACTE", "PAGES", "PAGNE", "PAIES", "PAINS", "PALES", "PALET", 
+  "PALME", "PALPE", "PAMPA", "PANNE", "PANSE", "PAPAL", "PAPAS", "PAPYS", 
+  "PAQUE", "PARCE", "PARDI", "PARER", "PARES", "PARIA", "PARIE", "PARMI", 
+  "PAROI", "PARTE", "PARTI", "PARTS", "PARUS", "PASSA", "PASSE", "PASTA", 
+  "PATCH", "PATES", "PATIN", "PATRE", "PATTE", "PAUME", "PAUSE", "PAVER", 
+  "PAVES", "PAVOT", "PAYER", "PAYES", "PEAGE", "PEAUX", "PECHE", "PEINE", 
+  "PEINT", "PELER", "PELES", "PELLE", "PENAL", "PENDU", "PENNE", "PENSA", 
+  "PENSE", "PENTE", "PENTU", "PEPIN", "PERCA", "PERCE", "PERDU", "PERES", 
+  "PERIR", "PERIS", "PERLE", "PERSE", "PERTE", "PESER", "PESES", "PESTE", 
+  "PETIT", "PETRI", "PEURS", "PHARE", "PHASE", "PHOTO", 
+  "PIANO", "PICOT", "PIECE", "PIEDS", "PIEGE", "PIETE", "PIEUX", "PIGER", 
+  "PILES", "PILLE", "PILOT", "PINCE", "PINTE", "PIONS",  "PIPER", 
+  "PIQUE", "PIRES", "PISTE", "PITIE", "PITON", "PITRE", "PIVOT", 
+  "PIXEL", "PIZZA", "PLACE", "PLAGE", "PLAID", "PLAIE", "PLAIN", "PLANS", 
+  "PLANT", "PLATS", "PLEBE", "PLEIN", "PLIES", "PLOMB", "PLOUF", "PLUIE", 
+  "PLUME", "PNEUS", "POCHE", "POELE", "POEME", "POETE", "POILS", "POILU", 
+  "POING", "POINT", "POIRE", "POLAR", "POLES", "POLIE", "POLIR", "POLIS", 
+  "POLKA", "POMME", "POMPE", "PONDU", "PONEY", "PONTS", "PORCS", "PORTA", 
+  "PORTE", "PORTS", "POSES", "POSTE", "POTES", "POTIN", "POUCE", "POUFS", 
+  "POULE", "POULS", "POUPE", "PRIME", "PRISE", "PROIE", "PROMO", "PRUDE", 
+  "PRUNE", "PUCES", "PUISE", "PUITS", "PULLS", "PULPE", "PULPS", "PUMAS", 
+  "PUNIR", "PUNIS", "QUAND", "QUARK", "QUART", "QUASI", "QUELS", "QUETE", 
+  "QUEUE", "QUOTA", "RABAT", "RABOT", "RADAR", "RADER", "RADIN", "RADIO", 
+  "RADIS", "RAGOT", "RAIDE", "RAIDS", "RAIES", "RAILS", "RAINE", "RALLY", 
+  "RAMER", "RAMES", "RAMPA", "RAMPE", "RANCH", "RANGS", "RAPES", "RAPER", 
+  "RAPPA", "RAPPE", "RARES", "RASER", "RASES", "RATER", "RATES", "RATON", 
+  "RATTE", "RAVIN", "RAVIR", "RAVIS", "RAYER", "RAYON", "REAGI", "REALS", 
+  "REBEL", "REBUS", "RECAL", "RECEL", "RECIF", "RECIT", "RECRE", "RECUE", 
+  "RECUS", "RECUT", "REDIT", "REELS", "REFUS", "REGAL", "REGIE", "REGIR", 
+  "REGIS", "REGLE", "REGNA", "REGNE", "REINS", "RELAI", "RELAX", "RELIE", 
+  "RELIT", "RELUE", "RELUS", "REMET", "REMIS", "REMIX", "REMUA", 
+  "REMUE", "RENDU", "RENDE", "RENDS", "RENES", "RENIA", "RENIE", "RENNE", 
+  "RENTE", "REPAS", "REPIT", "REPLI", "REPOS", "REPUE", "REPUT", "RESTE", 
+  "RETIF", "RETRO", "REUNI", "REVES", "REVER",  
+  "REVIS", "REVUE", "REVUS", "RHUME", "RIANT", "RICHE", "RIDER", "RIDES", 
+  "RIMER", "RIMES", "RINCE", "RINGS", "RIPER", "RIPES", "RIRES", "RISER", 
+  "RISES", "RIVAL", "RIVES", "RIVET", "ROBES", "ROBOT", "ROCHE",  
+  "RODEO", "RODER", "ROGNE", "ROLES", "ROMAN", "ROMPS", "ROMPT", "ROMPU", 
+  "RONCE", "RONDE", "RONDS", "RONGE", "ROQUE", "ROSES", "ROSSE", "ROTER", 
+  "ROTIE", "ROTIR", "ROTIS", "ROUER", "ROUES", "ROUGE", "ROUIE", "ROUIR", 
+  "ROULE", "ROUTE", "ROYAL", "RUBAN", "RUBIS", "RUCHE", "RUDES", 
+  "RUGIR", "RUINE", "RUMBA", "RURAL", "RUSES", "RUSSE", "SABLE", "SABOT", 
+  "SABRE", "SACRE", "SAGES", "SAINT", "SALER", "SALES", "SALLE", "SALON", 
+  "SALUT", "SAPIN", "SATIN", "SAULE", "SAUNA", "SAUTE", "SAUTS", "SAUVE", 
+  "SAVON", "SCENE", "SCORE", "SCOUT", "SECHE", "SECTE", "SEIZE", "SELLE", 
+  "SELON", "SEMER", "SENAT", "SENTI", "SERIE", "SERRE", "SERUM", "SERVI", 
+  "SEUIL", "SEULE", "SEULS", "SIEGE", "SIGLE", "SIGNE", "SINGE", "SINUS", 
+  "SIROP", "SITES", "SITUE", "SKIER", "SKIFS", "SLAVE", "SMART", "SMASH", 
+  "SNACK", "SOBRE", "SOCLE", "SOEUR", "SOFAS", "SOIES", "SOIFS", "SOINS", 
+  "SOIRS", "SOLES", "SOLOS", "SOLDE", "SOMME", "SONDE", "SONGE", "SONNE", 
+  "SORTE", "SORTI", "SORTS", "SOUCI", "SOUDE", "SOUPE", "SOURD", "SOUTE", 
+  "SPORT", "STADE", "STAGE", "STAND", "STARS", "STEAK", "STELE", "STOCK", 
+  "STORE", "STYLE", "STYLO", "TABLE", "TABOU", "TACHE", "TACLE", "TAIES", 
+  "TALON", "TAMIS", "TANGO", "TANTE", "TAPER", "TAPES", "TAPIS", "TARDE", 
+  "TARIF", "TAROT", "TARTE", "TASSE", "TATER", "TAUPE", "TAXER", "TAXIS", 
+  "TEINT", "TELLE", "TEMPO", "TEMPS", "TENDU", "TENIR", "TENTE", "TENUS", 
+  "TERME", "TERNE", "TERRE", "TESTS", "TESTE", "TETER", "TETES", "TEXTE", 
+  "THEME", "THESE", "THONS", "THYMS", "TIBIA", "TIENS", "TIENT", "TIERS", 
+  "TIGES", "TIGRE", "TINTE", "TIQUE", "TIRER", "TISON", "TISSE", "TISSU", 
+  "TITAN", "TITRE", "TOAST", "TOILE", "TOISE", "TOITS", "TOLES", "TOMBE", 
+  "TONDE", "TONDU", "TONNE", "TONUS", "TOQUE", "TORSE", "TORTE", "TORTS", 
+  "TOTAL", "TOUTE", "TOUTS", "TRAIN", "TRAIT", "TRAME", "TRAPU", "TRIBU", 
+  "TRIER", "TRIPE", "TROIS", "TROLL", "TRONC", "TRONE", "TROUS", "TRUCS", 
+  "TRUIE", "TUBES", "TUEUR", "TUILE", "TUNES", "TURBO", "TURCS", "TURFS", 
+  "TURNE", "TUTUS", "TWEET", "TWIST", "TYPES", "UNION", "UNITE", "URINE", 
+  "URNES", "USAGE", "USINE", "USURE", "UTILE", "VACHE", "VAGUE", "VAINS", 
+  "VALET", "VALSE", "VALVE", "VANNE", "VANTE", "VARAN", "VARIE", "VASES", 
+  "VASTE", "VEAUX", "VECUE", "VECUS", "VEINE", "VELOS", "VENGE", 
+  "VENIN", "VENIR", "VENTE", "VENTS", "VENUE", "VENUS", "VERBE",  
+  "VERIN", "VERRE", "VERSA", "VERSE", "VERSO", "VERTE", "VERTS", "VERTU", 
+  "VERVE", "VESTE", "VEUFS", "VEUVE", "VEXER", "VIBRE", "VICES", "VIDEO", 
+  "VIDER", "VIDES", "VIENS", "VIENT", "VIEUX", "VIGNE", "VILLA", "VINGT", 
+  "VIOLA", "VIOLE", "VIRAL", "VIRER", "VIRUS", "VISAS", "VISER", "VISES", 
+  "VISSE", "VITAL", "VITRE", "VIVES", "VIVRE", "VOCAL", "VOEUX", 
+  "VOGUE", "VOIES", "VOILA", "VOILE", "VOIRE", "VOLES", "VOLER", "VOLET", 
+  "VOLTS", "VOMIR", "VOTER", "VOTES", "VOTRE", "VOUER", "VOULU", "VOUTE", 
+  "VOYOU", "VRAIE", "VRAIS", "WAGON", "XENON", "YACHT", "ZEBRE", "ZEROS", 
+  "ZESTE", "ZONES", "VILLE", "CHATS", "LUNDI", 
+
+
+  // --- MOTS DE 4 LETTRES ---
+  "MONT", "RENT", "NOTE", "TONE", "MORE", "MORT", "ROTE", "TRIP", "RATE", 
+  "PAIR", "TAPE", "TIRE", "RIPE", "PART", "CANE", "ACNE", "AMEN", "MACE", 
+  "MINE", "CAME", "MICA", "MAIN", "LACE", "CHAT", "PILE", "SLIP", "LIME", 
+  "SEMI", "MILE", "PLIE", "PLAN", "PALE", "LENT", "ANTE", "AIDE", "RAID", 
+  "PIED", "RAPE", "DIRE", "RIDE", "MARE", "CHAR", "MARC", "ACHE", "RACE", 
+  "ACRE", "RALE", "REAL", "REEL", "RAIL", "LIRA", "ROLE", "MOLE", "TOME", 
+  "ARCS", "RUSE", "SURE", "LOIN", "COIN", "NOIR", "BOIS", "FOND", "PONT", 
+  "PORT", "SORT", "FORT", "CENT", "VENT", "DENT", "SENT", "MENT", "NUIT", 
+  "GOUT", "COUT", "BEAU", "PEAU", "SEAU", "VEAU", "BRAS", "GRAS", "MOIS", 
+  "POIS", "ACTE", "AGIR", "AIRE", "AISE", "ALLO", "AMIS", "AMER", "ANGE", 
+  "ARME", "ARTS", "AUTO", "AVEC", "AVIS", "BAIN", "BANC", "BASE", "BATI", 
+  "BEBE", "BETE", "BIEN", "BLEU", "BLOC", "BLOG", "BOUT", "BOXE", "BREF", 
+  "BRIN", "BRUT", "BUTS", "CAFE", "CAGE", "CAMP", "CAPE", "CAVE", "CECI", 
+  "CELA", "CERF", "CEUX", "CHER", "CHEZ", "CHIC", "CHOC", "CHOU", "CIEL", 
+  "CIRE", "CITE", "CLAN", "CLEF", "CLIC", "CLOU", "CLUB", "COCO", "CODE", 
+  "COMA", "COUP", "COUR", "CRUE", "CUBE", "CUIR", "CUIT", "CUVE", "DAME", 
+  "DANS", "DATE", "DEFI", "DEJA", "DEMI", "DEUX", "DIEU", "DIVA", "DOIT", 
+  "DONC", "DONS", "DONT", "DOSE", "DOUX", "DRAP", "DUEL", "DUNE", 
+  "DURA", "DURE", "DURS", "ECHO", "EGAL", "ELAN", "ELFE", "ELLE", 
+  "EMIR", "EPEE", "EPIS", "ETAT", "ETRE", "ETUI", "EURO", "FACE", "FADE", 
+  "FAIM", "FAIS", "FAIT", "FAUX", "FETE", "FEUX", "FEVE", "FIER", "FILM", 
+  "FILS", "FINI", "FINS", "FISC", "FIXE", "FLAN", "FLOT", "FLOU", "FLUX", 
+  "FOIE", "FOIN", "FOIS", "FOOT", "FOUR", "FOUS", "FOUT", "FRAI", "FRET", 
+  "FRIP", "FRIT", "FROC", "FUME", "FUYE", "GAGE", "GAIE", "GAIS", 
+  "GALA", "GALE", "GANG", "GANT", "GARE", "GARS", "GATE", "GAVE", "GAZE", 
+  "GEAI", "GELE", "GELS", "GENE", "GENS", "GERE", "GITE", "GLAS", "GLUE", 
+  "GOAL", "GOBE", "GOLF", "GOND", "GONG", "GORE", "GOTH", "GREE", "GRES", 
+  "GRIL", "GRIP", "GRIS", "GROS", "GRUE", "GURU", "HAIE", "HAUT", "HIER", 
+  "HOME", "HOTE", "HOUX", "HUIT", "HUME", "IDEE", "ILOT", "IODE", 
+  "IVRE", "JADE", "JARS", "JAZZ", "JEAN", "JEEP", "JETS", "JEUX", "JOIE", 
+  "JOLI", "JOUE", "JOUR", "JUGE", "JUIF", "JUPE", "JURA", "JURE", "JURY", 
+  "KAKI", "KILO", "KILT", "LAID", "LAIE", "LAIT", "LAMA", "LAME", "LARD", 
+  "LEGS", "LEUR", "LEVE", "LIEN", "LIER", "LIEU", "LION", "LIRE", "LOGE", 
+  "LONG", "LOOK", "LORS", "LOUP", "LOUE", "LUGE", "LUNE", "LUXE", "LYNX", 
+  "LYRE", "MAIS", "MAUX", "MAXI", "MEME", "MERE", "METS", "MIEL", "MIEN", 
+  "MIME", "MINI", "MISE", "MODE", "MOTO", "MOTS", "MOUE", "MOUS",  
+  "MULE", "MURE", "MURS", "MUSE", "MUTE", "NAGE", "NAIF", "NAIT",  
+  "NEON", "NERF", "NETS", "NEUF", "NEVE", "NIDS", "NIER", "NOEL", "NOMS", 
+  "NORD", "NOTA", "NOUE", "NOYE", "NUEE", "NUES", "NULS", "OBUS", "OCRE", 
+  "OEUF", "OGRE", "OIES", "OINT", "ORAL", "ORGE", "ORME", "ORNE", "OSES", 
+  "OSER", "OUER", "OUIR", "OURS", "OVNI", "PAGE", "PAIN", "PAIX", "PAPA", 
+  "PAPY", "PARC", "PARE", "PARI", "PARU", "PATE", "PAVE", "PAYE", "PAYS", 
+  "PEND", "PERE", "PERI", "PESE", "PEUR", "PIAF", "PICS", "PIEU", 
+  "PIGE", "PION", "PIRE", "PISE", "PIST", "QUAI", "QUEL", "QUIZ", 
+  "QUOI", "REIN", "REPU", "REVE", "RIEN", "RIRE", "RITE", "RIVE", 
+  "RIXE", "ROBE", "ROCS", "RODE", "ROND", "ROSE", "ROTI", "ROUE", 
+  "ROUX", "RUDE", "RUES", "RUNE", "RUSH", "SAGE", "SAIN", "SANG", "SANS", 
+  "SAPE", "SAUF", "SAUT", "SHOP", "SHOW", "SIEN", "SILO", "SIRE", 
+  "SITE", "SKIS", "SNOB", "SOFA", "SOIE", "SOIF", "SOIN", "SOIR", "SOLO", 
+  "SONS", "SPOT", "STAR", "STOP", "SUBI", "SUCE", "SUDS", "SUER", 
+  "SUIE", "SUIF", "SUIS", "SUIT", "SUMO", "SURF", "SURS", "TACT", "TACO", 
+  "TAIE", "TALC", "TANG", "TANK", "TANT", "TARD", "TARE", "TARO", "TASA", 
+  "TATE", "TAXE", "TAXI", "TEAM", "TELE", "TEND", "TENU", "TEST", "TETE", 
+  "TETU", "THAI", "THON", "THYM", "TIGE", "TIKI", "TILT", "TIPI", "TIRA", 
+  "TIRS", "TOGE", "TOIT", "TOLE", "TOND", "TONS", "TOPO", "TORD", "TORE", 
+  "TORS", "TORT", "TOUR", "TOUS", "TOUT", "TOUX", "UBAC", "UNES", "UNIE", 
+  "UNIS", "UNIT", "URNE", "USER", "USES", "VAIN", "VAIS", "VALU", "VAMP", 
+  "VANS", "VASE", "VAUT", "VAUX", "VECU", "VELO", "VELU", "VEND", "VENI", 
+  "VENU", "VERS", "VERT", "VETU", "VEUF", "VEUT", "VEUX", "VEXE", 
+  "VICE", "VIDE", "VIES", "VIFE", "VIFS", "VILA", "VILE", "VINS", "VINT", 
+  "VIRA", "VIRE", "VISA", "VISE", "VITE", "VIVE", "VOEU", "VOIE", "VOIR", 
+  "VOIS", "VOIT", "VOIX", "VOLA", "VOLE", "VOLS", "VOLT", "VOMI", "VOTA", 
+  "VOTE", "VOUA", "VOUE", "VOUS", "VRAI", "VUES", "WATT", "WIFI", "XYLO", 
+  "YACK", "YOGA", "YOLE", "YUCA", "ZEBU", "ZELE", "ZERO", "ZEST", "ZINC", 
+  "ZONE", "ZOOS", "EAUX", 
+
+
+  // --- MOTS DE 3 LETTRES ---
+  "NET", "ROT", "TON", "MOT", "RON", "PIE", "RIP", "APE", "TAP", "PAT", 
+  "RAP", "TIP", "TAR", "RAT", "ART", "IRE", "PAR", "ACE", "CAN", "ANE", 
+  "CAM", "ETA", "LAT", "CHA", "PAN", "TAN", "PET", "PAL", "LIE", "OLE", 
+  "MAR", "CAR", "NOM", "ROI", "LOI", "OUI", "MER", "AIR", "FEU", "JEU", 
+  "VIN", "MUR", "RUE", "VUE", "DUR", "SOL", "BON", "PAS", "BAR", "CAS", 
+  "LAC", "NID", "PEU", "SEC", "SUR", "TRI", "MOI", "SOI", "LUI", "CRI", 
+  "TAS", "FIL", "BAS", "MAL", "BUT", "MUT", "RUT", "NUL", "FIN", "LIN", 
+  "PIN", "AGE", "AIL", "AIS", "AIT", "AMI", "ARC", "AXE", "BAC", "BAL", 
+  "BAN", "BAT", "BEL", "BIO", "BOA", "BOB", "BOL", "BOX", "BOY", "BUS", 
+  "CAP", "CEP", "CIL", "CLE", "COQ", "COU", "CRU", "CUB", "DES", "DIS", 
+  "DIT", "DIX", "DOC", "DON", "DOT", "DUE", "DUO", "DUS", "DUT", "EAU", 
+  "ECO", "ECU", "ELU", "EPI", "EST", "ETE", "EUS", "EUT", "EUX", "FAC", 
+  "FAN", "FAR", "FER", "FIS", "FIT", "FOI", "FOL", "FOR", "FOU", "FOX", 
+  "FUT", "GAI", "GAP", "GAZ", "GEL", "GIN", "GLU", "GUE", "GUI", 
+  "GUS", "GYM", "HAI", "HIT", "HUE", "HUM", "ICI", "ILS", "ION", "JET", 
+  "JOB", "JUS", "KID", "KIF", "KIR", "KIT", "LAS", "LES", "LIA", "LIS", 
+  "LIT", "LOB", "LOG", "LOT", "LUE", "LUS", "LUT", "LUX", "LYS", "MAC", 
+  "MAI", "MAO", "MAS", "MAT", "MAX", "MEL", "MES", "MET", "MIE", 
+  "MIL", "MIS", "MIT", "MIX", "MOB", "MON", "MOU", "MUE", "MUG", "MUS", 
+  "NAC", "NAN", "NEE", "NEF", "NEM", "NEO", "NEZ", "NIA", "NIE", "NON", 
+  "NOS", "NUA", "NUE", "NUS", "OBI", "OCA", "ODE", "OFF", "OHM", "OIE", 
+  "ONT", "OPT", "ORC", "ORS", "OSA", "OSE", "OTA", "OTE", "OUD", "OUF", 
+  "OUT", "PAF", "PAX", "PEC", "PEP", "PES", "PHI", "PHO", "PIA", "PIC", 
+  "PIF", "PIS", "PLI", "PLU", "PUB", "PUA", "PUE", "PUR", "PUS", "PUT", 
+  "QUE", "QUI", "RAB", "RAD", "RAI", "RAS", "RAZ", "REA", "REG", "REM", 
+  "REP", "RHO", "RIA", "RIB", "RIE", "RIF", "RIO", "RIS", "RIT", "RIZ", 
+  "ROB", "ROC", "ROM", "RUA", "RUS", "RYE", "SAC", "SAI", "SAM", "SAP", 
+  "SAR", "SAS", "SAX", "SEL", "SEN", "SEP", "SES", "SET", "SIC", "SIL", 
+  "SIR", "SIS", "SIX", "SKI", "SKY", "SOC", "SON", "SOT", "SOU", "SPA", 
+  "SPI", "SUA", "SUD", "SUE", "SUS", "SUT", "TAC", "TAF", "TAG", "TAI", 
+  "TAO", "TAT", "TAU", "TEC", "TEE", "TEL", "TER", "TES", "TET", "TEX", 
+  "THE", "TIC", "TIE", "TIF", "TIL", "TIN", "TIR", "TIS", "TIT", "TOC", 
+  "TOF", "TOI", "TOM", "TOP", "TOT", "TUA", "TUE", "TUF", "TUS", "TUT", 
+  "UNE", "UNI", "UNS", "USA", "USE", "VAL", "VAN", "VAR", "VAS", "VAU", 
+  "VAX", "VER", "VET", "VIA", "VIE", "VIF", "VIL", "VIS", "VIT", "VOC", 
+  "VOD", "VOL", "VOS", "VOX", "VUS", "WAX", "WEB", "WIN", "WOK", "WON", 
+  "YAK", "YAM", "YEN", "YIN", "YOD", "ZAC", "ZAN", "ZEN", "ZIG", "ZIP", 
+  "ZOO", "ZOU", "AME", "DOS"
 ])];
 
 const BACKUP_PUZZLES = [
@@ -1826,23 +2775,273 @@ let currentLetters = [];
 let foundWords = [];
 let failedWords = [];
 let remainingJokers = 3;
+let jokerWordState = { active: false, word: '', found: false, unavailable: false };
+let jokerHintCredits = 0;
+let gameStartedAt = Date.now();
+let elapsedBeforeStart = 0;
+let timerSaveInterval = null;
 let backupIndex = 0;
-const usedBaseWords = new Set(); // Oturum boyunca kullanılan taban kelimeler
+const usedBaseWords = new Set();
+const recentSubWords = [];
+const RECENT_SUB_WORD_LIMIT = 80;
 
 let isDrawing = false;
 let selectedButtons = [];
 let btnCoords = [];
 
-// ══════════════════════════════════════════════════════════════
-//  LOCALSTORAGE İSTATİSTİK MOTORU
-// ══════════════════════════════════════════════════════════════
+// Varsayılan localStorage değerleri
 if (!localStorage.getItem('kelimer_completed')) localStorage.setItem('kelimer_completed', '0');
 if (!localStorage.getItem('kelimer_gave_up')) localStorage.setItem('kelimer_gave_up', '0');
+if (!localStorage.getItem('kelimer_hint_used')) localStorage.setItem('kelimer_hint_used', '0');
+if (!localStorage.getItem('kelimer_joker_words_found')) localStorage.setItem('kelimer_joker_words_found', '0');
+if (!localStorage.getItem('kelimer_best_time')) localStorage.setItem('kelimer_best_time', '0');
 if (!localStorage.getItem('kelimer_theme')) localStorage.setItem('kelimer_theme', 'light');
 if (!localStorage.getItem('kelimer_resume')) localStorage.setItem('kelimer_resume', 'on');
+if (!localStorage.getItem('kelimer_lang')) localStorage.setItem('kelimer_lang', 'tr');
 
 const SAVE_KEY   = 'kelimer_gamestate';
 const RESUME_KEY = 'kelimer_resume';
+const LANG_KEY   = 'kelimer_lang';
+const JOKER_WORD_SKIP_KEY = 'kelimer_joker_word_skip_info';
+const RECENT_SUB_WORDS_KEY = 'kelimer_recent_sub_words';
+
+// Çeviriler
+const TRANSLATIONS = {
+  tr: {
+    progressLabel: 'Izgara',
+    progressWords: (c, t) => `${c} / ${t} Kelime`,
+    jokerLabel: (n) => `İpucu: ${n}`,
+    ttStats: 'İstatistikler', ttSettings: 'Ayarlar',
+    ttGiveUp: 'Pes Et', ttJoker: 'Rastgele Harf Aç', ttJokerWord: 'Joker Kelime',
+    ttShuffle: 'Harfleri Karıştır', ttHistory: 'Deneme Geçmişi',
+    toastAlreadyFound: 'Bu kelimeyi zaten buldun!',
+    toastCorrect: 'Tebrikler!', toastInvalid: 'Geçersiz Kelime!',
+    toastHintUsed: 'Harf Keşfedildi!', toastNoHint: 'Açılacak harf kalmadı!',
+    toastJokerWordOpened: 'Joker Kelime açıldı!',
+    toastJokerWordFound: 'Joker Kelime bulundu! +1 ipucu',
+    toastJokerWordUnavailable: 'Bu ızgarada Joker Kelime yok.',
+    toastNextGame: 'Harika! Bir sonraki bulmacaya geçiliyor...',
+    toastLightTheme: 'Açık Tema Aktif', toastDarkTheme: 'Koyu Tema Aktif',
+    toastResumeOn: 'Devam et: Açık', toastResumeOff: 'Devam et: Kapalı',
+    toastLangSelected: 'Türkçe seçildi',
+    settingsTitle: 'Ayarlar',
+    settingsDesc: 'Oyun tercihlerini buradan kişiselleştirebilirsin.',
+    settingsThemeLabel: 'Tema',
+    themeLightText: 'Açık', themeDarkText: 'Koyu',
+    settingsResumeLabel: 'Izgarayı Hatırla',
+    settingsResumeDesc: 'Açık olması durumunda oyun kaldığı yerden devam eder.',
+    resumeOnText: 'Açık', resumeOffText: 'Kapalı',
+    settingsLangLabel: 'Dil Tercihi',
+    settingsClose: 'Kapat',
+    statsTitle: 'İstatistikler',
+    statsDesc: 'Şimdiye kadarki oyun performansın:',
+    statsCompletedLabel: 'Tamamlanan Izgara',
+    statsGaveUpLabel: 'Pes Edilen Oyun',
+    statsHintLabel: 'İpucu Kullanım Oranı',
+    statsJokerWordsLabel: 'Joker Kelimeler',
+    statsBestTimeLabel: 'Rekor Süre',
+    statsBestTimeEmpty: '-',
+    timeMinutesSeconds: (m, s) => `${m} dakika ${s} saniye`,
+    timeSeconds: (s) => `${s} saniye`,
+    statsClose: 'Kapat',
+    jokerWordTitle: 'Joker Kelime',
+    jokerWordDesc: 'Joker kelime, ızgaradan bağımsız ek bir kelimedir. Doğru bilirsen bu oyun için +1 ipucu kazanırsın. Bu ipucu kullanıldığında istatistiklere yansımaz. Joker kelime bulunmadan ızgara tamamlanmış sayılmaz.\n\nDevam etmek istiyor musun?',
+    jokerWordDontShow: 'Bu mesajı tekrar gösterme.',
+    historyTitle: 'Deneme Geçmişi',
+    historyDesc: 'Izgarada bulunamayan kelimeler:',
+    historyEmpty: 'Henüz yanlış deneme yapılmadı.',
+    historyLatest: 'Son',
+    historyClose: 'Kapat',
+    confirmTitle: 'Pes mi ediyorsun?',
+    confirmDesc: 'Eğer pes edersen, ızagaradaki cevap anahtarını görüntüleyecek ve eski oyuna dönemeyeceksin. Emin misin?',
+    confirmNo: 'Hayır', confirmYes: 'Evet',
+    resultTitle: 'Cevap Anahtarı',
+    resultDesc: 'Kaçırdığın kelimeler kırmızı renkle işaretlendi.',
+    resultFound: 'Bulundu', resultMissed: 'Kaçırıldı',
+    resultNewGame: 'Yeni Oyun',
+  },
+  en: {
+    progressLabel: 'Grid',
+    progressWords: (c, t) => `${c} / ${t} Words`,
+    jokerLabel: (n) => `Hints: ${n}`,
+    ttStats: 'Statistics', ttSettings: 'Settings',
+    ttGiveUp: 'Give Up', ttJoker: 'Reveal a Letter', ttJokerWord: 'Joker Word',
+    ttShuffle: 'Shuffle Letters', ttHistory: 'Attempt History',
+    toastAlreadyFound: 'Already found this word!',
+    toastCorrect: 'Correct!', toastInvalid: 'Invalid Word!',
+    toastHintUsed: 'Letter Revealed!', toastNoHint: 'No letters left to reveal!',
+    toastJokerWordOpened: 'Joker Word opened!',
+    toastJokerWordFound: 'Joker Word found! +1 hint',
+    toastJokerWordUnavailable: 'There is no Joker Word in this grid.',
+    toastNextGame: 'Great! Loading next puzzle...',
+    toastLightTheme: 'Light Theme Active', toastDarkTheme: 'Dark Theme Active',
+    toastResumeOn: 'Resume: On', toastResumeOff: 'Resume: Off',
+    toastLangSelected: 'English selected',
+    settingsTitle: 'Settings',
+    settingsDesc: 'Customize your game preferences.',
+    settingsThemeLabel: 'Theme',
+    themeLightText: 'Light', themeDarkText: 'Dark',
+    settingsResumeLabel: 'Remember Grid',
+    settingsResumeDesc: 'When on, the game resumes from where you left off.',
+    resumeOnText: 'On', resumeOffText: 'Off',
+    settingsLangLabel: 'Language',
+    settingsClose: 'Close',
+    statsTitle: 'Statistics',
+    statsDesc: 'Your game performance so far:',
+    statsCompletedLabel: 'Completed Grids',
+    statsGaveUpLabel: 'Games Given Up',
+    statsHintLabel: 'Hint Usage Rate',
+    statsJokerWordsLabel: 'Joker Words',
+    statsBestTimeLabel: 'Best Time',
+    statsBestTimeEmpty: '-',
+    timeMinutesSeconds: (m, s) => `${m} minutes ${s} seconds`,
+    timeSeconds: (s) => `${s} seconds`,
+    statsClose: 'Close',
+    jokerWordTitle: 'Joker Word',
+    jokerWordDesc: 'The Joker Word is an extra word independent from the grid. If you guess it correctly, you earn +1 hint for this game. When this hint is used, it does not count toward statistics. The grid is not considered complete until the Joker Word is found.\n\nDo you want to continue?',
+    jokerWordDontShow: 'Do not show this message again.',
+    historyTitle: 'Attempt History',
+    historyDesc: 'Words not found in the grid:',
+    historyEmpty: 'No wrong attempts yet.',
+    historyLatest: 'Latest',
+    historyClose: 'Close',
+    confirmTitle: 'Are you giving up?',
+    confirmDesc: 'If you give up, you will see the answer key and can start a new game. Do you want to continue?',
+    confirmNo: 'No', confirmYes: 'Yes',
+    resultTitle: 'Answer Key',
+    resultDesc: 'Missed words are marked in red.',
+    resultFound: 'Found', resultMissed: 'Missed',
+    resultNewGame: 'New Game',
+  },
+  fr: {
+    progressLabel: 'Grille',
+    progressWords: (c, t) => `${c} / ${t} Mots`,
+    jokerLabel: (n) => `Indices: ${n}`,
+    ttStats: 'Statistiques', ttSettings: 'Paramètres',
+    ttGiveUp: 'Abandonner', ttJoker: 'Révéler une Lettre', ttJokerWord: 'Mot Joker',
+    ttShuffle: 'Mélanger', ttHistory: 'Historique',
+    toastAlreadyFound: 'Mot déjà trouvé !',
+    toastCorrect: 'Bravo !', toastInvalid: 'Mot invalide !',
+    toastHintUsed: 'Lettre révélée !', toastNoHint: 'Aucune lettre à révéler !',
+    toastJokerWordOpened: 'Mot Joker ouvert !',
+    toastJokerWordFound: 'Mot Joker trouvé ! +1 indice',
+    toastJokerWordUnavailable: 'Il n’y a pas de Mot Joker dans cette grille.',
+    toastNextGame: 'Super ! Prochain puzzle en cours...',
+    toastLightTheme: 'Thème clair activé', toastDarkTheme: 'Thème sombre activé',
+    toastResumeOn: 'Reprendre : Activé', toastResumeOff: 'Reprendre : Désactivé',
+    toastLangSelected: 'Français sélectionné',
+    settingsTitle: 'Paramètres',
+    settingsDesc: 'Personnalisez vos préférences de jeu.',
+    settingsThemeLabel: 'Thème',
+    themeLightText: 'Clair', themeDarkText: 'Sombre',
+    settingsResumeLabel: 'Reprendre la Grille',
+    settingsResumeDesc: 'Activé, le jeu reprend là où vous vous êtes arrêté.',
+    resumeOnText: 'Oui', resumeOffText: 'Non',
+    settingsLangLabel: 'Langue',
+    settingsClose: 'Fermer',
+    statsTitle: 'Statistiques',
+    statsDesc: 'Vos performances de jeu :',
+    statsCompletedLabel: 'Grilles Complétées',
+    statsGaveUpLabel: 'Parties Abandonnées',
+    statsHintLabel: 'Taux d’utilisation des indices',
+    statsJokerWordsLabel: 'Mots Joker',
+    statsBestTimeLabel: 'Meilleur Temps',
+    statsBestTimeEmpty: '-',
+    timeMinutesSeconds: (m, s) => `${m} minutes ${s} secondes`,
+    timeSeconds: (s) => `${s} secondes`,
+    statsClose: 'Fermer',
+    jokerWordTitle: 'Mot Joker',
+    jokerWordDesc: 'Le Mot Joker est un mot supplémentaire indépendant de la grille. Si vous le trouvez, vous gagnez +1 indice pour cette partie. Lorsque cet indice est utilisé, il n’est pas comptabilisé dans les statistiques. La grille n’est pas considérée comme terminée tant que le Mot Joker n’a pas été trouvé.\n\nVoulez-vous continuer ?',
+    jokerWordDontShow: 'Ne plus afficher ce message.',
+    historyTitle: 'Historique',
+    historyDesc: 'Mots non trouvés dans la grille :',
+    historyEmpty: 'Aucune tentative erronée.',
+    historyLatest: 'Dernier',
+    historyClose: 'Fermer',
+    confirmTitle: 'Vous abandonnez ?',
+    confirmDesc: 'Si vous abandonnez, vous verrez la clé de réponses et pourrez commencer une nouvelle partie. Voulez-vous continuer ?',
+    confirmNo: 'Non', confirmYes: 'Oui',
+    resultTitle: 'Clé de Réponses',
+    resultDesc: 'Les mots manqués sont marqués en rouge.',
+    resultFound: 'Trouvé', resultMissed: 'Manqué',
+    resultNewGame: 'Nouvelle Partie',
+  }
+};
+
+function t(key, ...args) {
+  const lang = localStorage.getItem(LANG_KEY) || 'tr';
+  const val = (TRANSLATIONS[lang] ?? TRANSLATIONS.tr)[key] ?? TRANSLATIONS.tr[key];
+  return typeof val === 'function' ? val(...args) : (val ?? key);
+}
+
+function applyTranslations() {
+  // HTML lang attribute → CSS text-transform doğru locale kullanır
+  // (TR: i→İ, EN/FR: i→I)
+  document.documentElement.lang = localStorage.getItem(LANG_KEY) || 'tr';
+
+  const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+
+  // Header & progress
+  set('i18nProgressLabel',        t('progressLabel'));
+  document.getElementById('statsBtn').title    = t('ttStats');
+  document.getElementById('settingsBtn').title = t('ttSettings');
+  document.getElementById('giveUpBtn').title   = t('ttGiveUp');
+  document.getElementById('jokerWordBtn').title = t('ttJokerWord');
+  document.getElementById('jokerBtn').title    = t('ttJoker');
+  document.getElementById('shuffleBtn').title  = t('ttShuffle');
+  document.getElementById('historyBtn').title  = t('ttHistory');
+
+  // Settings modal
+  set('i18nSettingsTitle',       t('settingsTitle'));
+  set('i18nSettingsDesc',        t('settingsDesc'));
+  set('i18nSettingsThemeLabel',  t('settingsThemeLabel'));
+  set('i18nThemeLightText',      t('themeLightText'));
+  set('i18nThemeDarkText',       t('themeDarkText'));
+  set('i18nSettingsResumeLabel', t('settingsResumeLabel'));
+  set('i18nSettingsResumeDesc',  t('settingsResumeDesc'));
+  set('i18nResumeOnText',        t('resumeOnText'));
+  set('i18nResumeOffText',       t('resumeOffText'));
+  set('i18nSettingsLangLabel',   t('settingsLangLabel'));
+  set('modalSettingsCloseBtn',   t('settingsClose'));
+
+  // Stats modal
+  set('i18nStatsTitle',           t('statsTitle'));
+  set('i18nStatsDesc',            t('statsDesc'));
+  set('i18nStatsCompletedLabel',  t('statsCompletedLabel'));
+  set('i18nStatsGaveUpLabel',     t('statsGaveUpLabel'));
+  set('i18nStatsHintLabel',       t('statsHintLabel'));
+  set('i18nStatsJokerWordsLabel', t('statsJokerWordsLabel'));
+  set('i18nStatsBestTimeLabel',   t('statsBestTimeLabel'));
+  set('modalStatsCloseBtn',       t('statsClose'));
+
+  // Joker Word modal
+  set('i18nJokerWordTitle',     t('jokerWordTitle'));
+  set('i18nJokerWordDesc',      t('jokerWordDesc'));
+  set('i18nJokerWordDontShow',  t('jokerWordDontShow'));
+  set('jokerWordNoBtn',         t('confirmNo'));
+  set('jokerWordYesBtn',        t('confirmYes'));
+
+  // History modal
+  set('i18nHistoryTitle',      t('historyTitle'));
+  set('historyDesc',           t('historyDesc'));
+  set('modalHistoryCloseBtn',  t('historyClose'));
+
+  // Confirm modal
+  set('i18nConfirmTitle',  t('confirmTitle'));
+  set('i18nConfirmDesc',   t('confirmDesc'));
+  set('modalNoBtn',        t('confirmNo'));
+  set('modalYesBtn',       t('confirmYes'));
+
+  // Result modal
+  set('i18nResultTitle',   t('resultTitle'));
+  set('i18nResultDesc',    t('resultDesc'));
+  set('modalNewGameBtn',   t('resultNewGame'));
+
+  // Dinamik metinler
+  updateProgress();
+  updateJokerUI();
+  updateStatsUI();
+}
 
 function addStatCompleted() {
   let val = parseInt(localStorage.getItem('kelimer_completed')) || 0;
@@ -1854,15 +3053,86 @@ function addStatGaveUp() {
   localStorage.setItem('kelimer_gave_up', val + 1);
 }
 
-// ══════════════════════════════════════════════════════════════
-//  MATRİS MOTORU
-// ══════════════════════════════════════════════════════════════
+function addStatHintUsed() {
+  let val = parseInt(localStorage.getItem('kelimer_hint_used')) || 0;
+  localStorage.setItem('kelimer_hint_used', val + 1);
+}
+
+function addStatJokerWordFound() {
+  let val = parseInt(localStorage.getItem('kelimer_joker_words_found')) || 0;
+  localStorage.setItem('kelimer_joker_words_found', val + 1);
+}
+
+function getElapsedSeconds() {
+  return Math.max(0, Math.floor((Date.now() - gameStartedAt) / 1000) + elapsedBeforeStart);
+}
+
+function formatDuration(totalSeconds) {
+  const seconds = Math.max(0, parseInt(totalSeconds) || 0);
+  if (seconds <= 0) return t('statsBestTimeEmpty');
+
+  const pad = (num) => String(num).padStart(2, '0');
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const restSeconds = seconds % 60;
+
+  return hours > 0
+    ? `${hours}:${pad(minutes)}:${pad(restSeconds)}`
+    : `${pad(minutes)}:${pad(restSeconds)}`;
+}
+
+function updateBestTimeIfNeeded() {
+  const elapsed = getElapsedSeconds();
+  if (elapsed <= 0) return;
+
+  const best = parseInt(localStorage.getItem('kelimer_best_time')) || 0;
+  if (best === 0 || elapsed < best) {
+    localStorage.setItem('kelimer_best_time', String(elapsed));
+  }
+}
+
+function startTimerAutosave() {
+  if (timerSaveInterval) clearInterval(timerSaveInterval);
+  timerSaveInterval = setInterval(saveGameState, 15000);
+}
+
+function stopTimerAutosave() {
+  if (timerSaveInterval) {
+    clearInterval(timerSaveInterval);
+    timerSaveInterval = null;
+  }
+}
+
+function updateStatsUI() {
+  const completed = parseInt(localStorage.getItem('kelimer_completed')) || 0;
+  const gaveUp = parseInt(localStorage.getItem('kelimer_gave_up')) || 0;
+  const hintsUsed = parseInt(localStorage.getItem('kelimer_hint_used')) || 0;
+  const jokerWordsFound = parseInt(localStorage.getItem('kelimer_joker_words_found')) || 0;
+  const bestTime = parseInt(localStorage.getItem('kelimer_best_time')) || 0;
+  const gamesPlayed = completed + gaveUp;
+  const hintRate = gamesPlayed > 0 ? (hintsUsed / gamesPlayed) : 0;
+
+  const completedEl = document.getElementById('statsCompleted');
+  const gaveUpEl = document.getElementById('statsGaveUp');
+  const hintRateEl = document.getElementById('statsHintRate');
+  const jokerWordsEl = document.getElementById('statsJokerWords');
+  const bestTimeEl = document.getElementById('statsBestTime');
+
+  if (completedEl) completedEl.textContent = completed;
+  if (gaveUpEl) gaveUpEl.textContent = gaveUp;
+  if (hintRateEl) hintRateEl.textContent = hintRate.toFixed(1);
+  if (jokerWordsEl) jokerWordsEl.textContent = jokerWordsFound;
+  if (bestTimeEl) bestTimeEl.textContent = formatDuration(bestTime);
+}
 
 /**
  * Tek bir kelimeyi mevcut ızgaraya yerleştirmeyi dener.
  * Başarılıysa gridMatrix ve placedWords'ü günceller, true döner.
  */
-function tryPlaceWord(gridMatrix, placedWords, word) {
+function tryPlaceWord(gridMatrix, placedWords, word, substringFilter = true) {
+  // Alt kelime tekrarlarını engelle.
+  if (substringFilter && placedWords.some(pw => pw.text.includes(word))) return false;
+
   const candidates = [];
 
   for (const pw of placedWords) {
@@ -1875,13 +3145,10 @@ function tryPlaceWord(gridMatrix, placedWords, word) {
         const c = pw.dir === 'H' ? pw.c + i : pw.c - j;
 
         if (validatePlacement(gridMatrix, word, r, c, targetDir)) {
-          
-          // ── YENİ: UZAMSAL MATRİS SINIRLANDIRMA VE SIKIŞTIRMA MOTORU ──
-          // Bu kelime buraya yerleşirse oluşacak potansiyel yeni sınırları hesapla
+          // Aday yerleşimin oluşturacağı yeni sınırları hesapla.
           let minR = r, maxR = r + (targetDir === 'V' ? word.length - 1 : 0);
           let minC = c, maxC = c + (targetDir === 'H' ? word.length - 1 : 0);
 
-          // Mevcut yerleşmiş kelimelerin sınırlarını da hesaba kat
           for (const extW of placedWords) {
             const lenW = extW.text.length;
             if (extW.dir === 'H') {
@@ -1896,25 +3163,31 @@ function tryPlaceWord(gridMatrix, placedWords, word) {
           const numRows = (maxR - minR) + 1;
           const numCols = (maxC - minC) + 1;
 
-          // KATI KURAL: Matrisin mobilde çok uzayıp kutuları küçültmesini engellemek için 
-          // portre ekran sınırı koyuyoruz (Maks 9 Sütun, 9 Satır).
-          // Eğer bu yerleşim matrisi 9x9'dan daha fazla büyütecekse bu adayı doğrudan eliyoruz.
+          // Mobilde okunamayacak kadar büyük adayları ele.
           if (numCols > 9 || numRows > 9) {
             continue; 
           }
-          // ────────────────────────────────────────────────────────────
 
-          // Uç nokta = 0, tam orta = maksimum — her iki kelime için hesapla
+          // Ara harf bağlantılarını öne çıkar, uç bağlantıları tamamen yasaklama.
           const depthOnExisting = Math.min(i, pw.text.length - 1 - i);
           const depthOnNew      = Math.min(j, word.length - 1 - j);
-          // Yatay yerleşime +1 bonus: portre ekranlarda H yönü daha verimli
-          const hBonus = targetDir === 'H' ? 1 : 0;
-          
-          // AKILLI SIKIŞTIRMA (Skor Modifikasyonu):
-          // Toplam kaplanan alan (numRows * numCols) büyüdükçe adaya küçük bir ceza puanı kesiyoruz.
-          // Böylece katı sınıra takılmasa bile algoritma her zaman en toplu duran alternatifi seçecektir.
+          const existingCenterBonus = depthOnExisting / Math.max(1, Math.floor((pw.text.length - 1) / 2));
+          const newCenterBonus = depthOnNew / Math.max(1, Math.floor((word.length - 1) / 2));
+          const endpointPenalty =
+            ((i === 0 || i === pw.text.length - 1) ? 1.2 : 0) +
+            ((j === 0 || j === word.length - 1) ? 1.0 : 0);
           const areaPenalty = (numRows * numCols) * 0.05;
-          const score = depthOnExisting + depthOnNew + hBonus - areaPenalty;
+          const squarenessPenalty = Math.abs(numRows - numCols) * 0.25;
+
+          const score =
+            (depthOnExisting * 1.35) +
+            (depthOnNew * 1.15) +
+            (existingCenterBonus * 1.15) +
+            (newCenterBonus * 0.85) -
+            endpointPenalty -
+            areaPenalty -
+            squarenessPenalty +
+            Math.random() * 0.35;
 
           candidates.push({ r, c, dir: targetDir, score });
         }
@@ -1924,9 +3197,9 @@ function tryPlaceWord(gridMatrix, placedWords, word) {
 
   if (candidates.length === 0) return false;
 
-  // En yüksek skoru bul; eşit skorlular arasında rastgele seç (monotonluğu kır)
+  // En iyi adaylardan birini rastgele seç.
   const maxScore = Math.max(...candidates.map(c => c.score));
-  const best = candidates.filter(c => c.score === maxScore);
+  const best = candidates.filter(c => c.score >= maxScore - 0.75);
   const chosen = best[Math.floor(Math.random() * best.length)];
 
   for (let n = 0; n < word.length; n++) {
@@ -1940,28 +3213,47 @@ function tryPlaceWord(gridMatrix, placedWords, word) {
 
 /**
  * Homojen dağılımlı, 7-8 kelimeli bulmaca üretir.
- *
- * Yerleştirme sırası (kotalar):
- *   1) 5-harfli  → en fazla 2 adet
- *   2) 4-harfli  → en fazla 3 adet
- *   3) 3-harfli  → kalan slotları doldur (toplam 8'e kadar)
- *
- * Her tur kendi kotasını doldurmaya çalışır; tüm turlardan sonra
- * hâlâ 7'ye ulaşılamamışsa kalan listeden herhangi bir kelimeyle
- * ek dolgu yapılır.
  */
 function generateDensePuzzle() {
-  const MIN_WORDS = 7;
-  const MAX_WORDS = 8;
-  const MAX_ATTEMPTS = 1500; // Deneme sınırını 1500'e çıkararak başarı şansını maksimize ettik
+  loadRecentSubWords();
 
-  const allLongWords = DICTIONARY.filter(w => w.length === 6);
+  const MIN_WORDS = 7;
+  const TARGET_WORDS = 8;
+  const MAX_WORDS = TARGET_WORDS;
+  const MAX_ATTEMPTS = 1500;
+  let fallbackPuzzle = null;
+  let fallbackScore = -Infinity;
+
+  const getPatternScore = (words) => {
+    const counts = words.reduce((acc, w) => {
+      acc[w.text.length] = (acc[w.text.length] || 0) + 1;
+      return acc;
+    }, {});
+
+    const isIdealPattern =
+      counts[6] === 1 &&
+      counts[5] === 2 &&
+      counts[4] === 3 &&
+      counts[3] === 2;
+
+    const closeness =
+      Math.min(counts[5] || 0, 2) +
+      Math.min(counts[4] || 0, 3) +
+      Math.min(counts[3] || 0, 2);
+
+    return {
+      isIdealPattern,
+      score: words.length * 100 + closeness * 10 - Math.abs((counts[3] || 0) - 2)
+    };
+  };
+
+  const activeDict = getActiveDictionary();
+  const allLongWords = activeDict.filter(w => w.length === 6);
   if (usedBaseWords.size >= allLongWords.length) usedBaseWords.clear();
   const longWords = allLongWords.filter(w => !usedBaseWords.has(w));
 
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
 
-    // ── 1. Rastgele 6-harfli taban kelime seç ──
     const baseWord = longWords[Math.floor(Math.random() * longWords.length)];
     if (!baseWord) {
       usedBaseWords.clear();
@@ -1969,10 +3261,9 @@ function generateDensePuzzle() {
     }
     const letters  = baseWord.split('');
 
-    // ── 2. Taban harflerinden üretilebilen kelimeleri bul ──
     const byLen = { 5: [], 4: [], 3: [] };
 
-    for (const w of DICTIONARY) {
+    for (const w of activeDict) {
       if (!byLen[w.length]) continue;
       let pool = [...letters];
       let ok = true;
@@ -1987,52 +3278,70 @@ function generateDensePuzzle() {
     const totalCandidates = byLen[5].length + byLen[4].length + byLen[3].length;
     if (totalCandidates < MIN_WORDS - 1) continue;
 
-    shuffleArray(byLen[5]);
-    shuffleArray(byLen[4]);
-    shuffleArray(byLen[3]);
+    // Aynı taban kelimede farklı kombinasyonlar oluşabilsin.
+    shuffleAndPreferFreshWords(byLen[5]);
+    shuffleAndPreferFreshWords(byLen[4]);
+    shuffleAndPreferFreshWords(byLen[3]);
 
-    // ── 3. Taban kelimeyi ızgaraya yerleştir ──
-    const gridMatrix  = Array(40).fill(null).map(() => Array(40).fill(null));
-    const placedWords = [];
+    const MAX_THREE_LETTER = 2;
 
-    const startR = 20, startC = 17;
-    for (let i = 0; i < baseWord.length; i++) {
-      gridMatrix[startR][startC + i] = baseWord[i];
-    }
-    placedWords.push({ text: baseWord, r: startR, c: startC, dir: 'H' });
+    const runPlacement = (filter) => {
+      const gridMatrix  = Array(40).fill(null).map(() => Array(40).fill(null));
+      const placedWords = [];
 
-    // ── 4. Öncelikli pattern yerleşimi ──
-    const schedule = [
-      [byLen[5], 2],
-      [byLen[4], 3],
-      [byLen[3], 1],
-    ];
-
-    for (const [group, quota] of schedule) {
-      let placed = 0;
-      for (const word of group) {
-        if (placed >= quota)             break;
-        if (placedWords.length >= MAX_WORDS) break;
-        if (tryPlaceWord(gridMatrix, placedWords, word)) placed++;
+      const startR = 20, startC = 17;
+      for (let i = 0; i < baseWord.length; i++) {
+        gridMatrix[startR][startC + i] = baseWord[i];
       }
-      if (placedWords.length >= MAX_WORDS) break;
-    }
+      placedWords.push({ text: baseWord, r: startR, c: startC, dir: 'H' });
 
-    // ── 5. Eksik kalan slotları tamamla ──
-    if (placedWords.length < MIN_WORDS) {
-      const usedSet  = new Set(placedWords.map(p => p.text));
-      const leftover = [
-        ...byLen[5].filter(w => !usedSet.has(w)),
-        ...byLen[4].filter(w => !usedSet.has(w)),
-        ...byLen[3].filter(w => !usedSet.has(w)),
+      // Önce hedef kelime dağılımını doldur.
+      const schedule = [
+        [byLen[5], 2],
+        [byLen[4], 3],
+        [byLen[3], MAX_THREE_LETTER],
       ];
-      for (const word of leftover) {
+      for (const [group, quota] of schedule) {
+        let placed = 0;
+        for (const word of group) {
+          if (placed >= quota)                 break;
+          if (placedWords.length >= MAX_WORDS) break;
+          if (tryPlaceWord(gridMatrix, placedWords, word, filter)) placed++;
+        }
         if (placedWords.length >= MAX_WORDS) break;
-        tryPlaceWord(gridMatrix, placedWords, word);
       }
+
+      // Hedefe ulaşılamazsa kalan uygun kelimelerle tamamla.
+      if (placedWords.length < MAX_WORDS) {
+        const usedSet = new Set(placedWords.map(p => p.text));
+        const count3  = placedWords.filter(p => p.text.length === 3).length;
+
+        const leftover = [
+          ...byLen[5].filter(w => !usedSet.has(w)),
+          ...byLen[4].filter(w => !usedSet.has(w)),
+          ...(count3 < MAX_THREE_LETTER ? byLen[3].filter(w => !usedSet.has(w)) : []),
+        ];
+
+        for (const word of leftover) {
+          if (placedWords.length >= MAX_WORDS) break;
+          if (word.length === 3 && placedWords.filter(p => p.text.length === 3).length >= MAX_THREE_LETTER) continue;
+          tryPlaceWord(gridMatrix, placedWords, word, filter);
+        }
+      }
+
+      return { gridMatrix, placedWords };
+    };
+
+    let { placedWords } = runPlacement(true);
+
+    // Alt kelime filtresiyle yeterli sonuç çıkmazsa oynanabilirliği koru.
+    if (placedWords.length < MIN_WORDS) {
+      shuffleAndPreferFreshWords(byLen[5]);
+      shuffleAndPreferFreshWords(byLen[4]);
+      shuffleAndPreferFreshWords(byLen[3]);
+      ({ placedWords } = runPlacement(false));
     }
 
-    // ── 6. BOYUT VE KALİTE FİLTRESİ (GÜVENLİ VE KADEMELİ) ──
     if (placedWords.length >= MIN_WORDS) {
       const finalSelectedWords = placedWords.slice(0, MAX_WORDS);
 
@@ -2053,27 +3362,40 @@ function generateDensePuzzle() {
       const finalRows = (maxR - minR) + 1;
       const finalCols = (maxC - minC) + 1;
 
-      // Yeni 1500'lük limite göre optimize edilmiş kademeli esnetme:
-      let allowedLimit = 8; 
-      if (attempt > 400) {
-        allowedLimit = 9;  // İlk 400 denemede kusursuz 8x8 bulamazsa 9x9'a esne
-      }
-      if (attempt > 1000) {
-        allowedLimit = 10; // 1000 denemeden sonra hâlâ sıkışmadıysa maksimum 10x10'a izin ver
+      // Dikey oluşursa son adımda yataya çevrilir.
+      const allowedLimit = 9;
+
+      if (finalRows > allowedLimit || finalCols > allowedLimit) continue;
+
+      // Çok uzun-dar ızgaralar mobilde küçük görünür.
+      const longer  = Math.max(finalRows, finalCols);
+      const shorter = Math.min(finalRows, finalCols);
+      if (longer > shorter * 2) continue;
+
+      if (shorter > 8) continue;
+
+      const candidatePuzzle = { letters, words: finalSelectedWords };
+      const pattern = getPatternScore(finalSelectedWords);
+
+      // İdeal dağılım: 1x6, 2x5, 3x4, 2x3.
+      if (finalSelectedWords.length >= TARGET_WORDS && pattern.isIdealPattern) {
+        usedBaseWords.add(baseWord);
+        return candidatePuzzle;
       }
 
-      // Belirlenen dinamik boyuttan büyükse bu kombinasyonu reddet ve aramaya devam et
-      if (finalRows > allowedLimit || finalCols > allowedLimit) {
-        continue; 
+      // İdeal dağılım yoksa en iyi adayı yedekte tut.
+      if (pattern.score > fallbackScore) {
+        fallbackPuzzle = candidatePuzzle;
+        fallbackScore = pattern.score;
       }
-
-      // Kriterleri başarıyla geçen süper kompakt bulmacayı oyuna fırlat
-      usedBaseWords.add(baseWord);
-      return { letters, words: finalSelectedWords };
     }
   }
 
-  // 1500 denemede de mucizevi şekilde eşleşme olmazsa güvenlik önlemi olarak yedek havuzu döndür
+  if (fallbackPuzzle) {
+    usedBaseWords.add(fallbackPuzzle.words[0].text);
+    return fallbackPuzzle;
+  }
+
   return BACKUP_PUZZLES[backupIndex++ % BACKUP_PUZZLES.length];
 }
 
@@ -2116,9 +3438,42 @@ function validatePlacement(matrix, word, startR, startC, dir) {
   return intersections > 0;
 }
 
-// ══════════════════════════════════════════════════════════════
-//  GÖRSEL AKIŞ VE TETİKLEYİCİLER
-// ══════════════════════════════════════════════════════════════
+// Oyun akışı
+function getPuzzleBounds(words) {
+  let minR = Infinity, maxR = -Infinity;
+  let minC = Infinity, maxC = -Infinity;
+
+  words.forEach(w => {
+    const endR = w.dir === 'H' ? w.r : w.r + w.text.length - 1;
+    const endC = w.dir === 'H' ? w.c + w.text.length - 1 : w.c;
+
+    minR = Math.min(minR, w.r);
+    maxR = Math.max(maxR, endR);
+    minC = Math.min(minC, w.c);
+    maxC = Math.max(maxC, endC);
+  });
+
+  return {
+    minR, maxR, minC, maxC,
+    rows: (maxR - minR) + 1,
+    cols: (maxC - minC) + 1
+  };
+}
+
+function normalizePuzzleOrientation(puzzle) {
+  if (!puzzle || !Array.isArray(puzzle.words) || puzzle.words.length === 0) return puzzle;
+
+  const bounds = getPuzzleBounds(puzzle.words);
+  if (bounds.rows <= bounds.cols) return puzzle;
+
+  puzzle.words.forEach(w => {
+    [w.r, w.c] = [w.c, w.r];
+    w.dir = w.dir === 'H' ? 'V' : 'H';
+  });
+
+  return puzzle;
+}
+
 function initGame() {
   document.getElementById('customModal').style.display = 'none';
   document.getElementById('modalConfirmState').style.display = 'block';
@@ -2126,26 +3481,8 @@ function initGame() {
   document.getElementById('modalStatsState').style.display = 'none';
   document.getElementById('modalSettingsState').style.display = 'none';
 
-   currentPuzzle = generateDensePuzzle();
-
-  // Izgara dikey uzunsa 90° döndür — yatay alan portre ekranda daha verimli
-  (function rotatePuzzleIfTall() {
-    const words = currentPuzzle.words;
-    let minR = Infinity, maxR = -Infinity, minC = Infinity, maxC = -Infinity;
-    words.forEach(w => {
-      const endR = w.dir === 'H' ? w.r : w.r + w.text.length - 1;
-      const endC = w.dir === 'H' ? w.c + w.text.length - 1 : w.c;
-      minR = Math.min(minR, w.r);  maxR = Math.max(maxR, endR);
-      minC = Math.min(minC, w.c);  maxC = Math.max(maxC, endC);
-    });
-    if ((maxR - minR) > (maxC - minC)) {
-      // Transpose: r↔c koordinatları yer değiştirir, H↔V yön tersine döner
-      words.forEach(w => {
-        [w.r, w.c] = [w.c, w.r];
-        w.dir = w.dir === 'H' ? 'V' : 'H';
-      });
-    }
-  })();
+  currentPuzzle = normalizePuzzleOrientation(generateDensePuzzle());
+  rememberPuzzleSubWords(currentPuzzle.words);
 
   currentLetters = [...currentPuzzle.letters];
   shuffleArray(currentLetters);
@@ -2153,23 +3490,26 @@ function initGame() {
   foundWords = [];
   failedWords = [];
   remainingJokers = 3;
+  jokerWordState = { active: false, word: '', found: false, unavailable: false };
+  jokerHintCredits = 0;
+  gameStartedAt = Date.now();
+  elapsedBeforeStart = 0;
 
-  buildGrid();
-  buildDisc();
+  adjustGridSize();
   updateProgress();
   updateJokerUI();
-  adjustGridSize();
-  saveGameState(); // Yeni oyunu kaydet
+  updateJokerWordUI();
+  applyTranslations();
+  saveGameState();
+  startTimerAutosave();
 }
 
-// ══════════════════════════════════════════════════════════════
-//  KAYDET / GERİ YÜKLE / TEMİZLE
-// ══════════════════════════════════════════════════════════════
+// Oyun durumu
 function saveGameState() {
   if (localStorage.getItem(RESUME_KEY) !== 'on') return;
   if (!currentPuzzle) return;
 
-  // İpucu ile açılmış ama kelime olarak bulunmamış hücrelerin koordinatlarını kaydet
+  // İpucuyla açılan hücreleri ayrıca sakla.
   const hintRevealedKeys = [];
   if (currentPuzzle.placedCells) {
     Object.entries(currentPuzzle.placedCells).forEach(([key, cellObj]) => {
@@ -2185,6 +3525,9 @@ function saveGameState() {
     failedWords:      [...failedWords],
     remainingJokers,
     currentLetters:   [...currentLetters],
+    jokerWordState:   { ...jokerWordState },
+    jokerHintCredits,
+    elapsedSeconds:   getElapsedSeconds(),
     hintRevealedKeys,
     usedBaseWords:    [...usedBaseWords],
   };
@@ -2198,9 +3541,9 @@ function clearGameState() {
 function restoreGameState(state) {
   document.getElementById('customModal').style.display = 'none';
 
-  currentPuzzle   = { letters: state.puzzle.letters, words: state.puzzle.words };
+  currentPuzzle   = normalizePuzzleOrientation({ letters: state.puzzle.letters, words: state.puzzle.words });
 
-  // Sadece mevcut bulmacada gerçekten var olan kelimeleri kabul et + tekrarları temizle
+  // Kaydedilmiş kelimeleri mevcut bulmacaya göre doğrula.
   const validWordSet = new Set(currentPuzzle.words.map(w => w.text));
   foundWords = [...new Set(
     (Array.isArray(state.foundWords) ? state.foundWords : [])
@@ -2210,19 +3553,25 @@ function restoreGameState(state) {
   failedWords     = Array.isArray(state.failedWords) ? state.failedWords : [];
   remainingJokers = (typeof state.remainingJokers === 'number') ? state.remainingJokers : 3;
   currentLetters  = Array.isArray(state.currentLetters) ? state.currentLetters : [...currentPuzzle.letters];
+  jokerWordState  = (state.jokerWordState && typeof state.jokerWordState.word === 'string')
+    ? { active: !!state.jokerWordState.active, word: state.jokerWordState.word, found: !!state.jokerWordState.found, unavailable: !!state.jokerWordState.unavailable }
+    : { active: false, word: '', found: false, unavailable: false };
+  jokerHintCredits = (typeof state.jokerHintCredits === 'number') ? state.jokerHintCredits : 0;
+  elapsedBeforeStart = Math.max(0, parseInt(state.elapsedSeconds) || 0);
+  gameStartedAt = Date.now();
 
   if (Array.isArray(state.usedBaseWords)) {
     state.usedBaseWords.forEach(w => usedBaseWords.add(w));
   }
+  loadRecentSubWords();
 
   buildGrid();
   buildDisc();
 
-  // hint hücrelerini önceden set'e al — canlı oyundaki davranışı kopyala:
-  // hint ile açılmış hücreler kelime bulunsa bile filled ALMAZ, sadece hint-open kalır
+  // İpucuyla açılan hücreler kendi rengini korur.
   const hintKeySet = new Set(Array.isArray(state.hintRevealedKeys) ? state.hintRevealedKeys : []);
 
-  // Bulunan kelimelerin hücrelerini filled olarak geri aç (hint hücreleri hariç)
+  // Bulunan kelimelerin hücrelerini geri aç.
   foundWords.forEach(wordText => {
     const wordData = currentPuzzle.words.find(w => w.text === wordText);
     if (!wordData) return;
@@ -2234,54 +3583,74 @@ function restoreGameState(state) {
       if (cellObj) {
         cellObj.open = true;
         if (!hintKeySet.has(key)) {
-          cellObj.el.classList.add('filled'); // hint olmayan hücreler kahverengi
+          cellObj.el.classList.add('filled');
         }
       }
     }
   });
 
-  // İpucu ile açılmış hücreleri hint-open olarak geri aç (found word içindekiler dahil)
+  // İpucu hücrelerini geri aç.
   hintKeySet.forEach(key => {
     const cellObj = currentPuzzle.placedCells[key];
     if (cellObj) {
       cellObj.open = true;
-      cellObj.el.classList.add('hint-open'); // her zaman turuncu kalır
+      cellObj.el.classList.add('hint-open');
     }
   });
 
   updateProgress();
   updateJokerUI();
-  adjustGridSize();
+  updateJokerWordUI();
+  applyTranslations();
+  startTimerAutosave();
 }
 
-function adjustGridSize() {
-  const gridContainer = document.getElementById('gridContainer'); // Izgara kapsayıcınızın ID'si
-  if (!gridContainer) return;
+function reapplyOpenedCells(hintKeySet = new Set()) {
+  if (!currentPuzzle || !currentPuzzle.placedCells) return;
 
-  // Oyun alanınızın satır ve sütun sayıları (Örn: 5x5 veya kelime uzunluğuna göre dinamik)
-  // Eğer bu değerler dinamikse değişkenlerden çekebilirsin
-  const columns = 5; 
-  const rows = 5; 
+  foundWords.forEach(wordText => {
+    const wordData = currentPuzzle.words.find(w => w.text === wordText);
+    if (!wordData) return;
 
-  // Kullanılabilir maksimum genişlik (Sağdan soldan 16px toplam 32px padding bırakıyoruz)
-  const availableWidth = window.innerWidth - 32; 
-  
-  // Kullanılabilir maksimum yükseklik 
-  // Mobil tarayıcılarda üst/alt barlar alanı daraltabileceği için güvenli bir alan bırakıyoruz (örn: ekranın %60'ı)
-  const availableHeight = window.innerHeight * 0.55; 
+    for (let i = 0; i < wordData.text.length; i++) {
+      const r = wordData.dir === 'H' ? wordData.r     : wordData.r + i;
+      const c = wordData.dir === 'H' ? wordData.c + i : wordData.c;
+      const key = `${r},${c}`;
+      const cellObj = currentPuzzle.placedCells[key];
+      if (!cellObj) continue;
 
-  // Hücrelerin hem genişliğe hem yüksekliğe sığması için en uygun boyutu buluyoruz
-  const maxCellWidth = availableWidth / columns;
-  const maxCellHeight = availableHeight / rows;
-  
-  // Hangi boyut daha küçükse, hücrelerin kare kalması için onu baz alıyoruz (gap/boşluk payı düşülerek)
-  const gap = 8; // CSS'teki gap değeriyle aynı olmalı
-  const cellSize = Math.min(maxCellWidth, maxCellHeight) - gap;
+      cellObj.open = true;
+      if (!hintKeySet.has(key)) {
+        cellObj.el.classList.add('filled');
+      }
+    }
+  });
 
-  // Hesaplanan boyutları CSS Variable (Değişken) olarak CSS'e gönderiyoruz
-  document.documentElement.style.setProperty('--cell-size', `${cellSize}px`);
-  document.documentElement.style.setProperty('--grid-cols', columns);
-  document.documentElement.style.setProperty('--grid-rows', rows);
+  hintKeySet.forEach(key => {
+    const cellObj = currentPuzzle.placedCells[key];
+    if (!cellObj) return;
+
+    cellObj.open = true;
+    cellObj.el.classList.add('hint-open');
+  });
+}
+
+function adjustGridSize(hintKeys = null) {
+  if (!currentPuzzle) return;
+
+  const hintRevealedKeys = hintKeys ? [...hintKeys] : [];
+  if (!hintKeys && currentPuzzle.placedCells) {
+    Object.entries(currentPuzzle.placedCells).forEach(([key, cellObj]) => {
+      if (cellObj.open && cellObj.el.classList.contains('hint-open')) {
+        hintRevealedKeys.push(key);
+      }
+    });
+  }
+
+  buildGrid();
+  buildDisc();
+  renderJokerWord();
+  reapplyOpenedCells(new Set(hintRevealedKeys));
 }
 
 function shuffleArray(array) {
@@ -2291,6 +3660,207 @@ function shuffleArray(array) {
   }
 }
 
+function loadRecentSubWords() {
+  if (recentSubWords.length > 0) return;
+  try {
+    const saved = JSON.parse(localStorage.getItem(RECENT_SUB_WORDS_KEY) || '[]');
+    if (Array.isArray(saved)) {
+      recentSubWords.push(...saved.filter(w => typeof w === 'string').slice(-RECENT_SUB_WORD_LIMIT));
+    }
+  } catch(e) {}
+}
+
+function saveRecentSubWords() {
+  try {
+    localStorage.setItem(RECENT_SUB_WORDS_KEY, JSON.stringify(recentSubWords.slice(-RECENT_SUB_WORD_LIMIT)));
+  } catch(e) {}
+}
+
+function rememberPuzzleSubWords(words) {
+  const baseWord = words.find(w => w.text.length === 6)?.text;
+  words.forEach(w => {
+    if (w.text === baseWord) return;
+    recentSubWords.push(w.text);
+  });
+  if (recentSubWords.length > RECENT_SUB_WORD_LIMIT) {
+    recentSubWords.splice(0, recentSubWords.length - RECENT_SUB_WORD_LIMIT);
+  }
+  saveRecentSubWords();
+}
+
+function recentWordPenalty(word) {
+  let penalty = 0;
+  for (let i = recentSubWords.length - 1; i >= 0; i--) {
+    if (recentSubWords[i] !== word) continue;
+    const ageFromEnd = recentSubWords.length - 1 - i;
+    penalty += 4 - Math.min(3, Math.floor(ageFromEnd / 18));
+  }
+  return penalty;
+}
+
+function shuffleAndPreferFreshWords(words) {
+  shuffleArray(words);
+  words.sort((a, b) => {
+    const diff = recentWordPenalty(a) - recentWordPenalty(b);
+    return diff !== 0 ? diff : Math.random() - 0.5;
+  });
+}
+
+function canBuildFromLetters(word, letters) {
+  const pool = [...letters];
+  for (const ch of word) {
+    const idx = pool.indexOf(ch);
+    if (idx === -1) return false;
+    pool.splice(idx, 1);
+  }
+  return true;
+}
+
+function pickJokerWord() {
+  const gridWords = new Set(currentPuzzle.words.map(w => w.text));
+  const activeDict = getActiveDictionary();
+  const candidates = activeDict.filter(w =>
+    (w.length === 5 || w.length === 4) &&
+    !gridWords.has(w) &&
+    canBuildFromLetters(w, currentPuzzle.letters)
+  );
+
+  const fiveLetterWords = candidates.filter(w => w.length === 5);
+  const preferred = fiveLetterWords.length > 0 ? fiveLetterWords : candidates.filter(w => w.length === 4);
+  if (preferred.length === 0) return '';
+  return preferred[Math.floor(Math.random() * preferred.length)];
+}
+
+function renderJokerWord() {
+  const wrap = document.getElementById('jokerWordWrap');
+  if (!wrap) return;
+
+  wrap.innerHTML = '';
+  if (!jokerWordState.active || !jokerWordState.word) {
+    wrap.classList.remove('active');
+    return;
+  }
+
+  wrap.classList.add('active');
+  const gridCell = document.querySelector('#crosswordWrap .cell');
+  if (gridCell) {
+    const cellSize = parseFloat(gridCell.style.width) || gridCell.offsetWidth || gridCell.getBoundingClientRect().width;
+    wrap.style.setProperty('--joker-word-cell-size', `${Math.round(cellSize)}px`);
+  }
+
+  const badge = document.createElement('div');
+  badge.className = 'joker-word-badge';
+  badge.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.7 5.47 6.04.88-4.37 4.26 1.03 6.01L12 16.58l-5.4 2.84 1.03-6.01-4.37-4.26 6.04-.88L12 2.8z"/></svg>`;
+  wrap.appendChild(badge);
+
+  jokerWordState.word.split('').forEach((letter, idx) => {
+    const cell = document.createElement('div');
+    cell.className = `cell joker-word-cell${jokerWordState.found ? ' filled revealed' : ' entering'}`;
+    cell.style.setProperty('--joker-enter-delay', `${idx * 55}ms`);
+    cell.textContent = jokerWordState.found ? letter : '';
+    wrap.appendChild(cell);
+  });
+}
+
+function updateJokerWordUI() {
+  renderJokerWord();
+  const btn = document.getElementById('jokerWordBtn');
+  if (btn) btn.disabled = !!jokerWordState.active || !!jokerWordState.unavailable;
+}
+
+function isGameComplete() {
+  return foundWords.length === currentPuzzle.words.length &&
+    (!jokerWordState.active || jokerWordState.found);
+}
+
+function animateHintGain() {
+  const label = document.getElementById('jokerCountLabel');
+  if (!label) return;
+
+  const gain = document.createElement('span');
+  gain.className = 'hint-gain';
+  gain.textContent = '+1';
+  label.appendChild(gain);
+  setTimeout(() => gain.remove(), 950);
+}
+
+function animateJokerWordBadgeReward() {
+  const badge = document.querySelector('#jokerWordWrap .joker-word-badge');
+  if (!badge) return;
+
+  const starIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.7 5.47 6.04.88-4.37 4.26 1.03 6.01L12 16.58l-5.4 2.84 1.03-6.01-4.37-4.26 6.04-.88L12 2.8z"/></svg>`;
+  badge.classList.remove('reward-mode');
+  void badge.offsetWidth;
+  badge.innerHTML = '<span class="reward-text">+1</span>';
+  badge.classList.add('reward-mode');
+
+  setTimeout(() => {
+    badge.classList.remove('reward-mode');
+    void badge.offsetWidth;
+    badge.innerHTML = starIcon;
+    badge.classList.add('reward');
+    setTimeout(() => badge.classList.remove('reward'), 430);
+  }, 1150);
+}
+
+function revealJokerWord() {
+  document.querySelectorAll('#jokerWordWrap .joker-word-cell').forEach((cell, idx) => {
+    cell.textContent = jokerWordState.word[idx];
+    cell.classList.add('filled', 'revealed', 'pop');
+  });
+}
+
+function addJokerWordReward() {
+  remainingJokers++;
+  jokerHintCredits++;
+  updateJokerUI();
+  if (!isGameComplete()) animateHintGain();
+}
+
+function openJokerWord() {
+  if (jokerWordState.active || jokerWordState.unavailable) return;
+
+  const word = pickJokerWord();
+  if (!word) {
+    jokerWordState.unavailable = true;
+    updateJokerWordUI();
+    saveGameState();
+    showToast(t('toastJokerWordUnavailable'));
+    return;
+  }
+
+  jokerWordState = { active: true, word, found: false, unavailable: false };
+  updateJokerWordUI();
+  saveGameState();
+  showToast(t('toastJokerWordOpened'));
+}
+
+function completeJokerWord() {
+  if (!jokerWordState.active || jokerWordState.found) return false;
+
+  jokerWordState.found = true;
+  addStatJokerWordFound();
+  addJokerWordReward();
+  revealJokerWord();
+  updateJokerWordUI();
+  animateJokerWordBadgeReward();
+  showToast(t('toastJokerWordFound'));
+
+  if (isGameComplete()) {
+    updateBestTimeIfNeeded();
+    stopTimerAutosave();
+    addStatCompleted();
+    clearGameState();
+    setTimeout(() => {
+      showToast(t('toastNextGame'));
+      setTimeout(initGame, 1200);
+    }, 300);
+  } else {
+    saveGameState();
+  }
+
+  return true;
+}
 
 function buildGrid() {
   const wrap = document.getElementById('crosswordWrap');
@@ -2392,14 +3962,17 @@ function buildDisc() {
     const y = dSize / 2 + radius * Math.sin(angle) - btnSize / 2;
 
     const btn = document.createElement('button');
-    btn.className = 'letter-btn';
+    // Saat yönünde sırayla beliren giriş animasyonu
+    const delay = 80 + i * 45;
+    btn.className = 'letter-btn entering';
     btn.textContent = letter;
     btn.style.cssText = `
       width: ${btnSize}px; height: ${btnSize}px;
       left: ${x}px; top: ${y}px;
       font-size: ${Math.round(btnSize * 0.44)}px;
+      --letter-delay: ${delay}ms;
     `;
-    
+
     disc.appendChild(btn);
 
     btnCoords.push({
@@ -2412,9 +3985,7 @@ function buildDisc() {
   });
 }
 
-// ══════════════════════════════════════════════════════════════
-//  ETKİLEŞİM VE GESTURE YÖNETİMİ
-// ══════════════════════════════════════════════════════════════
+// Etkileşimler
 const discElement = document.getElementById('disc');
 const polyline = document.getElementById('swipePolyline');
 const activeLine = document.getElementById('activeLine');
@@ -2498,14 +4069,22 @@ function updateSwipeGraphics() {
 }
 
 function checkWord(targetWord) {
+  if (jokerWordState.active && targetWord === jokerWordState.word) {
+    if (jokerWordState.found) {
+      showToast(t('toastAlreadyFound'));
+      return;
+    }
+    completeJokerWord();
+    return;
+  }
+
   const matchIndex = currentPuzzle.words.findIndex(w => w.text === targetWord);
 
   if (matchIndex !== -1) {
     if (foundWords.includes(targetWord)) {
-      showToast('Bu kelimeyi zaten buldun!');
+      showToast(t('toastAlreadyFound'));
 
-      // Kelimenin hücrelerini sırayla (dalgalı) titret
-      // Her hücre için önceki timer'ları iptal et → race condition önlenir
+      // Daha önce bulunan kelimenin hücrelerini sırayla vurgula.
       const wordData = currentPuzzle.words[matchIndex];
       for (let i = 0; i < wordData.text.length; i++) {
         const r = wordData.dir === 'H' ? wordData.r     : wordData.r + i;
@@ -2515,7 +4094,7 @@ function checkWord(targetWord) {
 
         const el = cellObj.el;
 
-        // Önceki bekleyen timer'ları iptal et (hızlı ardışık tetiklemelerde çakışmayı önler)
+        // Hızlı ardışık tetiklemelerde bekleyen animasyonları temizle.
         if (el._wiggleStartTimer) clearTimeout(el._wiggleStartTimer);
         if (el._wiggleEndTimer)   clearTimeout(el._wiggleEndTimer);
 
@@ -2526,7 +4105,6 @@ function checkWord(targetWord) {
           el.classList.add('wiggle');
           el._wiggleEndTimer = setTimeout(() => {
             el.classList.remove('wiggle');
-            // Finale: glow pulse — kelimeyi daha önce bulduğunu vurgular
             if (el._finaleTimer) clearTimeout(el._finaleTimer);
             void el.offsetWidth;
             el.classList.add('finale');
@@ -2542,7 +4120,7 @@ function checkWord(targetWord) {
     }
 
     foundWords.push(targetWord);
-    showToast('Tebrikler!');
+    showToast(t('toastCorrect'));
 
     const wordData = currentPuzzle.words[matchIndex];
     for (let i = 0; i < wordData.text.length; i++) {
@@ -2557,28 +4135,29 @@ function checkWord(targetWord) {
     }
 
     updateProgress();
-    saveGameState(); // Kelime bulundu → kaydet
+    updateJokerUI();
+    saveGameState();
 
-    if (foundWords.length === currentPuzzle.words.length) {
+    if (isGameComplete()) {
+      updateBestTimeIfNeeded();
+      stopTimerAutosave();
       addStatCompleted();
-      clearGameState(); // Oyun bitti → kaydı temizle
+      clearGameState();
       setTimeout(() => {
-        showToast('Harika! Bir sonraki bulmacaya geçiliyor...');
+        showToast(t('toastNextGame'));
         setTimeout(initGame, 1200);
       }, 300);
     }
   } else {
-    showToast('Geçersiz Kelime!');
-    // Daha önce eklenmemişse ve doğru kelime değilse geçmişe ekle
-    if (!failedWords.includes(targetWord)) {
-      failedWords.unshift(targetWord); // En son deneme başa gelsin
-    }
+    showToast(t('toastInvalid'));
+    const prevFailedIndex = failedWords.indexOf(targetWord);
+    if (prevFailedIndex !== -1) failedWords.splice(prevFailedIndex, 1);
+    failedWords.unshift(targetWord);
+    saveGameState();
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-//  JOKER VE DİĞER AKSİYONLAR
-// ══════════════════════════════════════════════════════════════
+// Aksiyonlar
 document.getElementById('jokerBtn').addEventListener('click', () => {
   if (remainingJokers <= 0) return;
 
@@ -2590,13 +4169,19 @@ document.getElementById('jokerBtn').addEventListener('click', () => {
     randomCell.el.classList.add('hint-open', 'pop');
 
     remainingJokers--;
+    if (jokerHintCredits > 0) {
+      jokerHintCredits--;
+    } else {
+      addStatHintUsed();
+    }
     updateJokerUI();
-    showToast('Harf Keşfedildi!');
+    showToast(t('toastHintUsed'));
 
-    checkCompletedWordsByJoker();
-    saveGameState(); // İpucu kullanıldı → kaydet
+    const completedByJoker = checkCompletedWordsByJoker();
+    updateJokerUI();
+    if (!completedByJoker) saveGameState();
   } else {
-    showToast('Açılacak harf kalmadı!');
+    showToast(t('toastNoHint'));
   }
 });
 
@@ -2620,43 +4205,67 @@ function checkCompletedWordsByJoker() {
     }
   });
 
-  if (foundWords.length === currentPuzzle.words.length) {
+  if (isGameComplete()) {
+    updateBestTimeIfNeeded();
+    stopTimerAutosave();
     addStatCompleted(); 
+    clearGameState();
     setTimeout(() => {
-      showToast('Tebrikler! Bir sonraki bulmacaya geçiliyor...');
+      showToast(t('toastNextGame'));
       setTimeout(initGame, 1200);
     }, 300);
+    return true;
   }
+  return false;
 }
 
 function updateJokerUI() {
   const label = document.getElementById('jokerCountLabel');
-  label.innerHTML = `<svg viewBox="0 0 20 20" fill="currentColor" style="width:14px;height:14px;flex-shrink:0"><path d="M10 2a6 6 0 00-3.75 10.7.75.75 0 01.25.56V14h7v-.74a.75.75 0 01.25-.56A6 6 0 0010 2zm-1.5 12.5v.25a1.5 1.5 0 003 0v-.25h-3z"/></svg>İpucu: ${remainingJokers}`;
-  document.getElementById('jokerBtn').disabled = (remainingJokers <= 0);
+  label.innerHTML = `<svg viewBox="0 0 20 20" fill="currentColor" style="width:14px;height:14px;flex-shrink:0"><path d="M10 2a6 6 0 00-3.75 10.7.75.75 0 01.25.56V14h7v-.74a.75.75 0 01.25-.56A6 6 0 0010 2zm-1.5 12.5v.25a1.5 1.5 0 003 0v-.25h-3z"/></svg>${t('jokerLabel', remainingJokers)}`;
+  const hasClosedGridCells = currentPuzzle && currentPuzzle.placedCells &&
+    Object.values(currentPuzzle.placedCells).some(cell => !cell.open);
+  document.getElementById('jokerBtn').disabled = (remainingJokers <= 0 || !hasClosedGridCells);
 }
 
 function updateProgress() {
   const total   = currentPuzzle ? currentPuzzle.words.length : 0;
-  const current = Math.min(foundWords.length, total); // toplam kelime sayısını asla aşmasın
+  const current = Math.min(foundWords.length, total);
   const pct     = total > 0 ? Math.round((current / total) * 100) : 0;
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = `${current} / ${total} Kelime`;
+  document.getElementById('progressText').textContent = t('progressWords', current, total);
 }
 
 document.getElementById('shuffleBtn').addEventListener('click', () => {
-  shuffleArray(currentLetters);
-  buildDisc();
+  const disc = document.getElementById('disc');
+  const btns = disc.querySelectorAll('.letter-btn');
+
+  // 1) Mevcut harfleri ters saat yönünde çıkart
+  btns.forEach((btn, i) => {
+    const reverseI = btns.length - 1 - i;
+    btn.style.setProperty('--letter-delay', `${reverseI * 22}ms`);
+    btn.classList.remove('entering');
+    void btn.offsetWidth;
+    btn.classList.add('exiting');
+    btn.style.pointerEvents = 'none';
+  });
+
+  // 2) Çıkış tamamlanınca karıştır ve yeni harfleri giriş animasyonuyla getir
+  const exitDuration = (btns.length - 1) * 22 + 180 + 30;
+  setTimeout(() => {
+    shuffleArray(currentLetters);
+    buildDisc();
+    saveGameState();
+  }, exitDuration);
 });
 
-// ══════════════════════════════════════════════════════════════
-//  POP-UP (MODAL) YÖNETİM MERKEZİ
-// ══════════════════════════════════════════════════════════════
+// Modallar
 const modalOverlay = document.getElementById('customModal');
 const modalConfirmState = document.getElementById('modalConfirmState');
 const modalResultState = document.getElementById('modalResultState');
 const modalStatsState = document.getElementById('modalStatsState');
 const modalSettingsState = document.getElementById('modalSettingsState');
 const modalHistoryState = document.getElementById('modalHistoryState');
+const modalJokerWordState = document.getElementById('modalJokerWordState');
 
 function hideAllModals() {
   modalConfirmState.style.display = 'none';
@@ -2664,6 +4273,7 @@ function hideAllModals() {
   modalStatsState.style.display = 'none';
   modalSettingsState.style.display = 'none';
   modalHistoryState.style.display = 'none';
+  modalJokerWordState.style.display = 'none';
 }
 
 document.getElementById('giveUpBtn').addEventListener('click', () => {
@@ -2678,7 +4288,8 @@ document.getElementById('modalNoBtn').addEventListener('click', () => {
 
 document.getElementById('modalYesBtn').addEventListener('click', () => {
   addStatGaveUp();
-  clearGameState(); // Pes edildi → kaydı temizle
+  stopTimerAutosave();
+  clearGameState();
 
   Object.values(currentPuzzle.placedCells).forEach(cellObj => {
     if (!cellObj.open) {
@@ -2701,7 +4312,7 @@ document.getElementById('modalYesBtn').addEventListener('click', () => {
     
     const badge = document.createElement('span');
     badge.className = 'badge';
-    badge.textContent = isFound ? 'Bulundu' : 'Kaçırıldı';
+    badge.textContent = isFound ? t('resultFound') : t('resultMissed');
     
     item.appendChild(wordText);
     item.appendChild(badge);
@@ -2716,7 +4327,39 @@ document.getElementById('modalNewGameBtn').addEventListener('click', () => {
   initGame();
 });
 
-// --- GEÇMİŞ BUTONU ---
+document.getElementById('jokerWordBtn').addEventListener('click', () => {
+  if (jokerWordState.active || jokerWordState.unavailable) return;
+
+  if (localStorage.getItem(JOKER_WORD_SKIP_KEY) === 'on') {
+    openJokerWord();
+    return;
+  }
+
+  document.getElementById('jokerWordDontShowCheck').checked = true;
+  hideAllModals();
+  modalJokerWordState.style.display = 'block';
+  modalOverlay.style.display = 'flex';
+});
+
+function persistJokerWordInfoPreference() {
+  const checkbox = document.getElementById('jokerWordDontShowCheck');
+  if (checkbox && checkbox.checked) {
+    localStorage.setItem(JOKER_WORD_SKIP_KEY, 'on');
+  }
+}
+
+document.getElementById('jokerWordNoBtn').addEventListener('click', () => {
+  persistJokerWordInfoPreference();
+  modalOverlay.style.display = 'none';
+});
+
+document.getElementById('jokerWordYesBtn').addEventListener('click', () => {
+  persistJokerWordInfoPreference();
+  modalOverlay.style.display = 'none';
+  openJokerWord();
+});
+
+// Geçmiş
 document.getElementById('historyBtn').addEventListener('click', () => {
   const container = document.getElementById('historyListContainer');
   const desc = document.getElementById('historyDesc');
@@ -2724,7 +4367,7 @@ document.getElementById('historyBtn').addEventListener('click', () => {
 
   if (failedWords.length === 0) {
     desc.style.marginBottom = '0';
-    container.innerHTML = '<div class="history-empty">Henüz yanlış deneme yapılmadı.</div>';
+    container.innerHTML = `<div class="history-empty">${t('historyEmpty')}</div>`;
   } else {
     desc.style.marginBottom = '0';
     failedWords.forEach((word, idx) => {
@@ -2736,8 +4379,8 @@ document.getElementById('historyBtn').addEventListener('click', () => {
 
       const badge = document.createElement('span');
       badge.className = 'attempt-num';
-      // idx 0 = en son deneme
-      badge.textContent = idx === 0 ? 'Son' : `#${failedWords.length - idx}`;
+      // En son deneme üstte görünür.
+      badge.textContent = idx === 0 ? t('historyLatest') : `#${failedWords.length - idx}`;
 
       item.appendChild(wordText);
       item.appendChild(badge);
@@ -2754,10 +4397,9 @@ document.getElementById('modalHistoryCloseBtn').addEventListener('click', () => 
   modalOverlay.style.display = 'none';
 });
 
-// --- İSTATİSTİK BUTONU ---
+// İstatistikler
 document.getElementById('statsBtn').addEventListener('click', () => {
-  document.getElementById('statsCompleted').textContent = localStorage.getItem('kelimer_completed') || '0';
-  document.getElementById('statsGaveUp').textContent = localStorage.getItem('kelimer_gave_up') || '0';
+  updateStatsUI();
   hideAllModals();
   modalStatsState.style.display = 'block';
   modalOverlay.style.display = 'flex';
@@ -2767,7 +4409,7 @@ document.getElementById('modalStatsCloseBtn').addEventListener('click', () => {
   modalOverlay.style.display = 'none';
 });
 
-// --- AYARLAR VE TEMA AKSİYONLARI ---
+// Ayarlar
 document.getElementById('settingsBtn').addEventListener('click', () => {
   hideAllModals();
   modalSettingsState.style.display = 'block';
@@ -2786,6 +4428,12 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
   document.getElementById('resumeOnBtn').classList.toggle('active',  resumeOn);
   document.getElementById('resumeOffBtn').classList.toggle('active', !resumeOn);
 
+  // Dil toggle durumunu senkronize et
+  const activeLang = localStorage.getItem(LANG_KEY) || 'tr';
+  document.getElementById('langTrBtn').classList.toggle('active', activeLang === 'tr');
+  document.getElementById('langEnBtn').classList.toggle('active', activeLang === 'en');
+  document.getElementById('langFrBtn').classList.toggle('active', activeLang === 'fr');
+
   modalOverlay.style.display = 'flex';
 });
 
@@ -2798,7 +4446,7 @@ document.getElementById('themeLightBtn').addEventListener('click', () => {
   localStorage.setItem('kelimer_theme', 'light');
   document.getElementById('themeLightBtn').classList.add('active');
   document.getElementById('themeDarkBtn').classList.remove('active');
-  showToast('Açık Tema Aktif');
+  showToast(t('toastLightTheme'));
 });
 
 document.getElementById('themeDarkBtn').addEventListener('click', () => {
@@ -2806,25 +4454,45 @@ document.getElementById('themeDarkBtn').addEventListener('click', () => {
   localStorage.setItem('kelimer_theme', 'dark');
   document.getElementById('themeDarkBtn').classList.add('active');
   document.getElementById('themeLightBtn').classList.remove('active');
-  showToast('Koyu Tema Aktif');
+  showToast(t('toastDarkTheme'));
 });
 
-// --- KALDIĞIM YERDEN DEVAM ET ---
+// Kaldığım yerden devam et
 document.getElementById('resumeOnBtn').addEventListener('click', () => {
   localStorage.setItem(RESUME_KEY, 'on');
   document.getElementById('resumeOnBtn').classList.add('active');
   document.getElementById('resumeOffBtn').classList.remove('active');
-  saveGameState(); // Mevcut oyunu hemen kaydet
-  showToast('Devam et: Açık');
+  saveGameState();
+  showToast(t('toastResumeOn'));
 });
 
 document.getElementById('resumeOffBtn').addEventListener('click', () => {
   localStorage.setItem(RESUME_KEY, 'off');
   document.getElementById('resumeOffBtn').classList.add('active');
   document.getElementById('resumeOnBtn').classList.remove('active');
-  clearGameState(); // Kaydedilen oyunu sil
-  showToast('Devam et: Kapalı');
+  clearGameState();
+  showToast(t('toastResumeOff'));
 });
+
+// Dil seçimi
+function setLang(code, toastMsg) {
+  if (localStorage.getItem(LANG_KEY) === code) return;
+  localStorage.setItem(LANG_KEY, code);
+  ['langTrBtn', 'langEnBtn', 'langFrBtn'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+  const btnId = { tr: 'langTrBtn', en: 'langEnBtn', fr: 'langFrBtn' }[code];
+  document.getElementById(btnId).classList.add('active');
+  usedBaseWords.clear();
+  clearGameState();
+  modalOverlay.style.display = 'none';
+  initGame();
+  showToast(toastMsg);
+}
+
+document.getElementById('langTrBtn').addEventListener('click', () => setLang('tr', t('toastLangSelected')));
+document.getElementById('langEnBtn').addEventListener('click', () => setLang('en', TRANSLATIONS.en.toastLangSelected));
+document.getElementById('langFrBtn').addEventListener('click', () => setLang('fr', TRANSLATIONS.fr.toastLangSelected));
 
 let toastTimer;
 function showToast(msg) {
@@ -2861,6 +4529,11 @@ window.addEventListener('resize', () => {
     // Ekran boyutları değiştiğinde ızgarayı yeniden boyutlandır
     adjustGridSize();
   }, 150);
+});
+
+window.addEventListener('pagehide', saveGameState);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) saveGameState();
 });
 </script>
 </body>
