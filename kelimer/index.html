@@ -2831,7 +2831,7 @@ const SAVE_KEY   = 'kelimer_gamestate';
 const RESUME_KEY = 'kelimer_resume';
 const LANG_KEY   = 'kelimer_lang';
 const JOKER_WORD_SKIP_KEY = 'kelimer_joker_word_skip_info';
-const RECENT_SUB_WORDS_KEY = 'kelimer_recent_sub_words';
+const RECENT_SUB_WORDS_KEY = 'kelimer_recent_found_words';
 
 // Çeviriler
 const TRANSLATIONS = {
@@ -3547,7 +3547,6 @@ function initGame() {
   document.getElementById('modalSettingsState').style.display = 'none';
 
   currentPuzzle = normalizePuzzleOrientation(generateDensePuzzle());
-  rememberPuzzleSubWords(currentPuzzle.words);
 
   currentLetters = [...currentPuzzle.letters];
   shuffleArray(currentLetters);
@@ -3741,12 +3740,10 @@ function saveRecentSubWords() {
   } catch(e) {}
 }
 
-function rememberPuzzleSubWords(words) {
-  const baseWord = words.find(w => w.text.length === 6)?.text;
-  words.forEach(w => {
-    if (w.text === baseWord) return;
-    recentSubWords.push(w.text);
-  });
+function rememberFoundSubWord(word) {
+  if (!word || word.length === 6) return;
+
+  recentSubWords.push(word);
   if (recentSubWords.length > RECENT_SUB_WORD_LIMIT) {
     recentSubWords.splice(0, recentSubWords.length - RECENT_SUB_WORD_LIMIT);
   }
@@ -4185,6 +4182,7 @@ function checkWord(targetWord) {
     }
 
     foundWords.push(targetWord);
+    rememberFoundSubWord(targetWord);
     showToast(t('toastCorrect'));
 
     const wordData = currentPuzzle.words[matchIndex];
