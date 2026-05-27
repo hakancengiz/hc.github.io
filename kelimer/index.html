@@ -127,6 +127,51 @@
       opacity: 0.1;
     }
 
+    body.training-mode {
+      --accent: #FF5CA8;
+      --accent-light: #FFD166;
+      --accent-glow: rgba(255, 92, 168, 0.28);
+      --bg: #FFEAF4;
+      --bg2: #FFF6D7;
+      --surface: #FFF9FC;
+      --surface2: #FFF0F7;
+      --text-primary: #51305F;
+      --text-muted: #8B5F83;
+      --text-hint: #BD8AA8;
+      --cell-bg: #FFF9FC;
+      --cell-border: #FFB9D9;
+      --cell-filled-bg: #FF5CA8;
+      --cell-filled-text: #FFFFFF;
+      --hint-filled-bg: #20C7B5;
+      --hint-filled-text: #FFFFFF;
+      --disc-bg: #FFF2F8;
+      --disc-ring: rgba(255, 92, 168, 0.28);
+      --letter-dark: #7C4DFF;
+      --letter-text: #FFFFFF;
+      --track-bg: #FFD3E7;
+      --joker-bg: #FFF3B8;
+      --joker-border: #FFB703;
+      --joker-text: #7A3E00;
+      --logo-color: #7B3F8C;
+      --shadow-sm: 0 2px 7px rgba(255,92,168,0.18), 0 1px 2px rgba(95,46,120,0.08);
+      --shadow-md: 0 8px 20px rgba(255,92,168,0.20), 0 3px 8px rgba(32,199,181,0.12);
+      --shadow-lg: 0 18px 40px rgba(255,92,168,0.22), 0 6px 14px rgba(95,46,120,0.12);
+      background:
+        radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.78) 0 9%, transparent 20%),
+        radial-gradient(circle at 82% 22%, rgba(255, 209, 102, 0.24) 0 10%, transparent 24%),
+        radial-gradient(circle at 22% 82%, rgba(32, 199, 181, 0.18) 0 11%, transparent 26%),
+        linear-gradient(160deg, #FFEAF4 0%, #FFF7DB 54%, #EAFBFF 100%);
+    }
+
+    body.training-mode::before {
+      background-image:
+        radial-gradient(circle at 18px 18px, rgba(255,92,168,0.20) 0 2px, transparent 2.8px),
+        radial-gradient(circle at 72px 44px, rgba(32,199,181,0.16) 0 2px, transparent 2.8px),
+        radial-gradient(circle at 42px 86px, rgba(255,209,102,0.24) 0 2px, transparent 2.8px);
+      background-size: 112px 112px;
+      opacity: 0.34;
+    }
+
     .app {
       width: 100%;
       max-width: 480px;
@@ -158,6 +203,10 @@
 
     .logo span {
       color: var(--accent);
+    }
+
+    body.training-mode .logo {
+      text-shadow: 0 3px 0 rgba(255,255,255,0.75), 0 8px 18px rgba(255,92,168,0.20);
     }
 
     .header-controls {
@@ -281,6 +330,11 @@
       transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
     }
 
+    body.training-mode .cell {
+      border-radius: 13px;
+      box-shadow: 0 5px 0 rgba(255,185,217,0.55), 0 8px 18px rgba(255,92,168,0.12);
+    }
+
     .cell.filled {
       background: var(--cell-filled-bg);
       border-color: var(--cell-filled-bg);
@@ -288,11 +342,23 @@
       box-shadow: 0 4px 14px var(--accent-glow), var(--shadow-sm);
     }
 
+    body.training-mode .cell.filled {
+      background: linear-gradient(145deg, #FF7AB8, #FF4F9F);
+      border-color: #FF78B7;
+      box-shadow: 0 5px 0 #D83E86, 0 10px 20px rgba(255,92,168,0.28);
+    }
+
     .cell.hint-open {
       background: var(--hint-filled-bg);
       border-color: var(--hint-filled-bg);
       color: var(--hint-filled-text);
       box-shadow: 0 4px 14px rgba(165, 56, 0, 0.28), var(--shadow-sm);
+    }
+
+    body.training-mode .cell.hint-open {
+      background: linear-gradient(145deg, #33DCCB, #13B8AA);
+      border-color: #55E7D7;
+      box-shadow: 0 5px 0 #0C8F84, 0 10px 18px rgba(32,199,181,0.24);
     }
 
     /* If a hint-revealed cell later becomes word-found, filled overrides */
@@ -479,6 +545,16 @@
       transition: background-color 0.35s;
     }
 
+    body.training-mode .disc {
+      background:
+        repeating-radial-gradient(circle at center, rgba(255,255,255,0.45) 0 10px, rgba(255,211,231,0.45) 10px 20px),
+        linear-gradient(145deg, #FFF8FC, #FFE0F0);
+      box-shadow:
+        inset 0 3px 16px rgba(255,92,168,0.14),
+        0 0 0 3px rgba(255,255,255,0.65),
+        0 12px 24px rgba(255,92,168,0.22);
+    }
+
     /* Subtle inner ring decoration */
     .disc::before {
       content: '';
@@ -535,11 +611,29 @@
       letter-spacing: 0.5px;
     }
 
+    body.training-mode .letter-btn {
+      box-shadow: 0 7px 0 rgba(76,45,145,0.35), 0 12px 20px rgba(95,46,120,0.18);
+      border: 2px solid rgba(255,255,255,0.58);
+    }
+
+    body.training-mode .letter-btn:nth-child(6n+1) { background: linear-gradient(145deg, #FF5CA8, #E93D91); }
+    body.training-mode .letter-btn:nth-child(6n+2) { background: linear-gradient(145deg, #7C4DFF, #5E35D8); }
+    body.training-mode .letter-btn:nth-child(6n+3) { background: linear-gradient(145deg, #20C7B5, #0EA69A); }
+    body.training-mode .letter-btn:nth-child(6n+4) { background: linear-gradient(145deg, #FFB703, #F28A00); }
+    body.training-mode .letter-btn:nth-child(6n+5) { background: linear-gradient(145deg, #FF7A59, #F0523C); }
+    body.training-mode .letter-btn:nth-child(6n) { background: linear-gradient(145deg, #45A3FF, #2577E8); }
+
     .letter-btn.selected {
       transform: scale(1.2) !important;
       background: var(--accent);
       color: #FFFFFF !important;
       box-shadow: 0 6px 18px var(--accent-glow), 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    body.training-mode .letter-btn.selected {
+      background: linear-gradient(145deg, #FFFFFF, #FFF3B8) !important;
+      color: #7B3F8C !important;
+      box-shadow: 0 8px 0 #F0B429, 0 14px 24px rgba(255,183,3,0.28);
     }
 
     @keyframes letterEnter {
@@ -580,6 +674,14 @@
       color: var(--text-muted);
       box-shadow: var(--shadow-sm);
       transition: transform 0.12s, opacity 0.2s, background-color 0.3s, border-color 0.3s, color 0.2s, box-shadow 0.15s;
+    }
+
+    body.training-mode .icon-btn,
+    body.training-mode .action-btn,
+    body.training-mode .joker-count {
+      background: rgba(255,255,255,0.82);
+      border-color: rgba(255,92,168,0.38);
+      box-shadow: 0 5px 0 rgba(255,185,217,0.55), 0 10px 18px rgba(255,92,168,0.13);
     }
 
     .action-btn svg {
@@ -667,11 +769,44 @@
       border-radius: 28px;
       width: 100%;
       max-width: 360px;
-      padding: 28px 26px 24px;
+      max-height: calc(100vh - 40px);
+      max-height: calc(100dvh - 40px);
+      overflow: hidden;
+      padding: 0;
       box-shadow: var(--shadow-lg), 0 0 0 1px var(--cell-border);
       text-align: center;
       animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       transition: background-color 0.3s;
+      display: block;
+    }
+
+    .modal-card-scroll {
+      width: 100%;
+      max-height: calc(100vh - 128px);
+      max-height: calc(100dvh - 128px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+      padding: 28px 26px 18px;
+    }
+
+    .modal-card-scroll::-webkit-scrollbar { width: 4px; }
+    .modal-card-scroll::-webkit-scrollbar-track { background: transparent; margin: 18px 0; }
+    .modal-card-scroll::-webkit-scrollbar-thumb { background: var(--cell-border); border-radius: 4px; }
+
+    .modal-card-actions {
+      padding: 12px 26px 24px;
+      background: var(--surface);
+      box-shadow: 0 -10px 18px rgba(255, 248, 238, 0.82);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    body.dark-mode .modal-card-actions {
+      box-shadow: 0 -10px 18px rgba(26, 24, 46, 0.82);
+    }
+
+    .modal-card-actions .modal-buttons {
+      margin: 0;
     }
 
     @keyframes modalPop {
@@ -1471,6 +1606,34 @@ Devam etmek istiyor musun?</div>
               FR
             </button>
           </div>
+        </div>
+      </div>
+      <div class="setting-item">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; width:100%;">
+          <div class="setting-label" id="i18nSettingsTrainingLabel">Eğitim Modu</div>
+          <div class="theme-switch-group">
+            <button class="theme-btn" id="trainingOnBtn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 8.5l3.5 3.5 8-8"/>
+              </svg>
+              <span id="i18nTrainingOnText">Açık</span>
+            </button>
+            <button class="theme-btn active" id="trainingOffBtn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="4" x2="12" y2="12"/>
+                <line x1="12" y1="4" x2="4" y2="12"/>
+              </svg>
+              <span id="i18nTrainingOffText">Kapalı</span>
+            </button>
+          </div>
+        </div>
+        <div class="setting-sublabel">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;flex-shrink:0;margin-top:1px;">
+            <circle cx="8" cy="8" r="7"/>
+            <line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5" r="0.5" fill="currentColor" stroke="none"/>
+          </svg>
+          <span id="i18nSettingsTrainingDesc">Açık olduğunda bazı harfler hazır görünür. Bu mod istatistiklere işlemez.</span>
         </div>
       </div>
     </div>
@@ -2805,6 +2968,9 @@ let failedWords = [];
 let remainingJokers = 3;
 let jokerWordState = { active: false, word: '', found: false, unavailable: false };
 let jokerHintCredits = 0;
+let currentGameTrainingMode = false;
+let trainingRevealedKeys = [];
+let jokerTrainingRevealedIndexes = [];
 let gameStartedAt = Date.now();
 let elapsedBeforeStart = 0;
 let timerSaveInterval = null;
@@ -2826,10 +2992,12 @@ if (!localStorage.getItem('kelimer_best_time')) localStorage.setItem('kelimer_be
 if (!localStorage.getItem('kelimer_theme')) localStorage.setItem('kelimer_theme', 'light');
 if (!localStorage.getItem('kelimer_resume')) localStorage.setItem('kelimer_resume', 'on');
 if (!localStorage.getItem('kelimer_lang')) localStorage.setItem('kelimer_lang', 'tr');
+if (!localStorage.getItem('kelimer_training_mode')) localStorage.setItem('kelimer_training_mode', 'off');
 
 const SAVE_KEY   = 'kelimer_gamestate';
 const RESUME_KEY = 'kelimer_resume';
 const LANG_KEY   = 'kelimer_lang';
+const TRAINING_MODE_KEY = 'kelimer_training_mode';
 const JOKER_WORD_SKIP_KEY = 'kelimer_joker_word_skip_info';
 const RECENT_SUB_WORDS_KEY = 'kelimer_recent_found_words';
 
@@ -2859,6 +3027,11 @@ const TRANSLATIONS = {
     settingsResumeLabel: 'Izgarayı Hatırla',
     settingsResumeDesc: 'Açık olması durumunda oyun kaldığı yerden devam eder.',
     resumeOnText: 'Açık', resumeOffText: 'Kapalı',
+    settingsTrainingLabel: 'Eğitim Modu',
+    settingsTrainingDesc: 'Açık olduğunda bazı harfler hazır görünür. Bu mod istatistiklere işlemez.',
+    trainingOnText: 'Açık', trainingOffText: 'Kapalı',
+    toastTrainingOn: 'Eğitim Modu: Açık',
+    toastTrainingOff: 'Eğitim Modu: Kapalı',
     settingsLangLabel: 'Dil Tercihi',
     settingsClose: 'Kapat',
     statsTitle: 'İstatistikler',
@@ -2912,6 +3085,11 @@ const TRANSLATIONS = {
     settingsResumeLabel: 'Remember Grid',
     settingsResumeDesc: 'When on, the game resumes from where you left off.',
     resumeOnText: 'On', resumeOffText: 'Off',
+    settingsTrainingLabel: 'Training Mode',
+    settingsTrainingDesc: 'When on, some letters start revealed. This mode does not affect statistics.',
+    trainingOnText: 'On', trainingOffText: 'Off',
+    toastTrainingOn: 'Training Mode: On',
+    toastTrainingOff: 'Training Mode: Off',
     settingsLangLabel: 'Language',
     settingsClose: 'Close',
     statsTitle: 'Statistics',
@@ -2965,6 +3143,11 @@ const TRANSLATIONS = {
     settingsResumeLabel: 'Reprendre la Grille',
     settingsResumeDesc: 'Activé, le jeu reprend là où vous vous êtes arrêté.',
     resumeOnText: 'Oui', resumeOffText: 'Non',
+    settingsTrainingLabel: 'Mode Entraînement',
+    settingsTrainingDesc: 'Activé, certaines lettres sont révélées au départ. Ce mode ne modifie pas les statistiques.',
+    trainingOnText: 'Oui', trainingOffText: 'Non',
+    toastTrainingOn: 'Mode Entraînement : Activé',
+    toastTrainingOff: 'Mode Entraînement : Désactivé',
     settingsLangLabel: 'Langue',
     settingsClose: 'Fermer',
     statsTitle: 'Statistiques',
@@ -3002,6 +3185,10 @@ function t(key, ...args) {
   return typeof val === 'function' ? val(...args) : (val ?? key);
 }
 
+function updateTrainingVisualMode() {
+  document.body.classList.toggle('training-mode', !!currentGameTrainingMode);
+}
+
 function applyTranslations() {
   // HTML lang attribute → CSS text-transform doğru locale kullanır
   // (TR: i→İ, EN/FR: i→I)
@@ -3029,6 +3216,10 @@ function applyTranslations() {
   set('i18nSettingsResumeDesc',  t('settingsResumeDesc'));
   set('i18nResumeOnText',        t('resumeOnText'));
   set('i18nResumeOffText',       t('resumeOffText'));
+  set('i18nSettingsTrainingLabel', t('settingsTrainingLabel'));
+  set('i18nSettingsTrainingDesc',  t('settingsTrainingDesc'));
+  set('i18nTrainingOnText',        t('trainingOnText'));
+  set('i18nTrainingOffText',       t('trainingOffText'));
   set('i18nSettingsLangLabel',   t('settingsLangLabel'));
   set('modalSettingsCloseBtn',   t('settingsClose'));
 
@@ -3072,21 +3263,25 @@ function applyTranslations() {
 }
 
 function addStatCompleted() {
+  if (currentGameTrainingMode) return;
   let val = parseInt(localStorage.getItem('kelimer_completed')) || 0;
   localStorage.setItem('kelimer_completed', val + 1);
 }
 
 function addStatGaveUp() {
+  if (currentGameTrainingMode) return;
   let val = parseInt(localStorage.getItem('kelimer_gave_up')) || 0;
   localStorage.setItem('kelimer_gave_up', val + 1);
 }
 
 function addStatHintUsed() {
+  if (currentGameTrainingMode) return;
   let val = parseInt(localStorage.getItem('kelimer_hint_used')) || 0;
   localStorage.setItem('kelimer_hint_used', val + 1);
 }
 
 function addStatJokerWordFound() {
+  if (currentGameTrainingMode) return;
   let val = parseInt(localStorage.getItem('kelimer_joker_words_found')) || 0;
   localStorage.setItem('kelimer_joker_words_found', val + 1);
 }
@@ -3110,6 +3305,7 @@ function formatDuration(totalSeconds) {
 }
 
 function updateBestTimeIfNeeded() {
+  if (currentGameTrainingMode) return;
   const elapsed = getElapsedSeconds();
   if (elapsed <= 0) return;
 
@@ -3457,7 +3653,7 @@ function generateDensePuzzle() {
   }
 
   if (fallbackPuzzle) {
-    usedBaseWords.add(fallbackPuzzle.words[0].text);
+    if (!currentGameTrainingMode) usedBaseWords.add(fallbackPuzzle.words[0].text);
     return fallbackPuzzle;
   }
 
@@ -3546,6 +3742,8 @@ function initGame() {
   document.getElementById('modalStatsState').style.display = 'none';
   document.getElementById('modalSettingsState').style.display = 'none';
 
+  currentGameTrainingMode = localStorage.getItem(TRAINING_MODE_KEY) === 'on';
+  updateTrainingVisualMode();
   currentPuzzle = normalizePuzzleOrientation(generateDensePuzzle());
 
   currentLetters = [...currentPuzzle.letters];
@@ -3556,10 +3754,13 @@ function initGame() {
   remainingJokers = 3;
   jokerWordState = { active: false, word: '', found: false, unavailable: false };
   jokerHintCredits = 0;
+  trainingRevealedKeys = [];
+  jokerTrainingRevealedIndexes = [];
   gameStartedAt = Date.now();
   elapsedBeforeStart = 0;
 
   adjustGridSize();
+  applyTrainingRevealsForGrid();
   updateProgress();
   updateJokerUI();
   updateJokerWordUI();
@@ -3591,6 +3792,9 @@ function saveGameState() {
     currentLetters:   [...currentLetters],
     jokerWordState:   { ...jokerWordState },
     jokerHintCredits,
+    currentGameTrainingMode,
+    trainingRevealedKeys: [...trainingRevealedKeys],
+    jokerTrainingRevealedIndexes: [...jokerTrainingRevealedIndexes],
     elapsedSeconds:   getElapsedSeconds(),
     hintRevealedKeys,
     usedBaseWords:    [...usedBaseWords],
@@ -3621,6 +3825,10 @@ function restoreGameState(state) {
     ? { active: !!state.jokerWordState.active, word: state.jokerWordState.word, found: !!state.jokerWordState.found, unavailable: !!state.jokerWordState.unavailable }
     : { active: false, word: '', found: false, unavailable: false };
   jokerHintCredits = (typeof state.jokerHintCredits === 'number') ? state.jokerHintCredits : 0;
+  currentGameTrainingMode = !!state.currentGameTrainingMode;
+  updateTrainingVisualMode();
+  trainingRevealedKeys = Array.isArray(state.trainingRevealedKeys) ? state.trainingRevealedKeys : [];
+  jokerTrainingRevealedIndexes = Array.isArray(state.jokerTrainingRevealedIndexes) ? state.jokerTrainingRevealedIndexes : [];
   elapsedBeforeStart = Math.max(0, parseInt(state.elapsedSeconds) || 0);
   gameStartedAt = Date.now();
 
@@ -3633,7 +3841,10 @@ function restoreGameState(state) {
   buildDisc();
 
   // İpucuyla açılan hücreler kendi rengini korur.
-  const hintKeySet = new Set(Array.isArray(state.hintRevealedKeys) ? state.hintRevealedKeys : []);
+  const hintKeySet = new Set([
+    ...(Array.isArray(state.hintRevealedKeys) ? state.hintRevealedKeys : []),
+    ...trainingRevealedKeys,
+  ]);
 
   // Bulunan kelimelerin hücrelerini geri aç.
   foundWords.forEach(wordText => {
@@ -3702,7 +3913,7 @@ function reapplyOpenedCells(hintKeySet = new Set()) {
 function adjustGridSize(hintKeys = null) {
   if (!currentPuzzle) return;
 
-  const hintRevealedKeys = hintKeys ? [...hintKeys] : [];
+  const hintRevealedKeys = hintKeys ? [...hintKeys] : [...trainingRevealedKeys];
   if (!hintKeys && currentPuzzle.placedCells) {
     Object.entries(currentPuzzle.placedCells).forEach(([key, cellObj]) => {
       if (cellObj.open && cellObj.el.classList.contains('hint-open')) {
@@ -3715,6 +3926,83 @@ function adjustGridSize(hintKeys = null) {
   buildDisc();
   renderJokerWord();
   reapplyOpenedCells(new Set(hintRevealedKeys));
+}
+
+function pickRandomIndexes(length, count) {
+  const indexes = Array.from({ length }, (_, idx) => idx);
+  shuffleArray(indexes);
+  return indexes.slice(0, Math.min(count, length));
+}
+
+function pickTrainingIndexes(wordData, revealCount, intersectionKeys) {
+  const candidates = [];
+  for (let idx = 0; idx < wordData.text.length; idx++) {
+    const r = wordData.dir === 'H' ? wordData.r : wordData.r + idx;
+    const c = wordData.dir === 'H' ? wordData.c + idx : wordData.c;
+    const key = `${r},${c}`;
+    if (!intersectionKeys.has(key)) candidates.push({ idx, key });
+  }
+
+  shuffleArray(candidates);
+  return candidates.slice(0, Math.min(revealCount, candidates.length));
+}
+
+function revealTrainingGridKeys(keys) {
+  if (!currentPuzzle || !currentPuzzle.placedCells) return;
+
+  keys.forEach(key => {
+    const cellObj = currentPuzzle.placedCells[key];
+    if (!cellObj) return;
+
+    cellObj.open = true;
+    cellObj.el.classList.add('hint-open', 'pop');
+  });
+  updateJokerUI();
+  checkCompletedWordsByOpenCells(false);
+}
+
+function applyTrainingRevealsForGrid() {
+  if (!currentGameTrainingMode || !currentPuzzle || !currentPuzzle.placedCells) return;
+  if (trainingRevealedKeys.length > 0) {
+    revealTrainingGridKeys(trainingRevealedKeys);
+    return;
+  }
+
+  const cellUsage = new Map();
+  currentPuzzle.words.forEach(wordData => {
+    for (let idx = 0; idx < wordData.text.length; idx++) {
+      const r = wordData.dir === 'H' ? wordData.r : wordData.r + idx;
+      const c = wordData.dir === 'H' ? wordData.c + idx : wordData.c;
+      const key = `${r},${c}`;
+      cellUsage.set(key, (cellUsage.get(key) || 0) + 1);
+    }
+  });
+
+  const intersectionKeys = new Set(
+    [...cellUsage.entries()]
+      .filter(([, count]) => count > 1)
+      .map(([key]) => key)
+  );
+
+  const keys = new Set();
+  currentPuzzle.words.forEach(wordData => {
+    const revealCount = wordData.text.length >= 5 ? 2 : 1;
+    pickTrainingIndexes(wordData, revealCount, intersectionKeys).forEach(({ key }) => {
+      keys.add(key);
+    });
+  });
+
+  trainingRevealedKeys = [...keys];
+  revealTrainingGridKeys(trainingRevealedKeys);
+}
+
+function applyTrainingRevealsForJokerWord() {
+  if (!currentGameTrainingMode || !jokerWordState.active || !jokerWordState.word || jokerWordState.found) return;
+  if (jokerTrainingRevealedIndexes.length === 0) {
+    const revealCount = jokerWordState.word.length >= 5 ? 2 : 1;
+    jokerTrainingRevealedIndexes = pickRandomIndexes(jokerWordState.word.length, revealCount);
+  }
+  renderJokerWord();
 }
 
 function shuffleArray(array) {
@@ -3741,6 +4029,7 @@ function saveRecentSubWords() {
 }
 
 function rememberFoundSubWord(word) {
+  if (currentGameTrainingMode) return;
   if (!word || word.length === 6) return;
 
   recentSubWords.push(word);
@@ -3816,10 +4105,11 @@ function renderJokerWord() {
   wrap.appendChild(badge);
 
   jokerWordState.word.split('').forEach((letter, idx) => {
+    const trainingOpen = currentGameTrainingMode && jokerTrainingRevealedIndexes.includes(idx);
     const cell = document.createElement('div');
-    cell.className = `cell joker-word-cell${jokerWordState.found ? ' filled revealed' : ' entering'}`;
+    cell.className = `cell joker-word-cell${jokerWordState.found ? ' filled revealed' : trainingOpen ? ' hint-open revealed entering' : ' entering'}`;
     cell.style.setProperty('--joker-enter-delay', `${idx * 55}ms`);
-    cell.textContent = jokerWordState.found ? letter : '';
+    cell.textContent = (jokerWordState.found || trainingOpen) ? letter : '';
     wrap.appendChild(cell);
   });
 }
@@ -3892,6 +4182,8 @@ function openJokerWord() {
   }
 
   jokerWordState = { active: true, word, found: false, unavailable: false };
+  jokerTrainingRevealedIndexes = [];
+  applyTrainingRevealsForJokerWord();
   updateJokerWordUI();
   saveGameState();
   showToast(t('toastJokerWordOpened'));
@@ -4199,6 +4491,8 @@ function checkWord(targetWord) {
 
     updateProgress();
     updateJokerUI();
+    const completedByOpenCells = checkCompletedWordsByOpenCells(true);
+    if (completedByOpenCells) return;
     saveGameState();
 
     if (isGameComplete()) {
@@ -4248,7 +4542,9 @@ document.getElementById('jokerBtn').addEventListener('click', () => {
   }
 });
 
-function checkCompletedWordsByJoker() {
+function checkCompletedWordsByOpenCells(completeGame = true) {
+  let changed = false;
+
   currentPuzzle.words.forEach(w => {
     if (foundWords.includes(w.text)) return;
 
@@ -4264,11 +4560,14 @@ function checkCompletedWordsByJoker() {
 
     if (allOpen) {
       foundWords.push(w.text);
-      updateProgress();
+      if (!currentGameTrainingMode) rememberFoundSubWord(w.text);
+      changed = true;
     }
   });
 
-  if (isGameComplete()) {
+  if (changed) updateProgress();
+
+  if (completeGame && isGameComplete()) {
     updateBestTimeIfNeeded();
     stopTimerAutosave();
     addStatCompleted(); 
@@ -4279,7 +4578,12 @@ function checkCompletedWordsByJoker() {
     }, 300);
     return true;
   }
+  if (changed) saveGameState();
   return false;
+}
+
+function checkCompletedWordsByJoker() {
+  return checkCompletedWordsByOpenCells(true);
 }
 
 function updateJokerUI() {
@@ -4322,6 +4626,34 @@ document.getElementById('shuffleBtn').addEventListener('click', () => {
 });
 
 // Modallar
+function setupModalScrollContainers() {
+  document.querySelectorAll('.modal-card').forEach(card => {
+    if (card.querySelector(':scope > .modal-card-scroll')) return;
+
+    const scroll = document.createElement('div');
+    scroll.className = 'modal-card-scroll';
+    const actions = document.createElement('div');
+    actions.className = 'modal-card-actions';
+
+    while (card.firstChild) {
+      scroll.appendChild(card.firstChild);
+    }
+
+    const actionNode = scroll.querySelector(':scope > .modal-buttons') ||
+      [...scroll.querySelectorAll(':scope > .modal-btn')].pop();
+    if (actionNode) {
+      actions.appendChild(actionNode);
+    }
+
+    card.appendChild(scroll);
+    if (actions.childNodes.length > 0) {
+      card.appendChild(actions);
+    }
+  });
+}
+
+setupModalScrollContainers();
+
 const modalOverlay = document.getElementById('customModal');
 const modalConfirmState = document.getElementById('modalConfirmState');
 const modalResultState = document.getElementById('modalResultState');
@@ -4508,6 +4840,10 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
   document.getElementById('resumeOnBtn').classList.toggle('active',  resumeOn);
   document.getElementById('resumeOffBtn').classList.toggle('active', !resumeOn);
 
+  const trainingOn = localStorage.getItem(TRAINING_MODE_KEY) === 'on';
+  document.getElementById('trainingOnBtn').classList.toggle('active', trainingOn);
+  document.getElementById('trainingOffBtn').classList.toggle('active', !trainingOn);
+
   // Dil toggle durumunu senkronize et
   const activeLang = localStorage.getItem(LANG_KEY) || 'tr';
   document.getElementById('langTrBtn').classList.toggle('active', activeLang === 'tr');
@@ -4552,6 +4888,28 @@ document.getElementById('resumeOffBtn').addEventListener('click', () => {
   document.getElementById('resumeOnBtn').classList.remove('active');
   clearGameState();
   showToast(t('toastResumeOff'));
+});
+
+document.getElementById('trainingOnBtn').addEventListener('click', () => {
+  if (localStorage.getItem(TRAINING_MODE_KEY) === 'on') return;
+  localStorage.setItem(TRAINING_MODE_KEY, 'on');
+  document.getElementById('trainingOnBtn').classList.add('active');
+  document.getElementById('trainingOffBtn').classList.remove('active');
+  clearGameState();
+  modalOverlay.style.display = 'none';
+  initGame();
+  showToast(t('toastTrainingOn'));
+});
+
+document.getElementById('trainingOffBtn').addEventListener('click', () => {
+  if (localStorage.getItem(TRAINING_MODE_KEY) === 'off') return;
+  localStorage.setItem(TRAINING_MODE_KEY, 'off');
+  document.getElementById('trainingOffBtn').classList.add('active');
+  document.getElementById('trainingOnBtn').classList.remove('active');
+  clearGameState();
+  modalOverlay.style.display = 'none';
+  initGame();
+  showToast(t('toastTrainingOff'));
 });
 
 // Dil seçimi
