@@ -300,6 +300,53 @@
       box-shadow: 0 0 8px var(--accent-glow);
     }
 
+    .training-hud {
+      display: none;
+      margin: -4px 22px 8px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      color: var(--text-primary);
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    body.training-mode .training-hud.active {
+      display: flex;
+    }
+
+    .training-hud-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .training-pill {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(255,92,168,0.30);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      box-shadow: 0 4px 0 rgba(255,185,217,0.35), 0 8px 14px rgba(255,92,168,0.10);
+    }
+
+    .training-timer {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(255,92,168,0.30);
+      border-radius: 999px;
+      padding: 5px 10px;
+      box-shadow: 0 4px 0 rgba(255,185,217,0.35), 0 8px 14px rgba(255,92,168,0.10);
+    }
+
     /* ── GRID AREA ── */
     .grid-area {
       flex: 1;
@@ -309,6 +356,39 @@
       padding: 10px 22px;
       overflow: hidden;
       min-height: 0;
+      position: relative;
+    }
+
+    .training-turn-overlay {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      z-index: 15;
+      pointer-events: none;
+      opacity: 0;
+      background: linear-gradient(145deg, #7C4DFF, #FF5CA8);
+      color: #FFFFFF;
+      border: 3px solid rgba(255,255,255,0.82);
+      border-radius: 999px;
+      padding: 16px 30px;
+      font-size: 26px;
+      font-weight: 950;
+      letter-spacing: 0.4px;
+      text-shadow: 0 2px 0 rgba(80,40,120,0.22);
+      box-shadow: 0 9px 0 rgba(91,45,180,0.45), 0 20px 38px rgba(124,77,255,0.28);
+      white-space: nowrap;
+    }
+
+    .training-turn-overlay.show {
+      animation: trainingTurnPulse 1.15s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes trainingTurnPulse {
+      0%   { opacity: 0; transform: translate(-50%, -42%) scale(0.72); }
+      18%  { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+      68%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -58%) scale(0.9); }
     }
 
     .crossword-wrap {
@@ -404,6 +484,53 @@
       100% { transform: scale(1);    box-shadow: var(--shadow-sm); }
     }
     .cell.finale { animation: cellFinale 0.42s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    .pronounce-btn {
+      display: none;
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(255,255,255,0.86);
+      border-radius: 999px;
+      background: linear-gradient(145deg, #7C4DFF, #FF5CA8);
+      color: #FFFFFF;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 0 rgba(91,45,180,0.34), 0 10px 18px rgba(255,92,168,0.20);
+      cursor: pointer;
+      z-index: 7;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    body.training-mode .pronounce-btn {
+      display: flex;
+    }
+
+    .pronounce-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2.6;
+    }
+
+    .pronounce-btn:active {
+      transform: scale(0.9);
+    }
+
+    .pronounce-btn.playing {
+      animation: pronouncePulse 0.72s ease-in-out infinite;
+    }
+
+    @keyframes pronouncePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.14); }
+    }
+
+    .joker-word-pronounce {
+      position: absolute;
+      top: 30px;
+      right: -11px;
+      flex-shrink: 0;
+    }
 
     /* ── BOTTOM AREA ── */
     .bottom {
@@ -1215,6 +1342,122 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
+    .wizard-section {
+      text-align: left;
+      margin-bottom: 13px;
+    }
+
+    .wizard-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 7px;
+    }
+
+    .wizard-options {
+      width: 100%;
+    }
+
+    .wizard-options.three {
+      width: 100%;
+    }
+
+    .training-score-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      text-align: left;
+    }
+
+    .training-score-card {
+      background: var(--surface2);
+      border: 1px solid var(--cell-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+    .training-score-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .training-score-detail {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.5;
+    }
+
+    .training-fireworks {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .training-burst {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, #fff 0 18%, transparent 19%),
+        conic-gradient(from 0deg, #FF5CA8, #FFD166, #20C7B5, #7C4DFF, #FF5CA8);
+      filter: drop-shadow(0 0 8px rgba(255,92,168,0.30));
+      animation: trainingBurstCore 1.25s ease-out var(--d) both;
+    }
+
+    .training-spark {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--s);
+      height: var(--s);
+      border-radius: var(--r);
+      background: var(--c);
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      animation: trainingSparkFly 1.35s cubic-bezier(0.16, 0.8, 0.28, 1) var(--d) both;
+      box-shadow: 0 0 10px color-mix(in srgb, var(--c) 45%, transparent);
+    }
+
+    .training-spark.star {
+      clip-path: polygon(50% 0%, 62% 35%, 98% 35%, 68% 56%, 80% 92%, 50% 70%, 20% 92%, 32% 56%, 2% 35%, 38% 35%);
+      border-radius: 0;
+    }
+
+    @keyframes trainingBurstCore {
+      0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.18) rotate(0deg); }
+      16%  { opacity: 1; transform: translate(-50%, -50%) scale(1.6) rotate(18deg); }
+      42%  { opacity: 0.85; transform: translate(-50%, -50%) scale(2.2) rotate(72deg); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(3.4) rotate(160deg); }
+    }
+
+    @keyframes trainingSparkFly {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+      }
+      14% {
+        opacity: 1;
+      }
+      72% {
+        opacity: 0.95;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.92) rotate(var(--rot));
+      }
+    }
+
     /* ── DIVIDER ── */
     .modal-divider {
       height: 1px;
@@ -1313,7 +1556,16 @@
     </div>
   </div>
 
+  <div class="training-hud" id="trainingHud">
+    <div class="training-hud-meta">
+      <span class="training-pill" id="trainingUnitLabel">Ünite 1</span>
+      <span class="training-pill" id="trainingGroupLabel">Grup 1</span>
+    </div>
+    <div class="training-timer" id="trainingTimerLabel">00:00</div>
+  </div>
+
   <div class="grid-area" id="gridArea">
+    <div class="training-turn-overlay" id="trainingTurnOverlay">Grup 1</div>
     <div class="crossword-wrap" id="crosswordWrap"></div>
   </div>
 
@@ -1522,6 +1774,75 @@ Devam etmek istiyor musun?</div>
       </div>
     </div>
     <button class="modal-btn btn-close" id="modalStatsCloseBtn">Kapat</button>
+  </div>
+
+  <!-- Training Setup -->
+  <div class="modal-card" id="modalTrainingSetupState" style="display: none;">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2.8l2.7 5.47 6.04.88-4.37 4.26 1.03 6.01L12 16.58l-5.4 2.84 1.03-6.01-4.37-4.26 6.04-.88L12 2.8z"/>
+      </svg>
+    </div>
+    <div class="modal-title" id="trainingSetupTitle">Eğitim Kurulumu</div>
+    <div class="modal-desc" id="trainingSetupDesc" style="margin-bottom: 16px;">Eğitim oyununu başlatmadan önce seçeneklerini belirle.</div>
+
+    <div class="wizard-section">
+      <div class="wizard-label" id="trainingSetupLangLabel">Dil</div>
+      <div class="theme-switch-group wizard-options three">
+        <button class="theme-btn active" id="trainingSetupLangTr">TR</button>
+        <button class="theme-btn" id="trainingSetupLangEn">EN</button>
+        <button class="theme-btn" id="trainingSetupLangFr">FR</button>
+      </div>
+    </div>
+
+    <div class="wizard-section">
+      <div class="wizard-label" id="trainingSetupUnitLabel">Ünite</div>
+      <div class="theme-switch-group wizard-options" id="trainingSetupUnitOptions"></div>
+    </div>
+
+    <div class="wizard-section">
+      <div class="wizard-label" id="trainingSetupTimerLabel">Süre Sayacı</div>
+      <div class="theme-switch-group wizard-options">
+        <button class="theme-btn active" id="trainingSetupTimerYes">Evet</button>
+        <button class="theme-btn" id="trainingSetupTimerNo">Hayır</button>
+      </div>
+    </div>
+
+    <div class="wizard-section">
+      <div class="wizard-label" id="trainingSetupGameTypeLabel">Oyun Türü</div>
+      <div class="theme-switch-group wizard-options">
+        <button class="theme-btn active" id="trainingSetupGroup">Grup</button>
+        <button class="theme-btn" id="trainingSetupSolo">Tekli</button>
+      </div>
+    </div>
+
+    <div class="wizard-section" id="trainingSetupGroupCountWrap">
+      <div class="wizard-label" id="trainingSetupGroupCountLabel">Grup Sayısı</div>
+      <div class="theme-switch-group wizard-options">
+        <button class="theme-btn active" id="trainingSetupGroup2">2</button>
+        <button class="theme-btn" id="trainingSetupGroup3">3</button>
+        <button class="theme-btn" id="trainingSetupGroup4">4</button>
+      </div>
+    </div>
+
+    <button class="modal-btn btn-new-game" id="trainingSetupStartBtn">Oyunu Başlat</button>
+  </div>
+
+  <!-- Training Score -->
+  <div class="modal-card" id="modalTrainingScoreState" style="display: none;">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 21h8"/>
+        <path d="M12 17v4"/>
+        <path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/>
+        <path d="M5 6H3a3 3 0 0 0 3 3h1"/>
+        <path d="M19 6h2a3 3 0 0 1-3 3h-1"/>
+      </svg>
+    </div>
+    <div class="modal-title" id="trainingScoreTitle">Skor Tablosu</div>
+    <div class="modal-desc" id="trainingScoreDesc" style="margin-bottom: 16px;">Kazanan Grup</div>
+    <div class="training-score-list" id="trainingScoreList"></div>
+    <button class="modal-btn btn-new-game" id="trainingScoreNewGameBtn">Yeni Oyun</button>
   </div>
 
   <!-- Settings -->
@@ -2600,10 +2921,68 @@ const DICTIONARY_EN = [...new Set([
 ])];
 
 function getActiveDictionary() {
-  const lang = localStorage.getItem(LANG_KEY);
-  if (lang === 'en') return DICTIONARY_EN;
-  if (lang === 'fr') return DICTIONARY_FR;
+  if (currentGameTrainingMode) return getTrainingDictionary();
+  return getDictionaryByLang(localStorage.getItem(LANG_KEY) || 'tr');
+}
+
+function getDictionaryByLang(langCode) {
+  if (langCode === 'en') return DICTIONARY_EN;
+  if (langCode === 'fr') return DICTIONARY_FR;
   return DICTIONARY;
+}
+
+function getUppercaseLocale(langCode) {
+  if (langCode === 'en') return 'en-US';
+  if (langCode === 'fr') return 'fr-FR';
+  return 'tr-TR';
+}
+
+function normalizeTrainingWord(word, langCode) {
+  return String(word || '').trim().normalize('NFC').toLocaleUpperCase(getUppercaseLocale(langCode));
+}
+
+const TRAINING_UNITS = {
+  tr: {
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: []
+  },
+  en: {
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: []
+  },
+  fr: {
+    1: ["CRAYON","QUATRE", "TREIZE", "QUINZE", "BONJOUR", "BONSOIR", "MADAME", "PARDON", "DÉSOLÉ", "MARRON", "ORANGE", "VIOLET", "MONSIEUR", "SALUT", "ELLES", "SUPER", "BRAVO", "LIVRE", "STYLO", "TABLE", "ROUGE", "JAUNE", "BLANC", "TROIS", "DOUZE", "SEIZE", "VINGT", "MERCI", "BIEN", "ELLE", "NOUS", "VOUS", "QUEL", "VERT", "ROSE", "GRIS", "NOIR", "DEUX", "CINQ", "SEPT", "HUIT", "NEUF", "ONZE", "MAL", "TOI", "ILS", "ÂGE", "OUI", "NON", "UNE", "SIX", "DIX", "AMI"],
+    2: ["FRANCE", "ITALIE", "CANADA", "SUISSE", "RUSSIE", "BRÉSIL", "CORÉEN", "CHEVAL", "MOUTON", "CANARD", "RENARD", "GIRAFE", "BANANE", "ORANGE", "CITRON", "FRAISE", "CERISE", "RAISIN", "ANANAS", "MANGUE", "AVOCAT", "GRÈCE", "CHINE", "JAPON", "CORÉE", "MAROC", "BELGE", "RUSSE", "CHIEN", "VACHE", "POULE", "LAPIN", "TIGRE", "ZÈBRE", "POMME", "POIRE", "PÊCHE", "PRUNE", "MELON", "FIGUE", "TURC", "GREC", "CHAT", "LOUP", "OURS", "LION", "KIWI", "COQ", "ÂNE", "RAT"],
+    3: ["AVOCAT", "SAMEDI", "SAISON", "ACTEUR", "JEUDI", "ANNÉE", "HIVER", "LUNDI", "MARDI", "AVRIL", "JOUR", "MOIS", "MARS", "JUIN", "AOÛT", "MAI", "ÉTÉ"],
+    4: ["SOLEIL", "COUSIN", "ENFANT", "VISAGE", "BOUCHE", "LANGUE", "ÉPAULE", "VENTRE", "MAIGRE", "BOUCLÉ", "ONDULÉ", "GENTIL", "TIMIDE", "NUAGE", "PLUIE", "NEIGE", "ORAGE", "CHAUD", "FROID", "TEMPS", "PLEUT", "FILLE", "FRÈRE", "GRAND", "ONCLE", "TANTE", "NIÈCE", "FEMME", "CORPS", "DENTS", "DOIGT", "JAMBE", "GENOU", "PETIT", "MOYEN", "MINCE", "BELLE", "JEUNE", "VIEUX", "BLOND", "COURT", "FRISÉ", "RAIDE", "CALME", "DRÔLE", "VENT", "CIEL", "PÈRE", "MÈRE", "FILS", "SŒUR", "MARI", "BÉBÉ", "TÊTE", "YEUX", "BRAS", "MAIN", "PIED", "GROS", "BEAU", "JOLI", "FORT", "BRUN", "ROUX", "LONG", "POLI", "NEZ", "COU", "DOS"],
+    5: ["TSHIRT", "BASKET", "BONNET", "PYJAMA", "COLIER", "ENTRÉE", "BALCON", "JARDIN", "GARAGE", "BUREAU", "MAISON", "CHAISE", "CANAPÉ", "MIROIR", "LAVABO", "DOUCHE", "RIDEAU", "MINUTE", "CAMION", "BATEAU", "VESTE", "SHORT", "BOTTE", "GILET", "SALON", "PORTE", "TABLE", "LAMPE", "FRIGO", "TAPIS", "HEURE", "TRAIN", "MÉTRO", "AVION", "PULL", "JUPE", "ROBE", "GANT", "JEAN", "CAVE", "TOIT", "FOUR", "MOTO", "VÉLO", "TAXI", "SAC", "LIT", "BUS", "MON", "TON", "SON", "MES", "TES", "SES"]
+  }
+};
+
+function getTrainingDictionary() {
+  const manualUnit = TRAINING_UNITS[currentTrainingOptions.lang]?.[currentTrainingOptions.unit] || [];
+  if (manualUnit.length > 0) {
+    return [...new Set(manualUnit.map(w => normalizeTrainingWord(w, currentTrainingOptions.lang)).filter(Boolean))];
+  }
+
+  const source = getDictionaryByLang(currentTrainingOptions.lang);
+  const unitIndex = Math.max(0, Math.min(4, (parseInt(currentTrainingOptions.unit) || 1) - 1));
+  const selected = [];
+
+  [6, 5, 4, 3].forEach(len => {
+    const words = source.filter(w => w.length === len);
+    const chunkSize = Math.ceil(words.length / 5);
+    const chunk = words.slice(unitIndex * chunkSize, (unitIndex + 1) * chunkSize);
+    selected.push(...chunk);
+  });
+
+  return selected.length > 0 ? selected : source;
 }
 
 // Fransızca kelime havuzu
@@ -2971,6 +3350,12 @@ let jokerHintCredits = 0;
 let currentGameTrainingMode = false;
 let trainingRevealedKeys = [];
 let jokerTrainingRevealedIndexes = [];
+let pendingTrainingOptions = { lang: 'tr', unit: 1, timer: true, gameType: 'group', groupCount: 2 };
+let currentTrainingOptions = { ...pendingTrainingOptions };
+let trainingScores = [];
+let trainingCurrentGroup = 0;
+let trainingWordStartedAt = Date.now();
+let trainingTimerInterval = null;
 let gameStartedAt = Date.now();
 let elapsedBeforeStart = 0;
 let timerSaveInterval = null;
@@ -2982,6 +3367,51 @@ const RECENT_SUB_WORD_LIMIT = 80;
 let isDrawing = false;
 let selectedButtons = [];
 let btnCoords = [];
+
+const TRAINING_SETUP_TEXTS = {
+  tr: {
+    title: 'Eğitim Kurulumu',
+    desc: 'Eğitim oyununu başlatmadan önce seçeneklerini belirle.',
+    lang: 'Dil',
+    unit: 'Ünite',
+    timer: 'Süre Sayacı',
+    yes: 'Evet',
+    no: 'Hayır',
+    gameType: 'Oyun Türü',
+    group: 'Grup',
+    solo: 'Tekli',
+    groupCount: 'Grup Sayısı',
+    start: 'Oyunu Başlat'
+  },
+  en: {
+    title: 'Training Setup',
+    desc: 'Choose your options before starting the training game.',
+    lang: 'Language',
+    unit: 'Unit',
+    timer: 'Timer',
+    yes: 'Yes',
+    no: 'No',
+    gameType: 'Game Type',
+    group: 'Group',
+    solo: 'Solo',
+    groupCount: 'Number of Groups',
+    start: 'Start Game'
+  },
+  fr: {
+    title: 'Configuration',
+    desc: 'Choisissez vos options avant de lancer la partie d’entraînement.',
+    lang: 'Langue',
+    unit: 'Unité',
+    timer: 'Chronomètre',
+    yes: 'Oui',
+    no: 'Non',
+    gameType: 'Type de Jeu',
+    group: 'Groupe',
+    solo: 'Solo',
+    groupCount: 'Nombre de Groupes',
+    start: 'Lancer le Jeu'
+  }
+};
 
 // Varsayılan localStorage değerleri
 if (!localStorage.getItem('kelimer_completed')) localStorage.setItem('kelimer_completed', '0');
@@ -3187,6 +3617,152 @@ function t(key, ...args) {
 
 function updateTrainingVisualMode() {
   document.body.classList.toggle('training-mode', !!currentGameTrainingMode);
+  if (!currentGameTrainingMode) {
+    document.querySelectorAll('.pronounce-btn').forEach(btn => btn.remove());
+  }
+}
+
+function getSpeechLanguageCode() {
+  const lang = currentGameTrainingMode ? currentTrainingOptions.lang : (localStorage.getItem(LANG_KEY) || 'tr');
+  if (lang === 'en') return 'en-US';
+  if (lang === 'fr') return 'fr-FR';
+  return 'tr-TR';
+}
+
+function getSpeechUnsupportedMessage() {
+  const lang = currentGameTrainingMode ? currentTrainingOptions.lang : (localStorage.getItem(LANG_KEY) || 'tr');
+  if (lang === 'en') return 'Speech playback is not supported in this browser.';
+  if (lang === 'fr') return 'La lecture vocale n’est pas prise en charge par ce navigateur.';
+  return 'Bu tarayıcıda sesli okuma desteklenmiyor.';
+}
+
+function findSpeechVoice(langCode) {
+  if (!('speechSynthesis' in window) || !window.speechSynthesis.getVoices) return null;
+  const voices = window.speechSynthesis.getVoices();
+  const exact = voices.find(voice => voice.lang.toLowerCase() === langCode.toLowerCase());
+  if (exact) return exact;
+  const family = langCode.split('-')[0].toLowerCase();
+  return voices.find(voice => voice.lang.toLowerCase().startsWith(family)) || null;
+}
+
+function speakTrainingWord(word, buttonEl = null) {
+  if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+    showToast(getSpeechUnsupportedMessage());
+    return;
+  }
+
+  const langCode = getSpeechLanguageCode();
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = langCode;
+  utterance.rate = 0.9;
+  utterance.pitch = 1.04;
+
+  const voice = findSpeechVoice(langCode);
+  if (voice) utterance.voice = voice;
+
+  window.speechSynthesis.cancel();
+  if (buttonEl) buttonEl.classList.add('playing');
+  utterance.onend = utterance.onerror = () => {
+    if (buttonEl) buttonEl.classList.remove('playing');
+  };
+  window.speechSynthesis.speak(utterance);
+}
+
+function createTrainingScores() {
+  const count = currentTrainingOptions.gameType === 'group' ? currentTrainingOptions.groupCount : 1;
+  return Array.from({ length: count }, (_, idx) => ({
+    name: currentTrainingOptions.gameType === 'group' ? `Grup ${idx + 1}` : 'Oyuncu',
+    points: 0,
+    words: [],
+    totalTime: 0
+  }));
+}
+
+function formatTrainingTime(ms) {
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function resetTrainingWordTimer() {
+  trainingWordStartedAt = Date.now();
+  updateTrainingHud();
+}
+
+function startTrainingTimer() {
+  stopTrainingTimer();
+  if (!currentGameTrainingMode || !currentTrainingOptions.timer) return;
+  trainingTimerInterval = setInterval(updateTrainingHud, 500);
+}
+
+function stopTrainingTimer() {
+  if (trainingTimerInterval) {
+    clearInterval(trainingTimerInterval);
+    trainingTimerInterval = null;
+  }
+}
+
+function updateTrainingHud() {
+  const hud = document.getElementById('trainingHud');
+  if (!hud) return;
+
+  hud.classList.toggle('active', !!currentGameTrainingMode);
+  if (!currentGameTrainingMode) return;
+
+  const unitLabel = document.getElementById('trainingUnitLabel');
+  const groupLabel = document.getElementById('trainingGroupLabel');
+  const timerLabel = document.getElementById('trainingTimerLabel');
+  if (unitLabel) unitLabel.textContent = `Ünite ${currentTrainingOptions.unit}`;
+  if (groupLabel) {
+    groupLabel.style.display = currentTrainingOptions.gameType === 'group' ? '' : 'none';
+    groupLabel.textContent = trainingScores[trainingCurrentGroup]?.name || 'Grup 1';
+  }
+  if (timerLabel) {
+    timerLabel.style.display = currentTrainingOptions.timer ? '' : 'none';
+    timerLabel.textContent = formatTrainingTime(Date.now() - trainingWordStartedAt);
+  }
+}
+
+function showTrainingTurnOverlay() {
+  if (!currentGameTrainingMode || currentTrainingOptions.gameType !== 'group') return;
+  const overlay = document.getElementById('trainingTurnOverlay');
+  if (!overlay) return;
+
+  overlay.textContent = trainingScores[trainingCurrentGroup]?.name || `Grup ${trainingCurrentGroup + 1}`;
+  overlay.classList.remove('show');
+  void overlay.offsetWidth;
+  overlay.classList.add('show');
+}
+
+function advanceTrainingTurn() {
+  if (!currentGameTrainingMode) return;
+  if (currentTrainingOptions.gameType === 'group' && trainingScores.length > 0) {
+    trainingCurrentGroup = (trainingCurrentGroup + 1) % trainingScores.length;
+  }
+  resetTrainingWordTimer();
+  showTrainingTurnOverlay();
+}
+
+function awardTrainingWord(wordText) {
+  if (!currentGameTrainingMode || foundWords.includes(wordText)) return;
+  const wordScore = Math.max(1, (currentPuzzle.words.find(w => w.text === wordText)?.text.length || wordText.length) - 2);
+  const elapsed = Date.now() - trainingWordStartedAt;
+  const group = trainingScores[trainingCurrentGroup];
+  if (group) {
+    group.points += wordScore;
+    group.totalTime += elapsed;
+    group.words.push({ text: wordText, length: wordText.length, points: wordScore, time: elapsed });
+  }
+}
+
+function addTrainingGroupPoints(points, entry) {
+  if (!currentGameTrainingMode || currentTrainingOptions.gameType !== 'group') return;
+  const group = trainingScores[trainingCurrentGroup];
+  if (!group) return;
+
+  group.points += points;
+  if (entry) group.words.push(entry);
 }
 
 function applyTranslations() {
@@ -3447,7 +4023,7 @@ function tryPlaceWord(gridMatrix, placedWords, word, substringFilter = true) {
 function generateDensePuzzle() {
   loadRecentSubWords();
 
-  const MIN_WORDS = 7;
+  const MIN_WORDS = currentGameTrainingMode ? 1 : 7;
   const TARGET_WORDS = 8;
   const MAX_WORDS = TARGET_WORDS;
   const MAX_ATTEMPTS = 1500;
@@ -3743,6 +4319,7 @@ function initGame() {
   document.getElementById('modalSettingsState').style.display = 'none';
 
   currentGameTrainingMode = localStorage.getItem(TRAINING_MODE_KEY) === 'on';
+  if (currentGameTrainingMode) currentTrainingOptions = { ...pendingTrainingOptions };
   updateTrainingVisualMode();
   currentPuzzle = normalizePuzzleOrientation(generateDensePuzzle());
 
@@ -3756,6 +4333,9 @@ function initGame() {
   jokerHintCredits = 0;
   trainingRevealedKeys = [];
   jokerTrainingRevealedIndexes = [];
+  trainingScores = currentGameTrainingMode ? createTrainingScores() : [];
+  trainingCurrentGroup = 0;
+  resetTrainingWordTimer();
   gameStartedAt = Date.now();
   elapsedBeforeStart = 0;
 
@@ -3767,10 +4347,13 @@ function initGame() {
   applyTranslations();
   saveGameState();
   startTimerAutosave();
+  startTrainingTimer();
+  showTrainingTurnOverlay();
 }
 
 // Oyun durumu
 function saveGameState() {
+  if (currentGameTrainingMode) return;
   if (localStorage.getItem(RESUME_KEY) !== 'on') return;
   if (!currentPuzzle) return;
 
@@ -3876,6 +4459,7 @@ function restoreGameState(state) {
   updateProgress();
   updateJokerUI();
   updateJokerWordUI();
+  renderPronunciationButtons();
   applyTranslations();
   startTimerAutosave();
 }
@@ -3910,6 +4494,58 @@ function reapplyOpenedCells(hintKeySet = new Set()) {
   });
 }
 
+function renderPronunciationButtons() {
+  const wrap = document.getElementById('crosswordWrap');
+  if (!wrap) return;
+  wrap.querySelectorAll('.pronounce-btn').forEach(btn => btn.remove());
+  if (!currentGameTrainingMode || !currentPuzzle || !currentPuzzle.placedCells) return;
+
+  foundWords.forEach(wordText => {
+    const wordData = currentPuzzle.words.find(w => w.text === wordText);
+    if (!wordData) return;
+
+    const lastIndex = wordData.text.length - 1;
+    const endR = wordData.dir === 'H' ? wordData.r : wordData.r + lastIndex;
+    const endC = wordData.dir === 'H' ? wordData.c + lastIndex : wordData.c;
+    const endCell = currentPuzzle.placedCells[`${endR},${endC}`];
+    if (!endCell || !endCell.el) return;
+
+    const cellLeft = parseFloat(endCell.el.style.left) || 0;
+    const cellTop = parseFloat(endCell.el.style.top) || 0;
+    const cellSize = parseFloat(endCell.el.style.width) || endCell.el.offsetWidth || 36;
+    const wrapWidth = wrap.offsetWidth || 0;
+    const buttonSize = 28;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pronounce-btn';
+    btn.setAttribute('aria-label', wordText);
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 5 6 9H3v6h3l5 4V5z"></path>
+        <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+        <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+      </svg>
+    `;
+
+    const preferredLeft = wordData.dir === 'H'
+      ? cellLeft + cellSize - 6
+      : cellLeft + cellSize - 8;
+    const safeLeft = Math.min(Math.max(0, preferredLeft), Math.max(0, wrapWidth - buttonSize));
+    const top = wordData.dir === 'H'
+      ? cellTop - 12
+      : cellTop + cellSize - 10;
+
+    btn.style.left = `${safeLeft}px`;
+    btn.style.top = `${Math.max(0, top)}px`;
+    btn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      speakTrainingWord(wordText, btn);
+    });
+    wrap.appendChild(btn);
+  });
+}
+
 function adjustGridSize(hintKeys = null) {
   if (!currentPuzzle) return;
 
@@ -3926,6 +4562,7 @@ function adjustGridSize(hintKeys = null) {
   buildDisc();
   renderJokerWord();
   reapplyOpenedCells(new Set(hintRevealedKeys));
+  renderPronunciationButtons();
 }
 
 function pickRandomIndexes(length, count) {
@@ -3959,6 +4596,7 @@ function revealTrainingGridKeys(keys) {
   });
   updateJokerUI();
   checkCompletedWordsByOpenCells(false);
+  renderPronunciationButtons();
 }
 
 function applyTrainingRevealsForGrid() {
@@ -4112,6 +4750,25 @@ function renderJokerWord() {
     cell.textContent = (jokerWordState.found || trainingOpen) ? letter : '';
     wrap.appendChild(cell);
   });
+
+  if (currentGameTrainingMode && jokerWordState.found) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pronounce-btn joker-word-pronounce';
+    btn.setAttribute('aria-label', jokerWordState.word);
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 5 6 9H3v6h3l5 4V5z"></path>
+        <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+        <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+      </svg>
+    `;
+    btn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      speakTrainingWord(jokerWordState.word, btn);
+    });
+    wrap.appendChild(btn);
+  }
 }
 
 function updateJokerWordUI() {
@@ -4123,6 +4780,128 @@ function updateJokerWordUI() {
 function isGameComplete() {
   return foundWords.length === currentPuzzle.words.length &&
     (!jokerWordState.active || jokerWordState.found);
+}
+
+function handleGameComplete() {
+  stopTrainingTimer();
+  if (currentGameTrainingMode) {
+    showTrainingScoreModal();
+    return;
+  }
+
+  setTimeout(() => {
+    showToast(t('toastNextGame'));
+    setTimeout(initGame, 1200);
+  }, 300);
+}
+
+function showTrainingScoreModal() {
+  const scores = trainingScores.map((score, idx) => ({ ...score, idx }));
+  const maxWords = Math.max(...scores.map(s => s.words.length), 0);
+  const fastest = scores
+    .filter(s => s.words.length === maxWords && s.words.length > 0)
+    .sort((a, b) => a.totalTime - b.totalTime)[0];
+  if (fastest && currentTrainingOptions.gameType === 'group' && currentTrainingOptions.timer) fastest.points += 2;
+
+  const winner = scores
+    .slice()
+    .sort((a, b) => b.points - a.points || b.words.length - a.words.length || a.totalTime - b.totalTime)[0];
+  const sortedScores = scores
+    .slice()
+    .sort((a, b) => b.points - a.points || b.words.length - a.words.length || a.totalTime - b.totalTime);
+
+  const title = document.getElementById('trainingScoreTitle');
+  const desc = document.getElementById('trainingScoreDesc');
+  const list = document.getElementById('trainingScoreList');
+  if (title) title.textContent = 'Skor Tablosu';
+  if (currentTrainingOptions.gameType === 'solo') {
+    const soloScore = scores[0] || { totalTime: 0 };
+    if (title) title.textContent = 'Izgara Tamamlandı!';
+    if (desc) desc.textContent = currentTrainingOptions.timer
+      ? `Tamamlanan süre: ${formatTrainingTime(soloScore.totalTime)}`
+      : 'Izgara Tamamlandı!';
+    if (list) list.innerHTML = '';
+    hideAllModals();
+    modalTrainingScoreState.style.display = 'block';
+    modalOverlay.style.display = 'flex';
+    return;
+  }
+
+  if (desc) desc.textContent = winner ? `Kazanan: ${winner.name}` : 'Oyun tamamlandı';
+  if (list) {
+    list.innerHTML = '';
+    sortedScores.forEach(score => {
+      const counts = [6, 5, 4, 3]
+        .map(len => `${len} harf: ${score.words.filter(w => w.length === len).length}`)
+        .join(' · ');
+      const card = document.createElement('div');
+      card.className = 'training-score-card';
+      card.innerHTML = `
+        <div class="training-score-title">
+          <span>${score.name}</span>
+          <span>${score.points} puan</span>
+        </div>
+        <div class="training-score-detail">
+          Doğru kelime: ${score.words.length}<br>
+          ${counts}<br>
+          Joker: ${score.words.filter(w => w.joker).reduce((sum, w) => sum + w.points, 0)} puan<br>
+          Toplam süre: ${formatTrainingTime(score.totalTime)}
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  hideAllModals();
+  modalTrainingScoreState.style.display = 'block';
+  modalOverlay.style.display = 'flex';
+  launchTrainingFireworks();
+}
+
+function launchTrainingFireworks() {
+  const card = document.getElementById('modalTrainingScoreState');
+  if (!card) return;
+
+  card.querySelector('.training-fireworks')?.remove();
+  const layer = document.createElement('div');
+  layer.className = 'training-fireworks';
+  const colors = ['#FF5CA8', '#7C4DFF', '#20C7B5', '#FFD166', '#45A3FF', '#FF7A59', '#FFFFFF'];
+  const bursts = [
+    { x: 24, y: 25, delay: 0 },
+    { x: 76, y: 26, delay: 0.14 },
+    { x: 50, y: 18, delay: 0.27 },
+    { x: 30, y: 55, delay: 0.42 },
+    { x: 70, y: 55, delay: 0.54 }
+  ];
+
+  bursts.forEach((burst, burstIdx) => {
+    const core = document.createElement('span');
+    core.className = 'training-burst';
+    core.style.setProperty('--x', `${burst.x}%`);
+    core.style.setProperty('--y', `${burst.y}%`);
+    core.style.setProperty('--d', `${burst.delay}s`);
+    layer.appendChild(core);
+
+    for (let i = 0; i < 14; i++) {
+      const angle = (Math.PI * 2 * i) / 14 + burstIdx * 0.22;
+      const distance = 42 + ((i + burstIdx) % 4) * 12;
+      const spark = document.createElement('span');
+      spark.className = `training-spark${i % 5 === 0 ? ' star' : ''}`;
+      spark.style.setProperty('--x', `${burst.x}%`);
+      spark.style.setProperty('--y', `${burst.y}%`);
+      spark.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+      spark.style.setProperty('--dy', `${Math.sin(angle) * distance + 22}px`);
+      spark.style.setProperty('--rot', `${160 + i * 31}deg`);
+      spark.style.setProperty('--s', `${5 + (i % 3) * 2}px`);
+      spark.style.setProperty('--r', i % 4 === 0 ? '2px' : '50%');
+      spark.style.setProperty('--c', colors[(i + burstIdx) % colors.length]);
+      spark.style.setProperty('--d', `${burst.delay + i * 0.012}s`);
+      layer.appendChild(spark);
+    }
+  });
+
+  card.appendChild(layer);
+  setTimeout(() => layer.remove(), 2600);
 }
 
 function animateHintGain() {
@@ -4193,6 +4972,15 @@ function completeJokerWord() {
   if (!jokerWordState.active || jokerWordState.found) return false;
 
   jokerWordState.found = true;
+  if (currentGameTrainingMode && currentTrainingOptions.gameType === 'group') {
+    addTrainingGroupPoints(3, {
+      text: jokerWordState.word,
+      length: jokerWordState.word.length,
+      points: 3,
+      time: Date.now() - trainingWordStartedAt,
+      joker: true
+    });
+  }
   addStatJokerWordFound();
   addJokerWordReward();
   revealJokerWord();
@@ -4205,10 +4993,7 @@ function completeJokerWord() {
     stopTimerAutosave();
     addStatCompleted();
     clearGameState();
-    setTimeout(() => {
-      showToast(t('toastNextGame'));
-      setTimeout(initGame, 1200);
-    }, 300);
+    handleGameComplete();
   } else {
     saveGameState();
   }
@@ -4429,10 +5214,45 @@ function checkWord(targetWord) {
       return;
     }
     completeJokerWord();
+    if (currentGameTrainingMode && currentTrainingOptions.gameType === 'group' && !isGameComplete()) {
+      advanceTrainingTurn();
+    }
     return;
   }
 
   const matchIndex = currentPuzzle.words.findIndex(w => w.text === targetWord);
+
+  if (
+    currentGameTrainingMode &&
+    currentTrainingOptions.gameType === 'group' &&
+    jokerWordState.active &&
+    !jokerWordState.found &&
+    matchIndex === -1
+  ) {
+    addTrainingGroupPoints(-1, {
+      text: jokerWordState.word,
+      length: jokerWordState.word.length,
+      points: -1,
+      time: Date.now() - trainingWordStartedAt,
+      joker: true,
+      missed: true
+    });
+    jokerWordState.found = true;
+    revealJokerWord();
+    updateJokerWordUI();
+    showToast('Joker Kelime kaçırıldı! -1 puan');
+    saveGameState();
+    if (isGameComplete()) {
+      updateBestTimeIfNeeded();
+      stopTimerAutosave();
+      addStatCompleted();
+      clearGameState();
+      handleGameComplete();
+    } else {
+      advanceTrainingTurn();
+    }
+    return;
+  }
 
   if (matchIndex !== -1) {
     if (foundWords.includes(targetWord)) {
@@ -4470,9 +5290,11 @@ function checkWord(targetWord) {
           }, 620);
         }, i * 55);
       }
+      if (currentGameTrainingMode && currentTrainingOptions.gameType === 'group') advanceTrainingTurn();
       return;
     }
 
+    awardTrainingWord(targetWord);
     foundWords.push(targetWord);
     rememberFoundSubWord(targetWord);
     showToast(t('toastCorrect'));
@@ -4491,6 +5313,7 @@ function checkWord(targetWord) {
 
     updateProgress();
     updateJokerUI();
+    renderPronunciationButtons();
     const completedByOpenCells = checkCompletedWordsByOpenCells(true);
     if (completedByOpenCells) return;
     saveGameState();
@@ -4500,16 +5323,20 @@ function checkWord(targetWord) {
       stopTimerAutosave();
       addStatCompleted();
       clearGameState();
-      setTimeout(() => {
-        showToast(t('toastNextGame'));
-        setTimeout(initGame, 1200);
-      }, 300);
+      handleGameComplete();
+    } else if (currentGameTrainingMode) {
+      if (currentTrainingOptions.gameType === 'group') {
+        advanceTrainingTurn();
+      } else {
+        resetTrainingWordTimer();
+      }
     }
   } else {
     showToast(t('toastInvalid'));
     const prevFailedIndex = failedWords.indexOf(targetWord);
     if (prevFailedIndex !== -1) failedWords.splice(prevFailedIndex, 1);
     failedWords.unshift(targetWord);
+    if (currentGameTrainingMode && currentTrainingOptions.gameType === 'group') advanceTrainingTurn();
     saveGameState();
   }
 }
@@ -4565,17 +5392,17 @@ function checkCompletedWordsByOpenCells(completeGame = true) {
     }
   });
 
-  if (changed) updateProgress();
+  if (changed) {
+    updateProgress();
+    renderPronunciationButtons();
+  }
 
   if (completeGame && isGameComplete()) {
     updateBestTimeIfNeeded();
     stopTimerAutosave();
     addStatCompleted(); 
     clearGameState();
-    setTimeout(() => {
-      showToast(t('toastNextGame'));
-      setTimeout(initGame, 1200);
-    }, 300);
+    handleGameComplete();
     return true;
   }
   if (changed) saveGameState();
@@ -4661,6 +5488,8 @@ const modalStatsState = document.getElementById('modalStatsState');
 const modalSettingsState = document.getElementById('modalSettingsState');
 const modalHistoryState = document.getElementById('modalHistoryState');
 const modalJokerWordState = document.getElementById('modalJokerWordState');
+const modalTrainingSetupState = document.getElementById('modalTrainingSetupState');
+const modalTrainingScoreState = document.getElementById('modalTrainingScoreState');
 
 function hideAllModals() {
   modalConfirmState.style.display = 'none';
@@ -4669,6 +5498,96 @@ function hideAllModals() {
   modalSettingsState.style.display = 'none';
   modalHistoryState.style.display = 'none';
   modalJokerWordState.style.display = 'none';
+  modalTrainingSetupState.style.display = 'none';
+  modalTrainingScoreState.style.display = 'none';
+}
+
+function setWizardOption(groupSelector, activeId) {
+  document.querySelectorAll(groupSelector).forEach(btn => btn.classList.toggle('active', btn.id === activeId));
+}
+
+function getTrainingUnitNumbers(lang = pendingTrainingOptions.lang) {
+  const units = TRAINING_UNITS[lang] || TRAINING_UNITS.tr || {};
+  return Object.keys(units)
+    .map(Number)
+    .filter(Number.isFinite)
+    .sort((a, b) => a - b);
+}
+
+function renderTrainingUnitOptions() {
+  const wrap = document.getElementById('trainingSetupUnitOptions');
+  if (!wrap) return;
+
+  const units = getTrainingUnitNumbers();
+  if (!units.includes(pendingTrainingOptions.unit)) {
+    pendingTrainingOptions.unit = units[0] || 1;
+  }
+
+  wrap.innerHTML = '';
+  units.forEach(unit => {
+    const btn = document.createElement('button');
+    btn.className = 'theme-btn';
+    btn.id = `trainingSetupUnit${unit}`;
+    btn.textContent = unit;
+    btn.addEventListener('click', () => {
+      pendingTrainingOptions.unit = unit;
+      syncTrainingSetupWizard();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function openTrainingSetupWizard() {
+  pendingTrainingOptions = {
+    lang: localStorage.getItem(LANG_KEY) || 'tr',
+    unit: 1,
+    timer: true,
+    gameType: 'group',
+    groupCount: 2
+  };
+  syncTrainingSetupWizard();
+  hideAllModals();
+  modalTrainingSetupState.style.display = 'block';
+  modalOverlay.style.display = 'flex';
+}
+
+function syncTrainingSetupWizard() {
+  const text = TRAINING_SETUP_TEXTS[pendingTrainingOptions.lang] || TRAINING_SETUP_TEXTS.tr;
+  const set = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+
+  set('trainingSetupTitle', text.title);
+  set('trainingSetupDesc', text.desc);
+  set('trainingSetupLangLabel', text.lang);
+  set('trainingSetupUnitLabel', text.unit);
+  set('trainingSetupTimerLabel', text.timer);
+  set('trainingSetupTimerYes', text.yes);
+  set('trainingSetupTimerNo', text.no);
+  set('trainingSetupGameTypeLabel', text.gameType);
+  set('trainingSetupGroup', text.group);
+  set('trainingSetupSolo', text.solo);
+  set('trainingSetupGroupCountLabel', text.groupCount);
+  set('trainingSetupStartBtn', text.start);
+
+  renderTrainingUnitOptions();
+  setWizardOption('[id^="trainingSetupLang"]', `trainingSetupLang${pendingTrainingOptions.lang[0].toUpperCase()}${pendingTrainingOptions.lang.slice(1)}`);
+  setWizardOption('[id^="trainingSetupUnit"]', `trainingSetupUnit${pendingTrainingOptions.unit}`);
+  setWizardOption('[id^="trainingSetupTimer"]', pendingTrainingOptions.timer ? 'trainingSetupTimerYes' : 'trainingSetupTimerNo');
+  setWizardOption('#trainingSetupSolo, #trainingSetupGroup', pendingTrainingOptions.gameType === 'group' ? 'trainingSetupGroup' : 'trainingSetupSolo');
+  setWizardOption('[id^="trainingSetupGroup"]:not(#trainingSetupGroup)', `trainingSetupGroup${pendingTrainingOptions.groupCount}`);
+  const groupWrap = document.getElementById('trainingSetupGroupCountWrap');
+  if (groupWrap) groupWrap.style.display = pendingTrainingOptions.gameType === 'group' ? 'block' : 'none';
+}
+
+function startTrainingFromWizard() {
+  currentTrainingOptions = { ...pendingTrainingOptions };
+  localStorage.setItem(TRAINING_MODE_KEY, 'on');
+  localStorage.setItem(LANG_KEY, currentTrainingOptions.lang);
+  clearGameState();
+  modalOverlay.style.display = 'none';
+  initGame();
 }
 
 document.getElementById('giveUpBtn').addEventListener('click', () => {
@@ -4891,19 +5810,18 @@ document.getElementById('resumeOffBtn').addEventListener('click', () => {
 });
 
 document.getElementById('trainingOnBtn').addEventListener('click', () => {
-  if (localStorage.getItem(TRAINING_MODE_KEY) === 'on') return;
-  localStorage.setItem(TRAINING_MODE_KEY, 'on');
   document.getElementById('trainingOnBtn').classList.add('active');
   document.getElementById('trainingOffBtn').classList.remove('active');
-  clearGameState();
-  modalOverlay.style.display = 'none';
-  initGame();
-  showToast(t('toastTrainingOn'));
+  openTrainingSetupWizard();
 });
 
 document.getElementById('trainingOffBtn').addEventListener('click', () => {
   if (localStorage.getItem(TRAINING_MODE_KEY) === 'off') return;
   localStorage.setItem(TRAINING_MODE_KEY, 'off');
+  currentGameTrainingMode = false;
+  updateTrainingVisualMode();
+  stopTrainingTimer();
+  updateTrainingHud();
   document.getElementById('trainingOffBtn').classList.add('active');
   document.getElementById('trainingOnBtn').classList.remove('active');
   clearGameState();
@@ -4912,10 +5830,45 @@ document.getElementById('trainingOffBtn').addEventListener('click', () => {
   showToast(t('toastTrainingOff'));
 });
 
+document.getElementById('trainingSetupLangTr').addEventListener('click', () => { pendingTrainingOptions.lang = 'tr'; syncTrainingSetupWizard(); });
+document.getElementById('trainingSetupLangEn').addEventListener('click', () => { pendingTrainingOptions.lang = 'en'; syncTrainingSetupWizard(); });
+document.getElementById('trainingSetupLangFr').addEventListener('click', () => { pendingTrainingOptions.lang = 'fr'; syncTrainingSetupWizard(); });
+document.getElementById('trainingSetupTimerNo').addEventListener('click', () => { pendingTrainingOptions.timer = false; syncTrainingSetupWizard(); });
+document.getElementById('trainingSetupTimerYes').addEventListener('click', () => { pendingTrainingOptions.timer = true; syncTrainingSetupWizard(); });
+document.getElementById('trainingSetupSolo').addEventListener('click', () => {
+  pendingTrainingOptions.gameType = 'solo';
+  pendingTrainingOptions.groupCount = 2;
+  syncTrainingSetupWizard();
+});
+document.getElementById('trainingSetupGroup').addEventListener('click', () => {
+  pendingTrainingOptions.gameType = 'group';
+  pendingTrainingOptions.groupCount = Math.max(2, pendingTrainingOptions.groupCount || 2);
+  syncTrainingSetupWizard();
+});
+[2, 3, 4].forEach(count => {
+  document.getElementById(`trainingSetupGroup${count}`).addEventListener('click', () => {
+    pendingTrainingOptions.groupCount = count;
+    syncTrainingSetupWizard();
+  });
+});
+document.getElementById('trainingSetupStartBtn').addEventListener('click', startTrainingFromWizard);
+document.getElementById('trainingScoreNewGameBtn').addEventListener('click', () => {
+  modalOverlay.style.display = 'none';
+  initGame();
+});
+
 // Dil seçimi
 function setLang(code, toastMsg) {
   if (localStorage.getItem(LANG_KEY) === code) return;
   localStorage.setItem(LANG_KEY, code);
+  if (localStorage.getItem(TRAINING_MODE_KEY) === 'on') {
+    const units = getTrainingUnitNumbers(code);
+    const activeUnit = units.includes(currentTrainingOptions.unit)
+      ? currentTrainingOptions.unit
+      : (units[0] || 1);
+    currentTrainingOptions = { ...currentTrainingOptions, lang: code, unit: activeUnit };
+    pendingTrainingOptions = { ...currentTrainingOptions };
+  }
   ['langTrBtn', 'langEnBtn', 'langFrBtn'].forEach(id => {
     document.getElementById(id).classList.remove('active');
   });
@@ -4928,7 +5881,7 @@ function setLang(code, toastMsg) {
   showToast(toastMsg);
 }
 
-document.getElementById('langTrBtn').addEventListener('click', () => setLang('tr', t('toastLangSelected')));
+document.getElementById('langTrBtn').addEventListener('click', () => setLang('tr', TRANSLATIONS.tr.toastLangSelected));
 document.getElementById('langEnBtn').addEventListener('click', () => setLang('en', TRANSLATIONS.en.toastLangSelected));
 document.getElementById('langFrBtn').addEventListener('click', () => setLang('fr', TRANSLATIONS.fr.toastLangSelected));
 
@@ -4943,8 +5896,12 @@ function showToast(msg) {
 
 window.addEventListener('load', () => {
   let started = false;
+  if (localStorage.getItem(TRAINING_MODE_KEY) === 'on') {
+    openTrainingSetupWizard();
+    started = true;
+  }
   try {
-    const resumeOn = localStorage.getItem(RESUME_KEY) === 'on';
+    const resumeOn = !started && localStorage.getItem(RESUME_KEY) === 'on';
     const savedRaw = resumeOn ? localStorage.getItem(SAVE_KEY) : null;
     if (savedRaw) {
       const state = JSON.parse(savedRaw);
