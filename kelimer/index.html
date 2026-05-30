@@ -3756,13 +3756,24 @@ function awardTrainingWord(wordText) {
   }
 }
 
+function addTrainingGroupElapsed(elapsed = Date.now() - trainingWordStartedAt) {
+  if (!currentGameTrainingMode || currentTrainingOptions.gameType !== 'group') return;
+  const group = trainingScores[trainingCurrentGroup];
+  if (!group) return;
+
+  group.totalTime += Math.max(0, elapsed);
+}
+
 function addTrainingGroupPoints(points, entry) {
   if (!currentGameTrainingMode || currentTrainingOptions.gameType !== 'group') return;
   const group = trainingScores[trainingCurrentGroup];
   if (!group) return;
 
   group.points += points;
-  if (entry) group.words.push(entry);
+  if (entry) {
+    if (typeof entry.time === 'number') group.totalTime += Math.max(0, entry.time);
+    group.words.push(entry);
+  }
 }
 
 function applyTranslations() {
@@ -5290,7 +5301,10 @@ function checkWord(targetWord) {
           }, 620);
         }, i * 55);
       }
-      if (currentGameTrainingMode && currentTrainingOptions.gameType === 'group') advanceTrainingTurn();
+      if (currentGameTrainingMode && currentTrainingOptions.gameType === 'group') {
+        addTrainingGroupElapsed();
+        advanceTrainingTurn();
+      }
       return;
     }
 
@@ -5336,7 +5350,10 @@ function checkWord(targetWord) {
     const prevFailedIndex = failedWords.indexOf(targetWord);
     if (prevFailedIndex !== -1) failedWords.splice(prevFailedIndex, 1);
     failedWords.unshift(targetWord);
-    if (currentGameTrainingMode && currentTrainingOptions.gameType === 'group') advanceTrainingTurn();
+    if (currentGameTrainingMode && currentTrainingOptions.gameType === 'group') {
+      addTrainingGroupElapsed();
+      advanceTrainingTurn();
+    }
     saveGameState();
   }
 }
