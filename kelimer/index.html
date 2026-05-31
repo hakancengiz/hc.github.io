@@ -3739,6 +3739,11 @@ function findSpeechVoice(langCode) {
   return voices.find(voice => voice.lang.toLowerCase().startsWith(family)) || null;
 }
 
+function getSpeechText(word, langCode) {
+  const locale = langCode === 'fr-FR' ? 'fr-FR' : langCode === 'en-US' ? 'en-US' : 'tr-TR';
+  return String(word || '').normalize('NFC').toLocaleLowerCase(locale);
+}
+
 function speakTrainingWord(word, buttonEl = null) {
   if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
     showToast(getSpeechUnsupportedMessage());
@@ -3746,7 +3751,7 @@ function speakTrainingWord(word, buttonEl = null) {
   }
 
   const langCode = getSpeechLanguageCode();
-  const utterance = new SpeechSynthesisUtterance(word);
+  const utterance = new SpeechSynthesisUtterance(getSpeechText(word, langCode));
   utterance.lang = langCode;
   utterance.rate = 0.9;
   utterance.pitch = 1.04;
