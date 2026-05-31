@@ -568,6 +568,51 @@
       transform: scale(1) translateY(0);
     }
 
+    .training-score-ready {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 18px;
+      border: 2px solid rgba(255,255,255,0.78);
+      border-radius: 999px;
+      background: linear-gradient(145deg, #7C4DFF, #FF5CA8);
+      color: #FFFFFF;
+      font-family: 'Figtree', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 0 rgba(91,45,180,0.38), 0 14px 24px rgba(255,92,168,0.22);
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    .training-score-ready.active {
+      display: flex;
+      animation: trainingScoreReadyPop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .training-score-ready svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+    }
+
+    .training-score-ready:active {
+      transform: scale(0.94);
+    }
+
+    .disc-container.training-locked {
+      pointer-events: none;
+      opacity: 0.72;
+      filter: saturate(0.88);
+    }
+
+    @keyframes trainingScoreReadyPop {
+      0% { opacity: 0; transform: translateY(8px) scale(0.86); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     /* ── DISC ── */
     .disc-container {
       position: relative;
@@ -1572,9 +1617,19 @@
 
   <div class="bottom">
     <div class="word-preview" id="wordPreview"></div>
+    <button class="training-score-ready" id="trainingScoreReadyBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 21h8"/>
+        <path d="M12 17v4"/>
+        <path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/>
+        <path d="M5 6H3a3 3 0 0 0 3 3h1"/>
+        <path d="M19 6h2a3 3 0 0 1-3 3h-1"/>
+      </svg>
+      <span id="trainingScoreReadyText">Skor Tablosunu Göster</span>
+    </button>
     <div class="joker-word-wrap" id="jokerWordWrap"></div>
 
-    <div class="disc-container">
+    <div class="disc-container" id="discContainer">
       <svg class="swipe-svg">
         <polyline id="swipePolyline" points=""></polyline>
         <line id="activeLine" x1="0" y1="0" x2="0" y2="0" display="none"></line>
@@ -1796,6 +1851,14 @@ Devam etmek istiyor musun?</div>
     </div>
 
     <div class="wizard-section">
+      <div class="wizard-label" id="trainingSetupUnitSelectionLabel">Ünite Seçimi</div>
+      <div class="theme-switch-group wizard-options">
+        <button class="theme-btn" id="trainingSetupUnitSelectionOn">Açık</button>
+        <button class="theme-btn active" id="trainingSetupUnitSelectionOff">Kapalı</button>
+      </div>
+    </div>
+
+    <div class="wizard-section" id="trainingSetupUnitWrap">
       <div class="wizard-label" id="trainingSetupUnitLabel">Ünite</div>
       <div class="theme-switch-group wizard-options" id="trainingSetupUnitOptions"></div>
     </div>
@@ -2965,8 +3028,23 @@ const TRAINING_UNITS = {
   }
 };
 
+const TRAINING_ALL_UNITS = {
+  tr: [],
+  en: [],
+  fr: ["POULET", "JAMBON", "TENNIS", "COLÈRE", "ESPOIR", "RAPIDE", "FACILE", "PAUVRE", "DESSIN", "VISITE", "VOYAGE", "ESPACE", "ÉTOILE", "SECRET", "CADEAU", "BLAGUE", "NOMBRE", "PARLER", "CLASSE", "MEUBLE", "FLEUR", "PLAGE", "ARBRE", "HERBE", "NUAGE", "ROUTE", "PLACE", "FORÊT", "TIGRE", "ZÈBRE", "PANDA", "KOALA", "SOUPE", "PIZZA", "SAUCE", "DANSE", "CHANT", "SPORT", "AMOUR", "CHOIX", "DÉSIR", "RICHE", "SABLE", "PLUIE", "PHOTO", "ÉTUDE", "MONDE", "TERRE", "APPEL", "TEXTE", "CARTE", "LISTE", "FAIRE", "ÉCOLE", "PARC", "OEUF", "MIEL", "CAFÉ", "FOOT", "YOGA", "FILM", "PEUR", "JOIE", "RÊVE", "IDÉE", "LENT", "PONT", "QUAI", "VENT", "AIDE", "LUNE", "FÊTE", "RIRE", "VOIX", "NOTE", "LIRE", "ÎLE", "THÉ", "SKI", "JEU", "DUR", "LAC", "MER", "ROC", "FEU"]
+};
+
+function getCombinedTrainingUnitWords(langCode) {
+  const units = TRAINING_UNITS[langCode] || {};
+  const unitWords = Object.values(units).flat();
+  const manualWords = TRAINING_ALL_UNITS[langCode] || [];
+  return [...unitWords, ...manualWords];
+}
+
 function getTrainingDictionary() {
-  const manualUnit = TRAINING_UNITS[currentTrainingOptions.lang]?.[currentTrainingOptions.unit] || [];
+  const manualUnit = currentTrainingOptions.unitSelection
+    ? (TRAINING_UNITS[currentTrainingOptions.lang]?.[currentTrainingOptions.unit] || [])
+    : getCombinedTrainingUnitWords(currentTrainingOptions.lang);
   if (manualUnit.length > 0) {
     return [...new Set(manualUnit.map(w => normalizeTrainingWord(w, currentTrainingOptions.lang)).filter(Boolean))];
   }
@@ -3350,12 +3428,13 @@ let jokerHintCredits = 0;
 let currentGameTrainingMode = false;
 let trainingRevealedKeys = [];
 let jokerTrainingRevealedIndexes = [];
-let pendingTrainingOptions = { lang: 'tr', unit: 1, timer: true, gameType: 'group', groupCount: 2 };
+let pendingTrainingOptions = { lang: 'tr', unitSelection: false, unit: 1, timer: true, gameType: 'group', groupCount: 2 };
 let currentTrainingOptions = { ...pendingTrainingOptions };
 let trainingScores = [];
 let trainingCurrentGroup = 0;
 let trainingWordStartedAt = Date.now();
 let trainingTimerInterval = null;
+let trainingAwaitingScore = false;
 let gameStartedAt = Date.now();
 let elapsedBeforeStart = 0;
 let timerSaveInterval = null;
@@ -3373,6 +3452,11 @@ const TRAINING_SETUP_TEXTS = {
     title: 'Eğitim Kurulumu',
     desc: 'Eğitim oyununu başlatmadan önce seçeneklerini belirle.',
     lang: 'Dil',
+    unitSelection: 'Ünite Seçimi',
+    unitSelectionOn: 'Açık',
+    unitSelectionOff: 'Kapalı',
+    allUnits: 'Tüm Üniteler',
+    showScore: 'Skor Tablosunu Göster',
     unit: 'Ünite',
     timer: 'Süre Sayacı',
     yes: 'Evet',
@@ -3387,6 +3471,11 @@ const TRAINING_SETUP_TEXTS = {
     title: 'Training Setup',
     desc: 'Choose your options before starting the training game.',
     lang: 'Language',
+    unitSelection: 'Unit Selection',
+    unitSelectionOn: 'On',
+    unitSelectionOff: 'Off',
+    allUnits: 'All Units',
+    showScore: 'Show Scoreboard',
     unit: 'Unit',
     timer: 'Timer',
     yes: 'Yes',
@@ -3401,6 +3490,11 @@ const TRAINING_SETUP_TEXTS = {
     title: 'Configuration',
     desc: 'Choisissez vos options avant de lancer la partie d’entraînement.',
     lang: 'Langue',
+    unitSelection: 'Sélection d’unité',
+    unitSelectionOn: 'Activée',
+    unitSelectionOff: 'Désactivée',
+    allUnits: 'Toutes les unités',
+    showScore: 'Afficher le score',
     unit: 'Unité',
     timer: 'Chronomètre',
     yes: 'Oui',
@@ -3713,7 +3807,12 @@ function updateTrainingHud() {
   const unitLabel = document.getElementById('trainingUnitLabel');
   const groupLabel = document.getElementById('trainingGroupLabel');
   const timerLabel = document.getElementById('trainingTimerLabel');
-  if (unitLabel) unitLabel.textContent = `Ünite ${currentTrainingOptions.unit}`;
+  if (unitLabel) {
+    const text = TRAINING_SETUP_TEXTS[currentTrainingOptions.lang] || TRAINING_SETUP_TEXTS.tr;
+    unitLabel.textContent = currentTrainingOptions.unitSelection
+      ? `${text.unit} ${currentTrainingOptions.unit}`
+      : text.allUnits;
+  }
   if (groupLabel) {
     groupLabel.style.display = currentTrainingOptions.gameType === 'group' ? '' : 'none';
     groupLabel.textContent = trainingScores[trainingCurrentGroup]?.name || 'Grup 1';
@@ -3733,6 +3832,34 @@ function showTrainingTurnOverlay() {
   overlay.classList.remove('show');
   void overlay.offsetWidth;
   overlay.classList.add('show');
+}
+
+function setTrainingScoreReadyState(active) {
+  trainingAwaitingScore = !!active;
+
+  const readyBtn = document.getElementById('trainingScoreReadyBtn');
+  const readyText = document.getElementById('trainingScoreReadyText');
+  const discWrap = document.getElementById('discContainer');
+  const text = TRAINING_SETUP_TEXTS[currentTrainingOptions.lang] || TRAINING_SETUP_TEXTS.tr;
+
+  if (readyText) readyText.textContent = text.showScore;
+  if (readyBtn) readyBtn.classList.toggle('active', trainingAwaitingScore);
+  if (discWrap) discWrap.classList.toggle('training-locked', trainingAwaitingScore);
+
+  ['giveUpBtn', 'historyBtn', 'shuffleBtn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.disabled = trainingAwaitingScore;
+  });
+
+  if (trainingAwaitingScore) {
+    const jokerBtn = document.getElementById('jokerBtn');
+    const jokerWordBtn = document.getElementById('jokerWordBtn');
+    if (jokerBtn) jokerBtn.disabled = true;
+    if (jokerWordBtn) jokerWordBtn.disabled = true;
+  } else if (currentPuzzle) {
+    updateJokerUI();
+    updateJokerWordUI();
+  }
 }
 
 function advanceTrainingTurn() {
@@ -4104,7 +4231,31 @@ function generateDensePuzzle() {
   const activeDict = getActiveDictionary();
   const allLongWords = activeDict.filter(w => w.length === 6);
   if (usedBaseWords.size >= allLongWords.length) usedBaseWords.clear();
-  const longWords = allLongWords.filter(w => !usedBaseWords.has(w));
+  let longWords = allLongWords.filter(w => !usedBaseWords.has(w));
+
+  if (currentGameTrainingMode) {
+    const scoredBaseWords = allLongWords.map(base => {
+      const letters = base.split('');
+      let subCount = 0;
+      for (const word of activeDict) {
+        if (word.length < 3 || word.length > 5) continue;
+        if (canBuildFromLetters(word, letters)) subCount++;
+      }
+      return { base, subCount };
+    }).filter(item => item.subCount > 0);
+
+    const freshBaseWords = scoredBaseWords.filter(item => !usedBaseWords.has(item.base));
+    const freshMaxSubCount = freshBaseWords.length > 0
+      ? Math.max(...freshBaseWords.map(item => item.subCount))
+      : 0;
+    const sourceBaseWords = freshMaxSubCount >= 4 ? freshBaseWords : scoredBaseWords;
+    if (sourceBaseWords.length > 0) {
+      const maxSubCount = Math.max(...sourceBaseWords.map(item => item.subCount));
+      const preferredBaseWords = sourceBaseWords.filter(item => item.subCount >= Math.max(1, maxSubCount - 2));
+      shuffleArray(preferredBaseWords);
+      longWords = [preferredBaseWords[0].base];
+    }
+  }
 
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
 
@@ -4240,7 +4391,7 @@ function generateDensePuzzle() {
   }
 
   if (fallbackPuzzle) {
-    if (!currentGameTrainingMode) usedBaseWords.add(fallbackPuzzle.words[0].text);
+    usedBaseWords.add(fallbackPuzzle.words[0].text);
     return fallbackPuzzle;
   }
 
@@ -4346,6 +4497,7 @@ function initGame() {
   jokerTrainingRevealedIndexes = [];
   trainingScores = currentGameTrainingMode ? createTrainingScores() : [];
   trainingCurrentGroup = 0;
+  setTrainingScoreReadyState(false);
   resetTrainingWordTimer();
   gameStartedAt = Date.now();
   elapsedBeforeStart = 0;
@@ -4785,7 +4937,7 @@ function renderJokerWord() {
 function updateJokerWordUI() {
   renderJokerWord();
   const btn = document.getElementById('jokerWordBtn');
-  if (btn) btn.disabled = !!jokerWordState.active || !!jokerWordState.unavailable;
+  if (btn) btn.disabled = trainingAwaitingScore || !!jokerWordState.active || !!jokerWordState.unavailable;
 }
 
 function isGameComplete() {
@@ -4796,7 +4948,7 @@ function isGameComplete() {
 function handleGameComplete() {
   stopTrainingTimer();
   if (currentGameTrainingMode) {
-    showTrainingScoreModal();
+    setTrainingScoreReadyState(true);
     return;
   }
 
@@ -5149,6 +5301,7 @@ function getPointerPos(e) {
 }
 
 discElement.addEventListener('pointerdown', (e) => {
+  if (trainingAwaitingScore) return;
   if (document.getElementById('customModal').style.display === 'flex') return; 
   isDrawing = true;
   selectedButtons = [];
@@ -5435,7 +5588,7 @@ function updateJokerUI() {
   label.innerHTML = `<svg viewBox="0 0 20 20" fill="currentColor" style="width:14px;height:14px;flex-shrink:0"><path d="M10 2a6 6 0 00-3.75 10.7.75.75 0 01.25.56V14h7v-.74a.75.75 0 01.25-.56A6 6 0 0010 2zm-1.5 12.5v.25a1.5 1.5 0 003 0v-.25h-3z"/></svg>${t('jokerLabel', remainingJokers)}`;
   const hasClosedGridCells = currentPuzzle && currentPuzzle.placedCells &&
     Object.values(currentPuzzle.placedCells).some(cell => !cell.open);
-  document.getElementById('jokerBtn').disabled = (remainingJokers <= 0 || !hasClosedGridCells);
+  document.getElementById('jokerBtn').disabled = trainingAwaitingScore || (remainingJokers <= 0 || !hasClosedGridCells);
 }
 
 function updateProgress() {
@@ -5447,6 +5600,7 @@ function updateProgress() {
 }
 
 document.getElementById('shuffleBtn').addEventListener('click', () => {
+  if (trainingAwaitingScore) return;
   const disc = document.getElementById('disc');
   const btns = disc.querySelectorAll('.letter-btn');
 
@@ -5557,6 +5711,7 @@ function renderTrainingUnitOptions() {
 function openTrainingSetupWizard() {
   pendingTrainingOptions = {
     lang: localStorage.getItem(LANG_KEY) || 'tr',
+    unitSelection: false,
     unit: 1,
     timer: true,
     gameType: 'group',
@@ -5578,6 +5733,9 @@ function syncTrainingSetupWizard() {
   set('trainingSetupTitle', text.title);
   set('trainingSetupDesc', text.desc);
   set('trainingSetupLangLabel', text.lang);
+  set('trainingSetupUnitSelectionLabel', text.unitSelection);
+  set('trainingSetupUnitSelectionOn', text.unitSelectionOn);
+  set('trainingSetupUnitSelectionOff', text.unitSelectionOff);
   set('trainingSetupUnitLabel', text.unit);
   set('trainingSetupTimerLabel', text.timer);
   set('trainingSetupTimerYes', text.yes);
@@ -5587,15 +5745,19 @@ function syncTrainingSetupWizard() {
   set('trainingSetupSolo', text.solo);
   set('trainingSetupGroupCountLabel', text.groupCount);
   set('trainingSetupStartBtn', text.start);
+  set('trainingScoreReadyText', text.showScore);
 
   renderTrainingUnitOptions();
   setWizardOption('[id^="trainingSetupLang"]', `trainingSetupLang${pendingTrainingOptions.lang[0].toUpperCase()}${pendingTrainingOptions.lang.slice(1)}`);
-  setWizardOption('[id^="trainingSetupUnit"]', `trainingSetupUnit${pendingTrainingOptions.unit}`);
+  setWizardOption('#trainingSetupUnitSelectionOn, #trainingSetupUnitSelectionOff', pendingTrainingOptions.unitSelection ? 'trainingSetupUnitSelectionOn' : 'trainingSetupUnitSelectionOff');
+  setWizardOption('#trainingSetupUnitOptions .theme-btn', `trainingSetupUnit${pendingTrainingOptions.unit}`);
   setWizardOption('[id^="trainingSetupTimer"]', pendingTrainingOptions.timer ? 'trainingSetupTimerYes' : 'trainingSetupTimerNo');
   setWizardOption('#trainingSetupSolo, #trainingSetupGroup', pendingTrainingOptions.gameType === 'group' ? 'trainingSetupGroup' : 'trainingSetupSolo');
   setWizardOption('[id^="trainingSetupGroup"]:not(#trainingSetupGroup)', `trainingSetupGroup${pendingTrainingOptions.groupCount}`);
   const groupWrap = document.getElementById('trainingSetupGroupCountWrap');
   if (groupWrap) groupWrap.style.display = pendingTrainingOptions.gameType === 'group' ? 'block' : 'none';
+  const unitWrap = document.getElementById('trainingSetupUnitWrap');
+  if (unitWrap) unitWrap.style.display = pendingTrainingOptions.unitSelection ? 'block' : 'none';
 }
 
 function startTrainingFromWizard() {
@@ -5850,6 +6012,14 @@ document.getElementById('trainingOffBtn').addEventListener('click', () => {
 document.getElementById('trainingSetupLangTr').addEventListener('click', () => { pendingTrainingOptions.lang = 'tr'; syncTrainingSetupWizard(); });
 document.getElementById('trainingSetupLangEn').addEventListener('click', () => { pendingTrainingOptions.lang = 'en'; syncTrainingSetupWizard(); });
 document.getElementById('trainingSetupLangFr').addEventListener('click', () => { pendingTrainingOptions.lang = 'fr'; syncTrainingSetupWizard(); });
+document.getElementById('trainingSetupUnitSelectionOn').addEventListener('click', () => {
+  pendingTrainingOptions.unitSelection = true;
+  syncTrainingSetupWizard();
+});
+document.getElementById('trainingSetupUnitSelectionOff').addEventListener('click', () => {
+  pendingTrainingOptions.unitSelection = false;
+  syncTrainingSetupWizard();
+});
 document.getElementById('trainingSetupTimerNo').addEventListener('click', () => { pendingTrainingOptions.timer = false; syncTrainingSetupWizard(); });
 document.getElementById('trainingSetupTimerYes').addEventListener('click', () => { pendingTrainingOptions.timer = true; syncTrainingSetupWizard(); });
 document.getElementById('trainingSetupSolo').addEventListener('click', () => {
@@ -5872,6 +6042,11 @@ document.getElementById('trainingSetupStartBtn').addEventListener('click', start
 document.getElementById('trainingScoreNewGameBtn').addEventListener('click', () => {
   modalOverlay.style.display = 'none';
   initGame();
+});
+
+document.getElementById('trainingScoreReadyBtn').addEventListener('click', () => {
+  if (!trainingAwaitingScore) return;
+  showTrainingScoreModal();
 });
 
 // Dil seçimi
