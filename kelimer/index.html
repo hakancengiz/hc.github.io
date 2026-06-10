@@ -183,6 +183,80 @@
       z-index: 1;
     }
 
+    @media (min-width: 760px) and (orientation: landscape) {
+      body.training-mode.training-landscape .app {
+        max-width: none;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(390px, 42vw);
+        grid-template-rows: auto auto auto minmax(0, 1fr);
+        grid-template-areas:
+          "header header"
+          "progress progress"
+          "hud hud"
+          "grid controls";
+      }
+
+      body.training-mode.training-landscape .header {
+        grid-area: header;
+        padding: 20px 30px 10px;
+      }
+
+      body.training-mode.training-landscape .progress-wrap {
+        grid-area: progress;
+        padding: 0 30px 12px;
+      }
+
+      body.training-mode.training-landscape .training-hud {
+        grid-area: hud;
+        margin: -2px 30px 10px;
+      }
+
+      body.training-mode.training-landscape .grid-area {
+        grid-area: grid;
+        padding: 20px 30px 34px;
+      }
+
+      body.training-mode.training-landscape .bottom {
+        grid-area: controls;
+        min-width: 0;
+        padding: 18px 90px 34px 20px;
+        justify-content: center;
+        gap: 18px;
+      }
+
+      body.training-mode.training-landscape .disc-container {
+        width: min(31vw, 340px);
+        height: min(31vw, 340px);
+        min-width: 270px;
+        min-height: 270px;
+      }
+
+      body.training-mode.training-landscape .side-actions {
+        right: 24px;
+        bottom: 50%;
+        transform: translateY(50%);
+        gap: 12px;
+      }
+
+      body.training-mode.training-landscape .action-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 16px;
+      }
+
+      body.training-mode.training-landscape .joker-word-wrap {
+        left: 14px;
+        bottom: 50%;
+        transform: translateY(50%);
+      }
+
+      body.training-mode.training-landscape .word-preview,
+      body.training-mode.training-landscape .training-score-ready {
+        position: absolute;
+        top: 22px;
+      }
+    }
+
     /* ── HEADER ── */
     .header {
       display: flex;
@@ -1337,6 +1411,9 @@
       font-weight: 700;
       font-size: 13px;
       color: var(--text-primary);
+      flex: 1;
+      min-width: 0;
+      text-align: left;
     }
 
     .setting-sublabel {
@@ -1868,6 +1945,14 @@ Devam etmek istiyor musun?</div>
       <div class="theme-switch-group wizard-options">
         <button class="theme-btn active" id="trainingSetupTimerYes">Evet</button>
         <button class="theme-btn" id="trainingSetupTimerNo">Hayır</button>
+      </div>
+    </div>
+
+    <div class="wizard-section">
+      <div class="wizard-label" id="trainingSetupVerticalLabel">Dikey Kullanım</div>
+      <div class="theme-switch-group wizard-options">
+        <button class="theme-btn active" id="trainingSetupVerticalYes">Evet</button>
+        <button class="theme-btn" id="trainingSetupVerticalNo">Hayır</button>
       </div>
     </div>
 
@@ -3428,7 +3513,7 @@ let jokerHintCredits = 0;
 let currentGameTrainingMode = false;
 let trainingRevealedKeys = [];
 let jokerTrainingRevealedIndexes = [];
-let pendingTrainingOptions = { lang: 'tr', unitSelection: false, unit: 1, timer: true, gameType: 'group', groupCount: 2 };
+let pendingTrainingOptions = { lang: 'tr', unitSelection: false, unit: 1, timer: true, verticalUsage: true, gameType: 'group', groupCount: 2 };
 let currentTrainingOptions = { ...pendingTrainingOptions };
 let trainingScores = [];
 let trainingCurrentGroup = 0;
@@ -3459,6 +3544,7 @@ const TRAINING_SETUP_TEXTS = {
     showScore: 'Skor Tablosunu Göster',
     unit: 'Ünite',
     timer: 'Süre Sayacı',
+    verticalUsage: 'Dikey Kullanım',
     yes: 'Evet',
     no: 'Hayır',
     gameType: 'Oyun Türü',
@@ -3478,6 +3564,7 @@ const TRAINING_SETUP_TEXTS = {
     showScore: 'Show Scoreboard',
     unit: 'Unit',
     timer: 'Timer',
+    verticalUsage: 'Portrait Mode',
     yes: 'Yes',
     no: 'No',
     gameType: 'Game Type',
@@ -3497,6 +3584,7 @@ const TRAINING_SETUP_TEXTS = {
     showScore: 'Afficher le score',
     unit: 'Unité',
     timer: 'Chronomètre',
+    verticalUsage: 'Mode portrait',
     yes: 'Oui',
     no: 'Non',
     gameType: 'Type de Jeu',
@@ -3711,6 +3799,10 @@ function t(key, ...args) {
 
 function updateTrainingVisualMode() {
   document.body.classList.toggle('training-mode', !!currentGameTrainingMode);
+  document.body.classList.toggle(
+    'training-landscape',
+    !!currentGameTrainingMode && currentTrainingOptions.verticalUsage === false
+  );
   if (!currentGameTrainingMode) {
     document.querySelectorAll('.pronounce-btn').forEach(btn => btn.remove());
   }
@@ -5203,7 +5295,11 @@ function buildGrid() {
 
   // Minimum 26px; altına düşerse wrapper CSS scale ile sığdırılır
   const MIN_SZ = 26;
-  const rawSz = Math.min(szW, szH, 44);
+  const landscapeTraining = currentGameTrainingMode &&
+    currentTrainingOptions.verticalUsage === false &&
+    window.innerWidth >= 760 &&
+    window.innerWidth > window.innerHeight;
+  const rawSz = Math.min(szW, szH, landscapeTraining ? 64 : 44);
   const sz = Math.max(rawSz, MIN_SZ);
   const step = sz + gap;
 
@@ -5259,7 +5355,11 @@ function buildDisc() {
   
   const dSize = disc.clientWidth;
   const radius = dSize * 0.35;
-  const btnSize = Math.min(Math.round(dSize * 0.24), 54);
+  const landscapeTraining = currentGameTrainingMode &&
+    currentTrainingOptions.verticalUsage === false &&
+    window.innerWidth >= 760 &&
+    window.innerWidth > window.innerHeight;
+  const btnSize = Math.min(Math.round(dSize * 0.24), landscapeTraining ? 68 : 54);
 
   btnCoords = [];
 
@@ -5719,6 +5819,7 @@ function openTrainingSetupWizard() {
     unitSelection: false,
     unit: 1,
     timer: true,
+    verticalUsage: true,
     gameType: 'group',
     groupCount: 2
   };
@@ -5743,8 +5844,11 @@ function syncTrainingSetupWizard() {
   set('trainingSetupUnitSelectionOff', text.unitSelectionOff);
   set('trainingSetupUnitLabel', text.unit);
   set('trainingSetupTimerLabel', text.timer);
+  set('trainingSetupVerticalLabel', text.verticalUsage);
   set('trainingSetupTimerYes', text.yes);
   set('trainingSetupTimerNo', text.no);
+  set('trainingSetupVerticalYes', text.yes);
+  set('trainingSetupVerticalNo', text.no);
   set('trainingSetupGameTypeLabel', text.gameType);
   set('trainingSetupGroup', text.group);
   set('trainingSetupSolo', text.solo);
@@ -5757,6 +5861,7 @@ function syncTrainingSetupWizard() {
   setWizardOption('#trainingSetupUnitSelectionOn, #trainingSetupUnitSelectionOff', pendingTrainingOptions.unitSelection ? 'trainingSetupUnitSelectionOn' : 'trainingSetupUnitSelectionOff');
   setWizardOption('#trainingSetupUnitOptions .theme-btn', `trainingSetupUnit${pendingTrainingOptions.unit}`);
   setWizardOption('[id^="trainingSetupTimer"]', pendingTrainingOptions.timer ? 'trainingSetupTimerYes' : 'trainingSetupTimerNo');
+  setWizardOption('#trainingSetupVerticalYes, #trainingSetupVerticalNo', pendingTrainingOptions.verticalUsage ? 'trainingSetupVerticalYes' : 'trainingSetupVerticalNo');
   setWizardOption('#trainingSetupSolo, #trainingSetupGroup', pendingTrainingOptions.gameType === 'group' ? 'trainingSetupGroup' : 'trainingSetupSolo');
   setWizardOption('[id^="trainingSetupGroup"]:not(#trainingSetupGroup)', `trainingSetupGroup${pendingTrainingOptions.groupCount}`);
   const groupWrap = document.getElementById('trainingSetupGroupCountWrap');
@@ -6027,6 +6132,8 @@ document.getElementById('trainingSetupUnitSelectionOff').addEventListener('click
 });
 document.getElementById('trainingSetupTimerNo').addEventListener('click', () => { pendingTrainingOptions.timer = false; syncTrainingSetupWizard(); });
 document.getElementById('trainingSetupTimerYes').addEventListener('click', () => { pendingTrainingOptions.timer = true; syncTrainingSetupWizard(); });
+document.getElementById('trainingSetupVerticalNo').addEventListener('click', () => { pendingTrainingOptions.verticalUsage = false; syncTrainingSetupWizard(); });
+document.getElementById('trainingSetupVerticalYes').addEventListener('click', () => { pendingTrainingOptions.verticalUsage = true; syncTrainingSetupWizard(); });
 document.getElementById('trainingSetupSolo').addEventListener('click', () => {
   pendingTrainingOptions.gameType = 'solo';
   pendingTrainingOptions.groupCount = 2;
