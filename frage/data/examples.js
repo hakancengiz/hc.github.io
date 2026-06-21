@@ -45704,6 +45704,30 @@
     "source": "French Wiktionary (source-free example)"
   },
   {
+    "id": 17320,
+    "entryId": 5122,
+    "senseId": null,
+    "fr": "Je fais mes devoirs.",
+    "tr": "Ödevlerimi yapıyorum.",
+    "source": "FRAGE curated contribution"
+  },
+  {
+    "id": 17321,
+    "entryId": 5122,
+    "senseId": null,
+    "fr": "Nous faisons du sport le week-end.",
+    "tr": "Hafta sonları spor yapıyoruz.",
+    "source": "FRAGE curated contribution"
+  },
+  {
+    "id": 17322,
+    "entryId": 5122,
+    "senseId": null,
+    "fr": "Il fait beau aujourd’hui.",
+    "tr": "Bugün hava güzel.",
+    "source": "FRAGE curated contribution"
+  },
+  {
     "id": 6596,
     "entryId": 5123,
     "senseId": 4736,
