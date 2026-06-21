@@ -15,9 +15,9 @@ const indexCache = new Map();
 const entryShardById = new Map();
 
 importScripts(
-  "../data/core.js?v=12",
-  "../data/forms.js?v=12",
-  "../data/examples.js?v=12",
+  "../data/core.js?v=14",
+  "../data/forms.js?v=14",
+  "../data/examples.js?v=14",
   "mock-data.js?v=12"
 );
 
@@ -90,8 +90,8 @@ async function initSqlite() {
       shardManifest = null;
     }
     const [coreBytes, formsBytes] = await Promise.all([
-      fetchBytes("../data/core.sqlite?v=12"),
-      fetchBytes("../data/forms.sqlite?v=12"),
+      fetchBytes("../data/core.sqlite?v=14"),
+      fetchBytes("../data/forms.sqlite?v=14"),
     ]);
     coreDb = new sqliteModule.Database(coreBytes);
     formsDb = new sqliteModule.Database(formsBytes);
@@ -111,7 +111,7 @@ function getEntrySenses(entryId) { return sqliteSenses.filter((sense) => sense.e
 
 async function ensureFullExamples() {
   if (examplesDb) return;
-  examplesDb = new sqliteModule.Database(await fetchBytes("../data/examples.sqlite?v=12"));
+  examplesDb = new sqliteModule.Database(await fetchBytes("../data/examples.sqlite?v=14"));
   sqliteExamples = readRows(examplesDb, "SELECT id, entry_id AS entryId, sense_id AS senseId, fr_text AS fr, tr_text AS tr, source FROM examples ORDER BY id");
 }
 
