@@ -1,0 +1,9 @@
+{
+  "format": "frage-sharded-sqlite-v1",
+  "prefixLength": 2,
+  "shardDirectory": "shards",
+  "indexDirectory": "shards/index",
+  "shardCount": 300,
+  "indexBucketCount": 31,
+  "entryCount": 11771
+}
