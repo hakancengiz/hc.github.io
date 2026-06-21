@@ -1003,35 +1003,22 @@ function speakFrenchWord(word) {
     return;
   }
 
-  const run = () => {
-    const voice = getFrenchVoice();
-    if (!voice) {
-      setSpeechStatus("Fransızca ses bulunamadı.");
-      return;
-    }
+  const voice = getFrenchVoice();
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = voice?.lang || "fr-FR";
+  if (voice) utterance.voice = voice;
+  utterance.rate = 0.86;
+  utterance.pitch = 1;
 
-    window.speechSynthesis.cancel();
+  utterance.onstart = () => setSpeechStatus("Telaffuz oynatılıyor...");
+  utterance.onend = () => setSpeechStatus("");
+  utterance.onerror = () => setSpeechStatus("Telaffuz oynatılamadı.");
 
-    const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = voice.lang || "fr-FR";
-    utterance.voice = voice;
-    utterance.rate = 0.86;
-    utterance.pitch = 1;
-
-    utterance.onstart = () => setSpeechStatus("Telaffuz oynatılıyor...");
-    utterance.onend = () => setSpeechStatus("");
-    utterance.onerror = () => setSpeechStatus("Telaffuz oynatılamadı.");
-
-    window.speechSynthesis.speak(utterance);
-  };
-
-  if (window.speechSynthesis.getVoices().length) {
-    run();
-    return;
-  }
-
-  window.speechSynthesis.onvoiceschanged = run;
-  setSpeechStatus("Fransızca ses hazırlanıyor...");
+  // Let the browser choose fr-FR immediately if its voice list is still loading.
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.resume();
+  setSpeechStatus("Telaffuz oynatılıyor...");
+  window.speechSynthesis.speak(utterance);
 }
 
 async function selectEntry(index, options = {}) {
@@ -1291,7 +1278,7 @@ function registerServiceWorker() {
   if (!["http:", "https:"].includes(window.location.protocol)) return;
 
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=75", { updateViaCache: "none" }).catch(() => {
+    navigator.serviceWorker.register("sw.js?v=76", { updateViaCache: "none" }).catch(() => {
       // The app remains fully usable without service worker support.
     });
   }, { once: true });
