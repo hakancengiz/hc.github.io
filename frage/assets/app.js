@@ -86,7 +86,7 @@ function createDataWorker() {
   if (!window.Worker) return null;
 
   try {
-    return new Worker("assets/db-worker.js?v=37");
+    return new Worker("assets/db-worker.js?v=38");
   } catch {
     return null;
   }
@@ -1305,7 +1305,7 @@ function registerServiceWorker() {
   if (!["http:", "https:"].includes(window.location.protocol)) return;
 
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=78", { updateViaCache: "none" }).catch(() => {
+    navigator.serviceWorker.register("sw.js?v=79", { updateViaCache: "none" }).catch(() => {
       // The app remains fully usable without service worker support.
     });
   }, { once: true });

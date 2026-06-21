@@ -145,6 +145,7 @@ function searchFull(queryText) {
     const variants = getQueryVariants(query);
     const score = Math.max(
       variants.includes(entry.normalized) ? 100 : 0,
+      entry.translations.some((translation) => variants.includes(normalize(translation))) ? 95 : 0,
       forms.some((item) => variants.includes(normalize(item.form))) ? 80 : 0,
       variants.some((item) => entry.normalized.startsWith(item)) ? 60 : 0,
       variants.some((item) => haystack.includes(item)) ? 40 : 0
@@ -196,7 +197,12 @@ async function searchSharded(queryText) {
       records.forEach((record) => {
         const existing = candidates.get(record.id);
         const exact = term === variant;
-        const score = record.kind === "headword" ? (exact ? 100 : 60) : record.kind === "form" ? (exact ? 80 : 55) : (exact ? 70 : 45);
+        const exactTranslation = record.kind === "translation" && record.translations?.some((translation) => normalize(translation) === variant);
+        const score = record.kind === "headword"
+          ? (exact ? 100 : 60)
+          : record.kind === "form"
+            ? (exact ? 80 : 55)
+            : (exactTranslation ? 95 : (exact ? 70 : 45));
         const match = record.kind === "form" ? "form" : record.kind === "translation" ? "anlam" : (exact ? "tam" : "aksan");
         const candidate = { ...record, score, match };
         if (!existing || candidate.score > existing.score) candidates.set(record.id, candidate);

@@ -96,10 +96,11 @@ function toSummary(entry) {
 
         const queryVariants = getQueryVariants(query, queryText);
         const exactScore = queryVariants.includes(entry.normalized) ? 100 : 0;
+        const translationExactScore = entry.translations.some((translation) => queryVariants.includes(normalize(translation))) ? 95 : 0;
         const formScore = entryForms.some((form) => queryVariants.includes(normalize(form.form))) ? 80 : 0;
         const prefixScore = queryVariants.some((variant) => entry.normalized.startsWith(variant)) ? 60 : 0;
         const textScore = queryVariants.some((variant) => haystack.includes(variant)) ? 40 : 0;
-        const score = Math.max(exactScore, formScore, prefixScore, textScore);
+        const score = Math.max(exactScore, translationExactScore, formScore, prefixScore, textScore);
 
         return {
           ...toSummary(entry),
