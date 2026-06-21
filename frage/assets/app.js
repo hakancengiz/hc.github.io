@@ -1310,7 +1310,7 @@ function registerServiceWorker() {
   if (!["http:", "https:"].includes(window.location.protocol)) return;
 
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=80", { updateViaCache: "none" }).catch(() => {
+    navigator.serviceWorker.register("sw.js?v=81", { updateViaCache: "none" }).catch(() => {
       // The app remains fully usable without service worker support.
     });
   }, { once: true });

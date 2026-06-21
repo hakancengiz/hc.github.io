@@ -1368,7 +1368,7 @@ a:focus-visible {
     scroll-snap-type: x proximity;
     scroll-padding-inline: 0;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
+    touch-action: auto;
     scrollbar-width: thin;
   }
 

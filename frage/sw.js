@@ -1,10 +1,10 @@
-const CACHE_NAME = "frage-static-v80";
+const CACHE_NAME = "frage-static-v81";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./assets/app.css?v=10",
-  "./assets/app.js?v=101",
+  "./assets/app.js?v=102",
   "./assets/db-worker.js?v=38",
   "./assets/mock-data.js?v=12",
   "./assets/icon.svg",
