@@ -612,10 +612,11 @@ function renderSearchLoading() {
   `).join("");
 }
 
-function renderResults(results) {
+function renderResults(results, options = {}) {
+  const preserveScroll = Boolean(options.preserveScroll);
+  const previousScrollLeft = preserveScroll ? dom.resultsList.scrollLeft : 0;
   dom.resultsList.removeAttribute("aria-busy");
   dom.resultsList.innerHTML = "";
-  dom.resultsList.scrollLeft = 0;
   dom.resultCount.textContent = String(results.length);
   dom.resultSummary.textContent = results.length
     ? `${results.length} sonuç gösteriliyor`
@@ -668,11 +669,15 @@ function renderResults(results) {
     dom.resultsList.append(button);
   });
 
-  dom.resultsList.querySelector(`#${CSS.escape(activeOptionId)}`)?.scrollIntoView({
-    behavior: "smooth",
-    block: "nearest",
-    inline: "nearest",
-  });
+  if (preserveScroll) {
+    dom.resultsList.scrollLeft = previousScrollLeft;
+  } else {
+    dom.resultsList.querySelector(`#${CSS.escape(activeOptionId)}`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "nearest",
+    });
+  }
   requestAnimationFrame(updateResultsScrollHint);
 }
 
@@ -1024,7 +1029,7 @@ function speakFrenchWord(word) {
 async function selectEntry(index, options = {}) {
   if (!currentResults.length) return;
   activeIndex = Math.max(0, Math.min(index, currentResults.length - 1));
-  renderResults(currentResults);
+  renderResults(currentResults, { preserveScroll: true });
 
   try {
     const result = currentResults[activeIndex];
@@ -1305,7 +1310,7 @@ function registerServiceWorker() {
   if (!["http:", "https:"].includes(window.location.protocol)) return;
 
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=79", { updateViaCache: "none" }).catch(() => {
+    navigator.serviceWorker.register("sw.js?v=80", { updateViaCache: "none" }).catch(() => {
       // The app remains fully usable without service worker support.
     });
   }, { once: true });
