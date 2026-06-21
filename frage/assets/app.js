@@ -1143,11 +1143,29 @@ function setupResultsScrollDrag() {
   if (!dom.resultsList) return;
 
   let dragState = null;
+  let suppressNextClick = false;
+  let suppressTimer = null;
+
+  const markNextClickAsSuppressed = () => {
+    suppressNextClick = true;
+    window.clearTimeout(suppressTimer);
+    suppressTimer = window.setTimeout(() => {
+      suppressNextClick = false;
+    }, 0);
+  };
+
+  dom.resultsList.addEventListener("click", (event) => {
+    if (!suppressNextClick) return;
+    suppressNextClick = false;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }, true);
 
   dom.resultsList.addEventListener("pointerdown", (event) => {
-    if (event.pointerType === "touch" || event.button !== 0) return;
+    if (event.pointerType !== "touch" && event.button !== 0) return;
     dragState = {
       pointerId: event.pointerId,
+      pointerType: event.pointerType,
       startX: event.clientX,
       startY: event.clientY,
       startLeft: dom.resultsList.scrollLeft,
@@ -1163,12 +1181,19 @@ function setupResultsScrollDrag() {
     if (!dragState.moved) {
       if (Math.abs(distance) < 8 || Math.abs(distance) <= Math.abs(verticalDistance)) return;
       dragState.moved = true;
-      dom.resultsList.classList.add("is-dragging");
-      dom.resultsList.setPointerCapture?.(event.pointerId);
+
+      if (dragState.pointerType !== "touch") {
+        dom.resultsList.classList.add("is-dragging");
+        dom.resultsList.setPointerCapture?.(event.pointerId);
+      }
     }
 
-    dom.resultsList.scrollLeft = dragState.startLeft - distance;
-    event.preventDefault();
+    // Touch devices keep their native momentum scrolling. Mouse dragging is
+    // controlled here so desktop users can drag the same horizontal list.
+    if (dragState.pointerType !== "touch") {
+      dom.resultsList.scrollLeft = dragState.startLeft - distance;
+      event.preventDefault();
+    }
   });
 
   const finishDrag = (event) => {
@@ -1179,9 +1204,8 @@ function setupResultsScrollDrag() {
     }
     dragState = null;
 
-    // Keep result cards inert for the synthetic click dispatched after a drag.
-    // A normal click never adds this class, so selecting a word remains immediate.
     if (moved) {
+      markNextClickAsSuppressed();
       window.setTimeout(() => dom.resultsList.classList.remove("is-dragging"), 0);
     } else {
       dom.resultsList.classList.remove("is-dragging");
@@ -1278,7 +1302,7 @@ function registerServiceWorker() {
   if (!["http:", "https:"].includes(window.location.protocol)) return;
 
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=76", { updateViaCache: "none" }).catch(() => {
+    navigator.serviceWorker.register("sw.js?v=77", { updateViaCache: "none" }).catch(() => {
       // The app remains fully usable without service worker support.
     });
   }, { once: true });

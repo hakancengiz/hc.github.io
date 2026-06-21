@@ -512,10 +512,16 @@ main {
     transform 120ms ease;
 }
 
-.result-item:hover,
 .result-item.is-active {
   border-color: var(--orange);
   background: var(--orange-dim);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .result-item:hover {
+    border-color: var(--orange);
+    background: var(--orange-dim);
+  }
 }
 
 .result-word {
