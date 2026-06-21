@@ -1199,12 +1199,15 @@ function setupResultsScrollDrag() {
   const finishDrag = (event) => {
     if (!dragState || event.pointerId !== dragState.pointerId) return;
     const moved = dragState.moved;
+    const pointerType = dragState.pointerType;
     if (dom.resultsList.hasPointerCapture?.(event.pointerId)) {
       dom.resultsList.releasePointerCapture(event.pointerId);
     }
     dragState = null;
 
-    if (moved) {
+    // Native touch scrolling already cancels its own click. Suppressing the
+    // next click here could reject a legitimate tap with slight finger drift.
+    if (moved && pointerType !== "touch") {
       markNextClickAsSuppressed();
       window.setTimeout(() => dom.resultsList.classList.remove("is-dragging"), 0);
     } else {
@@ -1302,7 +1305,7 @@ function registerServiceWorker() {
   if (!["http:", "https:"].includes(window.location.protocol)) return;
 
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=77", { updateViaCache: "none" }).catch(() => {
+    navigator.serviceWorker.register("sw.js?v=78", { updateViaCache: "none" }).catch(() => {
       // The app remains fully usable without service worker support.
     });
   }, { once: true });
