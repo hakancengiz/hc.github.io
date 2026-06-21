@@ -1,11 +1,11 @@
-const CACHE_NAME = "frage-static-v81";
+const CACHE_NAME = "frage-static-v83";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./assets/app.css?v=10",
-  "./assets/app.js?v=102",
-  "./assets/db-worker.js?v=38",
+  "./assets/app.js?v=104",
+  "./assets/db-worker.js?v=39",
   "./assets/mock-data.js?v=12",
   "./assets/icon.svg",
   "./assets/icons/favicon-16.png",
@@ -14,9 +14,9 @@ const CORE_ASSETS = [
   "./assets/icons/apple-touch-icon.png",
   "./assets/icons/android-chrome-192.png",
   "./assets/icons/android-chrome-512.png",
-  "./data/core.js?v=10",
-  "./data/forms.js?v=10",
-  "./data/examples.js?v=10",
+  "./data/core.js?v=11",
+  "./data/forms.js?v=11",
+  "./data/examples.js?v=11",
   "./data/metadata.json?v=13",
   "./data/attributions.json?v=13",
   "./data/shards/manifest.json",

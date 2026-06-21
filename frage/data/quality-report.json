@@ -9,7 +9,7 @@
     "entries": 11771,
     "senses": 11772,
     "forms": 32247,
-    "examples": 12292,
+    "examples": 12295,
     "sources": 4
   },
   "coverage": {
@@ -2838,7 +2838,7 @@
     "withoutFrenchText": [],
     "withoutTurkishText": [],
     "withoutSource": [],
-    "directTurkishTranslations": 1498,
+    "directTurkishTranslations": 1501,
     "optionalMachineTranslations": 10794
   },
   "links": {
@@ -4274,6 +4274,7 @@
     "Wiktionary/Kaikki": 6524,
     "French Wiktionary": 3244,
     "Tatoeba": 819,
-    "FRAGE curated correction": 17
+    "FRAGE curated correction": 17,
+    "FRAGE curated contribution": 1
   }
 }
