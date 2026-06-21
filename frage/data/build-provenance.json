@@ -1,0 +1,85 @@
+{
+  "format": "frage-build-provenance-v1",
+  "generatedAt": "2026-06-19T16:52:37.345800+00:00",
+  "inputs": {
+    "baseSeed": {
+      "path": "data\\source-seed.json",
+      "bytes": 4345,
+      "sha256": "b3f453ae83ea96e1b23cbdcf146e3ee13cb67caf58ef0f1a533b377c9d0a4209"
+    },
+    "freedict": {
+      "path": "C:\\tmp\\frage-data-sources\\freedict-fra-tur\\fra-tur\\fra-tur.tei",
+      "bytes": 4655792,
+      "sha256": "f0f7d958f26e3a13899945ff8586211503638bc20cfa113e33f076532064f9b1"
+    },
+    "kaikki": {
+      "path": "C:\\tmp\\frage-data-sources\\kaikki-french.jsonl",
+      "bytes": 559898352,
+      "sha256": "e544906baab2bfdb863a7c83e218a494c56f5a8489142f172f496a3c457963ff"
+    },
+    "tatoebaFrench": {
+      "path": "C:\\tmp\\frage-data-sources\\tatoeba\\fra_sentences.tsv",
+      "bytes": 39987615,
+      "sha256": "97a51045b8a6b2e2f986362b0c813d36b06dfe198a555e5bd099e418d51abc12"
+    },
+    "tatoebaTurkish": {
+      "path": "C:\\tmp\\frage-data-sources\\tatoeba\\tur_sentences.tsv",
+      "bytes": 37982730,
+      "sha256": "772f98c299f767de7a6636bf33be3cb16dc8299be1372f18859c3a91056f9dee"
+    },
+    "tatoebaLinks": {
+      "path": "C:\\tmp\\frage-data-sources\\tatoeba\\links.csv",
+      "bytes": 451310524,
+      "sha256": "33c0efc3d3b13156ec59e0fdf409dc07037e63a31d45e7ef06a62492bf33cf23"
+    }
+  },
+  "stages": [
+    {
+      "source": "FreeDict",
+      "entries": 11628,
+      "merge": {
+        "inputRows": 11628,
+        "createdEntries": 11499,
+        "mergedEntries": 129,
+        "addedSenses": 0,
+        "addedForms": 0,
+        "addedExamples": 0,
+        "skippedEntries": 0
+      }
+    },
+    {
+      "source": "Wiktionary/Kaikki",
+      "entries": 89505,
+      "merge": {
+        "inputRows": 89505,
+        "createdEntries": 0,
+        "mergedEntries": 6934,
+        "addedSenses": 0,
+        "addedForms": 31982,
+        "addedExamples": 0,
+        "skippedEntries": 82571
+      }
+    },
+    {
+      "source": "Tatoeba",
+      "entries": 818,
+      "merge": {
+        "inputRows": 818,
+        "createdEntries": 0,
+        "mergedEntries": 818,
+        "addedSenses": 0,
+        "addedForms": 0,
+        "addedExamples": 1492,
+        "skippedEntries": 0
+      },
+      "frenchSentences": 719089,
+      "turkishSentences": 745258
+    }
+  ],
+  "result": {
+    "entries": 11504,
+    "senses": 6,
+    "forms": 31987,
+    "examples": 1498
+  }
+}

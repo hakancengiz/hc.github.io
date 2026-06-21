@@ -1,0 +1,32 @@
+{
+  "sources": [
+    {
+      "id": "freedict-fra-tur",
+      "name": "FreeDict French-Turkish",
+      "url": "https://freedict.org/downloads/",
+      "license": "CC BY-SA 3.0 (source archive COPYING)",
+      "usage": "Direct French-Turkish translations; 2025.11.23 source release"
+    },
+    {
+      "id": "wiktionary-kaikki",
+      "name": "Wiktionary via Kaikki/Wiktextract",
+      "url": "https://kaikki.org/dictionary/French/",
+      "license": "CC BY-SA compatible Wiktionary content",
+      "usage": "Forms and pronunciation enrichment for existing FreeDict entries"
+    },
+    {
+      "id": "tatoeba",
+      "name": "Tatoeba",
+      "url": "https://tatoeba.org/",
+      "license": "CC BY / CC0 depending on sentence",
+      "usage": "Linked French example sentences and Turkish translations"
+    },
+    {
+      "id": "french-wiktionary",
+      "name": "French Wiktionary",
+      "url": "https://fr.wiktionary.org/",
+      "license": "CC BY-SA 4.0 / GFDL",
+      "usage": "Direct Turkish translation tables and source-free French examples extracted from the 2026-06-01 French Wiktionary dump"
+    }
+  ]
+}

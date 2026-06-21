@@ -1,0 +1,21 @@
+{
+  "name": "FRAGE French-Turkish Dictionary Package",
+  "version": "0.2.0",
+  "format": "model-2-js-and-sqlite-data",
+  "buildDate": "2026-06-19",
+  "entryCount": 11771,
+  "description": "FreeDict French-Turkish data enriched with Kaikki forms and Tatoeba examples, delivered as lazy SQLite shards.",
+  "runtimeFiles": [
+    "data/core.js",
+    "data/forms.js",
+    "data/examples.js",
+    "data/core.sqlite",
+    "data/forms.sqlite",
+    "data/examples.sqlite",
+    "data/shards/manifest.json"
+  ],
+  "futurePackages": [
+    "vendor/sql-wasm.js",
+    "vendor/sql-wasm.wasm"
+  ]
+}
