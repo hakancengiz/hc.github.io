@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#04111f">
+  <meta name="description" content="Doğru anı yakala, milisaniyeleri puana çevir.">
+
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/favicon-64.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y59QC84L5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7Y59QC84L5');
+  </script>
+  <title>Tam İsabet</title>
+</head>
+<body>
+  <main class="game-shell" id="app">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <section class="screen active menu-screen" id="menuScreen" aria-labelledby="gameTitle">
+      <header class="menu-header">
+        <div class="brand-mark" aria-hidden="true">
+          <i></i><i></i><b></b>
+        </div>
+        <p class="eyebrow">MİLİSANİYELİK REFLEKS OYUNU</p>
+        <h1 id="gameTitle"><span>TAM</span> İSABET</h1>
+        <p class="tagline">Doğru anı bekle. Tek dokunuşta yakala.</p>
+      </header>
+
+      <div class="menu-score glass">
+        <span>EN YÜKSEK</span>
+        <strong id="menuHighScore">0</strong>
+        <small>PUAN</small>
+      </div>
+
+      <div class="menu-actions">
+        <button class="primary-btn pulse-btn" id="startBtn">
+          <span class="play-icon">▶</span>
+          <span>OYUNA BAŞLA<small id="startModeLabel">Klasik · 3 enerji</small></span>
+        </button>
+        <div class="secondary-grid">
+          <button class="icon-btn" id="tutorialBtn"><span>◎</span>Eğitim</button>
+          <button class="icon-btn" id="statsBtn"><span>▥</span>İstatistik</button>
+          <button class="icon-btn" id="settingsBtn"><span>◉</span>Ayarlar</button>
+          <button class="icon-btn" id="modesBtn"><span>◇</span>Modlar</button>
+        </div>
+      </div>
+
+      <footer class="menu-footer">
+        <span id="menuHint">Ekranın herhangi bir yerine dokun</span>
+        <button class="sound-quick" id="quickSoundBtn" aria-label="Sesi aç veya kapat">♪</button>
+      </footer>
+    </section>
+
+    <section class="screen game-screen" id="gameScreen" aria-label="Oyun alanı">
+      <header class="game-header">
+        <div class="hud-score"><small>SKOR</small><strong id="scoreValue">0</strong></div>
+        <div class="round-badge"><small>TUR</small><strong id="roundValue">1</strong></div>
+        <div class="timer-badge hidden" id="timerValue">60.0</div>
+        <div class="energy" id="energy" aria-label="3 enerji">
+          <i></i><i></i><i></i>
+        </div>
+        <button class="pause-btn" id="pauseBtn" aria-label="Oyunu duraklat">Ⅱ</button>
+      </header>
+
+      <div class="combo-bar">
+        <span id="comboValue">SERİ ×1</span>
+        <div><i id="comboFill"></i></div>
+      </div>
+
+      <section class="arena" id="arena" aria-describedby="missionText">
+        <div class="mission-card" id="missionCard">
+          <span id="missionKicker">HAZIRLAN</span>
+          <strong id="missionText">Halkalar birleştiğinde dokun.</strong>
+        </div>
+        <canvas id="gameCanvas" aria-label="Hareketli zamanlama görevi"></canvas>
+        <div class="tap-cue" id="tapCue">DOKUN</div>
+        <div class="result-card" id="resultCard" aria-live="assertive">
+          <span id="resultLabel">TAM İSABET!</span>
+          <strong id="resultTiming">Tam zamanında</strong>
+          <small id="resultPoints">+1.000</small>
+        </div>
+        <div class="count-in" id="countIn" aria-live="polite"></div>
+      </section>
+
+      <footer class="game-footer">
+        <span id="roundType">HALKALARI BİRLEŞTİR</span>
+        <span id="modeLabel">KLASİK</span>
+        <span class="touch-label"><i></i> Dokun</span>
+      </footer>
+    </section>
+
+    <section class="screen panel-screen" id="settingsScreen" aria-labelledby="settingsTitle">
+      <header class="panel-header">
+        <button class="back-btn" data-back aria-label="Geri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 8 12l7 7"/></svg></button>
+        <h2 id="settingsTitle">Ayarlar</h2><span></span>
+      </header>
+      <div class="panel-content">
+        <div class="setting-group glass">
+          <label><span><b>Ses</b><small>Efektler ve geri bildirimler</small></span><input type="checkbox" id="soundToggle"><i></i></label>
+          <label><span><b>Titreşim</b><small>Desteklenen cihazlarda</small></span><input type="checkbox" id="vibrationToggle"><i></i></label>
+          <label><span><b>Yüksek kontrast</b><small>Daha belirgin hedefler</small></span><input type="checkbox" id="contrastToggle"><i></i></label>
+          <label><span><b>Azaltılmış hareket</b><small>Daha sakin animasyonlar</small></span><input type="checkbox" id="motionToggle"><i></i></label>
+        </div>
+        <div class="theme-picker glass">
+          <span>GÖRSEL TEMA</span>
+          <div><button data-theme="neon">Lacivert</button><button data-theme="sunset">Zümrüt</button><button data-theme="mint">Okyanus</button></div>
+        </div>
+        <div class="theme-picker glass">
+          <span>HEDEF TASARIMI</span>
+          <div><button data-target="orbit">Yörünge</button><button data-target="prism">Prizma</button><button data-target="pulse">Nabız</button></div>
+        </div>
+        <button class="outline-btn" id="replayTutorialBtn">Eğitimi yeniden başlat</button>
+        <button class="danger-btn" id="resetStatsBtn">İstatistikleri sıfırla</button>
+      </div>
+    </section>
+
+    <section class="screen panel-screen" id="statsScreen" aria-labelledby="statsTitle">
+      <header class="panel-header">
+        <button class="back-btn" data-back aria-label="Geri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 8 12l7 7"/></svg></button>
+        <h2 id="statsTitle">İstatistikler</h2><span></span>
+      </header>
+      <div class="panel-content">
+        <div class="hero-stat glass"><span>EN YÜKSEK SKOR</span><strong id="statHighScore">0</strong><small>Zaman ustalığın burada büyür.</small></div>
+        <div class="stats-grid">
+          <div><small>Toplam oyun</small><strong id="statGames">0</strong></div>
+          <div><small>Toplam tur</small><strong id="statRounds">0</strong></div>
+          <div><small>Tam İsabet</small><strong id="statPerfect">0</strong></div>
+          <div><small>En uzun seri</small><strong id="statCombo">0</strong></div>
+          <div><small>Ort. fark</small><strong id="statAverage">—</strong></div>
+          <div><small>Erken / Geç</small><strong id="statBalance">0 / 0</strong></div>
+          <div><small>60 sn rekoru</small><strong id="statTimed">0</strong></div>
+          <div><small>Tam seri rekoru</small><strong id="statStreak">0</strong></div>
+        </div>
+        <div class="daily-card glass" id="dailyCard"><span>GÜNLÜK GÖREV</span><strong id="dailyTaskText">Yükleniyor…</strong><small id="dailyTaskProgress">0 / 0</small></div>
+        <h3 class="section-title">Başarımlar</h3>
+        <div class="achievement-list" id="achievementList"></div>
+      </div>
+    </section>
+
+    <section class="screen panel-screen" id="modesScreen" aria-labelledby="modesTitle">
+      <header class="panel-header">
+        <button class="back-btn" data-back aria-label="Geri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 8 12l7 7"/></svg></button>
+        <h2 id="modesTitle">Oyun Modları</h2><span></span>
+      </header>
+      <div class="panel-content mode-list">
+        <button class="mode-card glass" data-mode="classic"><span>◎</span><div><strong>Klasik</strong><small>Üç enerjiyle mümkün olan en yüksek skoru yap.</small></div><b>OYNA</b></button>
+        <button class="mode-card glass" data-mode="streak"><span>✦</span><div><strong>İsabet Serisi</strong><small>Yalnızca Tam İsabet seriyi devam ettirir.</small></div><b>OYNA</b></button>
+        <button class="mode-card glass" data-mode="timed"><span>60</span><div><strong>60 Saniye</strong><small>Süre bitmeden olabildiğince çok puan topla.</small></div><b>OYNA</b></button>
+        <button class="mode-card daily glass" data-mode="daily"><span>◫</span><div><strong>Günlük İsabet</strong><small>Her oyuncu için aynı 12 turluk günlük seri.</small></div><b>OYNA</b></button>
+      </div>
+    </section>
+    <section class="screen panel-screen tutorial-intro" id="tutorialScreen" aria-labelledby="tutorialTitle">
+      <header class="panel-header">
+        <button class="back-btn" data-back aria-label="Geri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 8 12l7 7"/></svg></button>
+        <h2 id="tutorialTitle">Nasıl Oynanır?</h2><span></span>
+      </header>
+      <div class="panel-content tutorial-content">
+        <div class="tutorial-visual" aria-hidden="true"><i></i><i></i><b></b></div>
+        <h3>Doğru anı yakala</h3>
+        <p>Hareketi izle ve şekiller tam hizalandığında ekranın herhangi bir yerine dokun.</p>
+        <div class="timing-scale">
+          <span>ERKEN</span><i></i><b>TAM</b><i></i><span>GEÇ</span>
+        </div>
+        <p class="tutorial-note">Üç kısa denemede oyunu öğren.</p>
+        <button class="primary-btn compact" id="beginTutorialBtn">EĞİTİME BAŞLA</button>
+      </div>
+    </section>
+
+    <section class="screen panel-screen" id="gameOverScreen" aria-labelledby="gameOverTitle">
+      <div class="game-over-content">
+        <p class="eyebrow" id="recordLabel">OYUN TAMAMLANDI</p>
+        <h2 id="gameOverTitle">RİTMİ YAKALADIN</h2>
+        <div class="final-score"><span>SKOR</span><strong id="finalScore">0</strong></div>
+        <p class="performance-note" id="performanceNote"></p>
+        <div class="summary-grid">
+          <div><small>Tur</small><strong id="summaryRound">0</strong></div>
+          <div><small>En iyi seri</small><strong id="summaryCombo">0</strong></div>
+          <div><small>Tam İsabet</small><strong id="summaryPerfect">0</strong></div>
+          <div><small>Ort. fark</small><strong id="summaryAverage">—</strong></div>
+        </div>
+        <button class="primary-btn compact" id="replayBtn">TEKRAR OYNA</button>
+        <div class="end-actions">
+          <button class="outline-btn" id="shareBtn">Paylaş</button>
+          <button class="outline-btn" id="menuBtn">Ana Menü</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="overlay" id="pauseOverlay" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+      <div class="overlay-card glass">
+        <span class="pause-symbol">Ⅱ</span>
+        <h2 id="pauseTitle">Oyun duraklatıldı</h2>
+        <p>Zaman da seninle birlikte bekliyor.</p>
+        <button class="primary-btn compact" id="resumeBtn">DEVAM ET</button>
+        <button class="text-btn" id="quitBtn">Ana menüye dön</button>
+      </div>
+    </div>
+
+    <div class="orientation-lock" aria-live="polite">
+      <div class="phone-icon">↻</div>
+      <strong>Telefonunu dik tut</strong>
+      <span>Tam İsabet dikey ekranda oynanır.</span>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+  </main>
+  <script defer src="./js/storage.js"></script>
+  <script defer src="./js/audio.js"></script>
+  <script defer src="./js/rounds.js"></script>
+  <script defer src="./js/game.js"></script>
+  <script defer src="./js/app.js"></script>
+</body>
+</html>
