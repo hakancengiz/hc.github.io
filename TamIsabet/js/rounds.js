@@ -30,6 +30,7 @@ function motionProgress(p, variant) {
 }
 function variantOf(options, max) { return (options.config?.variant || 0) % max; }
 function pendulumAngle(progress, direction = 1) { return direction * .78 * Math.cos(clamp(progress) * Math.PI / 2); }
+function squareAlignmentAngle(progress, direction = 1) { return direction * Math.PI * .46 * (1-clamp(progress)); }
 
 const roundTypes = [
   {
@@ -216,7 +217,7 @@ const roundTypes = [
   },
   {
     id:"angleMatch",title:"AÇI EŞLEŞMESİ",mission:"Dönen prizma hedef açısına geldiğinde dokun.",minRound:1,variants:4,
-    draw(ctx,w,h,p,now,o){const v=variantOf(o,4),cx=w/2,cy=h/2+12,size=55,angle=(v%2?1:-1)*(1-p)*Math.PI*1.35;ctx.save();ctx.translate(cx,cy);ctx.rotate(Math.PI/4);ctx.strokeStyle="rgba(255,255,255,.18)";ctx.lineWidth=2;ctx.strokeRect(-size*.72,-size*.72,size*1.44,size*1.44);ctx.restore();ctx.save();ctx.translate(cx,cy);ctx.rotate(angle+Math.PI/4);ctx.strokeStyle=o.secondary;ctx.lineWidth=6;glow(ctx,o.secondary);ctx.strokeRect(-size*.72,-size*.72,size*1.44,size*1.44);ctx.restore();resetGlow(ctx);}
+    draw(ctx,w,h,p,now,o){const v=variantOf(o,4),cx=w/2,cy=h/2+12,size=55,angle=squareAlignmentAngle(p,v%2?1:-1);ctx.save();ctx.translate(cx,cy);ctx.rotate(Math.PI/4);ctx.strokeStyle="rgba(255,255,255,.18)";ctx.lineWidth=2;ctx.strokeRect(-size*.72,-size*.72,size*1.44,size*1.44);ctx.restore();ctx.save();ctx.translate(cx,cy);ctx.rotate(angle+Math.PI/4);ctx.strokeStyle=o.secondary;ctx.lineWidth=6;glow(ctx,o.secondary);ctx.strokeRect(-size*.72,-size*.72,size*1.44,size*1.44);ctx.restore();resetGlow(ctx);}
   },
   {
     id:"tunnel",title:"TÜNEL HİZASI",mission:"Yaklaşan çerçeve hedefle eşleştiğinde dokun.",minRound:1,variants:4,
@@ -322,5 +323,5 @@ function drawParticles(ctx, particles, delta) {
 function makeParticles(x,y,colors,reducedMotion) {
   const count=reducedMotion?8:28;return Array.from({length:count},(_,i)=>{const angle=i/count*TAU+Math.random()*.25,speed=2+Math.random()*4,life=500+Math.random()*300;return{x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,size:1.5+Math.random()*2.5,life,maxLife:life,color:colors[i%colors.length]};});
 }
-window.TamRounds={roundTypes,drawParticles,makeParticles,helpers:{pendulumAngle}};
+window.TamRounds={roundTypes,drawParticles,makeParticles,helpers:{pendulumAngle,squareAlignmentAngle}};
 })();

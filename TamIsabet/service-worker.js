@@ -1,4 +1,4 @@
-const CACHE = "tam-isabet-v15";
+const CACHE = "tam-isabet-v16";
 const ASSETS = [
   "./",
   "./index.html",
