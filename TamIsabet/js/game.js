@@ -56,7 +56,7 @@ class Game {
     this.el.resultCard.className="result-card";this.el.missionCard.classList.remove("hidden");this.el.missionKicker.textContent=this.tutorial?`EĞİTİM ${this.tutorialStep+1}/3`:this.currentType.title;this.el.missionText.textContent=this.currentType.mission;this.el.roundType.textContent=this.currentType.title;this.feedback.tone("start");
     clearTimeout(this.missionTimer);this.missionTimer=setTimeout(()=>{if(this.active&&!this.paused)this.el.missionCard.classList.add("hidden");},instructionDuration);this.raf=requestAnimationFrame(this.boundFrame);
   }
-  adaptiveAdjustment(){const recent=this.history.slice(-5);if(recent.filter(r=>r==="perfect").length>=3)return-220;if(recent.slice(-2).length===2&&recent.slice(-2).every(r=>r==="miss"))return260;return 0;}
+  adaptiveAdjustment(){const recent=this.history.slice(-5);if(recent.filter(r=>r==="perfect").length>=3)return-220;if(recent.slice(-2).length===2&&recent.slice(-2).every(r=>r==="miss"))return 260;return 0;}
   resize(){const rect=this.el.arena.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);this.el.canvas.width=Math.max(1,Math.round(rect.width*dpr));this.el.canvas.height=Math.max(1,Math.round(rect.height*dpr));this.ctx.setTransform(dpr,0,0,dpr,0,0);this.width=rect.width;this.height=rect.height;}
   frame(now){
     if(!this.active||this.paused)return;

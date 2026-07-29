@@ -5,7 +5,7 @@ Milisaniye hassasiyetinde doğru anı yakalamaya dayanan, mobil öncelikli bir r
 ## Tam sürüm özellikleri
 
 - `performance.now()` ve `requestAnimationFrame()` tabanlı, kare hızından bağımsız zamanlama motoru
-- 30 tur türü: halkalar, çizgiler, hedefte durdur, çarpışma, sıfır, merkez, renk, gizli hareket, sahte duruş, hız değişimi, ritim, yasak an, orbital hizalama, nabız zirvesi, ışık kapısı, denge anı, sarmal merkez ve üçlü senkron, saat ibresi, sarkaç merkezi, tutulma anı, tarayıcı çizgisi, odak açıklığı, bloğu oturt, dalga buluşması, açı eşleşmesi, tünel hizası, tepe noktası, eşit seviye ve yıldız yolu
+- 50 tur türü: halkalar, çizgiler, hedefte durdur, çarpışma, sıfır, merkez, renk, gizli hareket, sahte duruş, hız değişimi, ritim, yasak an, orbital hizalama, nabız zirvesi, ışık kapısı, denge anı, sarmal merkez ve üçlü senkron, saat ibresi, sarkaç merkezi, tutulma anı, tarayıcı çizgisi, odak açıklığı, bloğu oturt, dalga buluşması, açı eşleşmesi, tünel hizası, tepe noktası, eşit seviye, yıldız yolu, merkez perdesi, çift yörünge, kuyruklu ışık, çentik noktası, üçgen hizası, çapraz kesişim, karşıt noktalar, daralan nabız, sekme sonu, ışık fermuarı, radar işareti, artı hizası, damla buluşması, manyetik çekim, desen kilidi, dalga tepesi, son taş, kum saati, dörtlü birleşim ve netlik anı
 - Her turda yön, hız, şekil, gizlenme ve yanıltma varyasyonları
 - Son dört turu hatırlayan torba tabanlı tekrar önleme sistemi
 - Klasik, İsabet Serisi, 60 Saniye ve tarih seed’li Günlük İsabet modları
@@ -56,4 +56,4 @@ Depo adı veya yayın yolu farklı olacaksa `manifest.webmanifest` içindeki `st
 node tests/game.test.cjs
 ```
 
-Test; 30 turun açılmasını, kısa aralıklı tekrar korumasını, günlük seed’in deterministik olmasını ve bir turun yalnızca bir kez enerji tüketmesini doğrular.
+Test; 50 turun açılmasını, kısa aralıklı tekrar korumasını, günlük seed’in deterministik olmasını ve bir turun yalnızca bir kez enerji tüketmesini doğrular.

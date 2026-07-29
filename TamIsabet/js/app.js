@@ -8,7 +8,7 @@ const ACHIEVEMENTS=[
   {id:"perfect25",icon:"◇",title:"Keskin Zamanlama",desc:"25 Tam İsabet yap",test:d=>d.totalPerfectHits>=25},
   {id:"combo10",icon:"↗",title:"Zaman Ustası",desc:"10 turluk seri yakala",test:d=>d.bestCombo>=10},
   {id:"century",icon:"100",title:"Tecrübeli",desc:"100 tur tamamla",test:d=>d.totalRounds>=100},
-  {id:"explorer",icon:"◎",title:"Tur Kaşifi",desc:"30 tur türünün hepsini oyna",test:d=>Object.keys(d.roundTypeCounts||{}).length>=30},
+  {id:"explorer",icon:"◎",title:"Tur Kaşifi",desc:"50 tur türünün hepsini oyna",test:d=>Object.keys(d.roundTypeCounts||{}).length>=50},
   {id:"allModes",icon:"▦",title:"Çok Yönlü",desc:"Dört oyun modunu da oyna",test:d=>Object.values(d.gamesByMode||{}).every(v=>v>0)},
   {id:"daily",icon:"◫",title:"Günün İsabeti",desc:"Bir günlük görevi tamamla",test:d=>Boolean(d.dailyChallenge?.claimed)}
 ];

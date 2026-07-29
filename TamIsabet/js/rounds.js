@@ -29,6 +29,7 @@ function motionProgress(p, variant) {
   return .44+(p-.62)/.38*.56;
 }
 function variantOf(options, max) { return (options.config?.variant || 0) % max; }
+function pendulumAngle(progress, direction = 1) { return direction * .78 * Math.cos(clamp(progress) * Math.PI / 2); }
 
 const roundTypes = [
   {
@@ -191,7 +192,7 @@ const roundTypes = [
   },
   {
     id:"pendulum",title:"SARKAÇ MERKEZİ",mission:"Sarkaç merkez çizgisindeyken dokun.",minRound:1,variants:4,
-    draw(ctx,w,h,p,now,o){const v=variantOf(o,4),cx=w/2,top=h*.25,length=Math.min(w,h)*.3,angle=(v%2?1:-1)*Math.sin((1-p)*Math.PI*2.5)*(1-p)*.75,x=cx+Math.sin(angle)*length,y=top+Math.cos(angle)*length;ctx.strokeStyle="rgba(255,255,255,.18)";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx,top);ctx.lineTo(x,y);ctx.stroke();ctx.strokeStyle=o.primary;ctx.setLineDash([4,6]);ctx.beginPath();ctx.moveTo(cx,top);ctx.lineTo(cx,top+length+30);ctx.stroke();resetGlow(ctx);glow(ctx,o.secondary);circle(ctx,x,y,18,o.secondary,true);resetGlow(ctx);}
+    draw(ctx,w,h,p,now,o){const v=variantOf(o,4),cx=w/2,top=h*.25,length=Math.min(w,h)*.3,angle=pendulumAngle(p,v%2?1:-1),x=cx+Math.sin(angle)*length,y=top+Math.cos(angle)*length;ctx.strokeStyle="rgba(255,255,255,.18)";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx,top);ctx.lineTo(x,y);ctx.stroke();ctx.strokeStyle=o.primary;ctx.setLineDash([4,6]);ctx.beginPath();ctx.moveTo(cx,top);ctx.lineTo(cx,top+length+30);ctx.stroke();resetGlow(ctx);glow(ctx,o.secondary);circle(ctx,x,y,18,o.secondary,true);resetGlow(ctx);}
   },
   {
     id:"eclipse",title:"TUTULMA ANI",mission:"İki ışık tam üst üste geldiğinde dokun.",minRound:1,variants:4,
@@ -232,6 +233,86 @@ const roundTypes = [
   {
     id:"starPath",title:"YILDIZ YOLU",mission:"Işık son yıldıza ulaştığında dokun.",minRound:1,variants:4,
     draw(ctx,w,h,p,now,o){const v=variantOf(o,4),points=[[w*.18,h*.67],[w*.34,h*.38],[w*.52,h*.58],[w*.72,h*.3]],segment=Math.min(2,Math.floor(p*3)),local=Math.min(1,p*3-segment),a=points[segment],b=points[segment+1],x=a[0]+(b[0]-a[0])*local,y=a[1]+(b[1]-a[1])*local;ctx.strokeStyle="rgba(255,255,255,.14)";ctx.lineWidth=2;ctx.beginPath();points.forEach((pt,i)=>i?ctx.lineTo(...pt):ctx.moveTo(...pt));ctx.stroke();points.forEach((pt,i)=>{ctx.fillStyle=i===3?o.primary:"rgba(255,255,255,.25)";ctx.font="900 22px system-ui";ctx.textAlign="center";ctx.fillText("✦",pt[0],pt[1]+7);});glow(ctx,o.secondary);circle(ctx,x,y,9,o.secondary,true);resetGlow(ctx);}
+  },
+  {
+    id:"shutters",title:"MERKEZ PERDESİ",mission:"İki perde merkez aralığını oluşturduğunda dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const v=variantOf(o,4),cx=w/2,cy=h/2+12,horizontal=v%2===0,gap=24+(1-p)*w*.26;ctx.fillStyle="rgba(255,255,255,.09)";horizontal?(ctx.fillRect(0,0,cx-gap,h),ctx.fillRect(cx+gap,0,w-cx-gap,h)):(ctx.fillRect(0,0,w,cy-gap),ctx.fillRect(0,cy+gap,w,h-cy-gap));ctx.strokeStyle=o.primary;ctx.lineWidth=4;horizontal?(ctx.strokeRect(cx-24,cy-70,48,140)):(ctx.strokeRect(cx-70,cy-24,140,48));ctx.strokeStyle=o.secondary;ctx.lineWidth=6;glow(ctx,o.secondary);ctx.beginPath();horizontal?(ctx.moveTo(cx-gap,cy-80),ctx.lineTo(cx-gap,cy+80),ctx.moveTo(cx+gap,cy-80),ctx.lineTo(cx+gap,cy+80)):(ctx.moveTo(cx-80,cy-gap),ctx.lineTo(cx+80,cy-gap),ctx.moveTo(cx-80,cy+gap),ctx.lineTo(cx+80,cy+gap));ctx.stroke();resetGlow(ctx);}
+  },
+  {
+    id:"counterOrbit",title:"ÇİFT YÖRÜNGE",mission:"İki ışık üst işarette buluştuğunda dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+15,r=Math.min(w,h)*.21,a1=-Math.PI/2-Math.PI*1.4*(1-p),a2=-Math.PI/2+Math.PI*1.4*(1-p);dashedGuide(ctx,cx,cy,r);circle(ctx,cx,cy-r,12,o.primary,false,3);glow(ctx,o.secondary);circle(ctx,cx+Math.cos(a1)*r,cy+Math.sin(a1)*r,10,o.secondary,true);resetGlow(ctx);glow(ctx,o.primary);diamond(ctx,cx+Math.cos(a2)*r,cy+Math.sin(a2)*r,10,o.primary);resetGlow(ctx);}
+  },
+  {
+    id:"cometTrail",title:"KUYRUKLU IŞIK",mission:"Kuyruklu ışık hedef çizgisine ulaştığında dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const v=variantOf(o,4),vertical=v%2===1,target=vertical?h*.7:w*.76,x=vertical?w/2:w*.1+(target-w*.1)*p,y=vertical?h*.14+(target-h*.14)*p:h/2+15;ctx.strokeStyle=o.primary;ctx.lineWidth=4;ctx.beginPath();vertical?(ctx.moveTo(w*.36,target),ctx.lineTo(w*.64,target)):(ctx.moveTo(target,y-55),ctx.lineTo(target,y+55));ctx.stroke();for(let i=5;i>0;i--){ctx.globalAlpha=.08*i;circle(ctx,vertical?x:(x-i*15),vertical?(y-i*15):y,6+i,o.secondary,true);}resetGlow(ctx);glow(ctx,o.secondary);circle(ctx,x,y,13,o.secondary,true);resetGlow(ctx);}
+  },
+  {
+    id:"notchSlider",title:"ÇENTİK NOKTASI",mission:"Kayan düğme parlak çentiğe geldiğinde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const v=variantOf(o,4),cx=w/2,cy=h/2+15,r=Math.min(w,h)*.22,a=-Math.PI*.8+Math.PI*.3*p;ctx.strokeStyle="rgba(255,255,255,.14)";ctx.lineWidth=12;ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI*.8,-Math.PI*.5);ctx.stroke();const tx=cx+Math.cos(-Math.PI*.5)*r,ty=cy+Math.sin(-Math.PI*.5)*r;diamond(ctx,tx,ty,13,o.primary);glow(ctx,o.secondary);circle(ctx,cx+Math.cos(a)*r,cy+Math.sin(a)*r,12,o.secondary,true);resetGlow(ctx);}
+  },
+  {
+    id:"triangleFit",title:"ÜÇGEN HİZASI",mission:"Hareketli üçgen hedef üçgenle eşleştiğinde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+20,target=72,size=target+(1-p)*125;function tri(sz,color,width){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();for(let i=0;i<3;i++){const a=-Math.PI/2+i*TAU/3,x=cx+Math.cos(a)*sz,y=cy+Math.sin(a)*sz;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.closePath();ctx.stroke();}tri(target,"rgba(255,255,255,.18)",2);glow(ctx,o.secondary);tri(size,o.secondary,5);resetGlow(ctx);circle(ctx,cx,cy,4,o.primary,true);}
+  },
+  {
+    id:"diagonalCross",title:"ÇAPRAZ KESİŞİM",mission:"İki çapraz çizgi merkezde kesiştiğinde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+10,d=Math.min(w,h)*.34*(1-p);ctx.lineWidth=7;ctx.lineCap="round";glow(ctx,o.secondary);ctx.strokeStyle=o.secondary;ctx.beginPath();ctx.moveTo(cx-d-70,cy-d-70);ctx.lineTo(cx-d,cy-d);ctx.stroke();resetGlow(ctx);glow(ctx,o.primary);ctx.strokeStyle=o.primary;ctx.beginPath();ctx.moveTo(cx+d,cy-d);ctx.lineTo(cx+d+70,cy-d-70);ctx.stroke();resetGlow(ctx);circle(ctx,cx,cy,7,"rgba(255,255,255,.3)",false,2);}
+  },
+  {
+    id:"oppositeOrbit",title:"KARŞIT NOKTALAR",mission:"İki parça karşılıklı işaretlere oturduğunda dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+12,r=Math.min(w,h)*.22,offset=(1-p)*Math.PI*.8,a=-Math.PI/2-offset,b=Math.PI/2-offset;dashedGuide(ctx,cx,cy,r);diamond(ctx,cx,cy-r,11,o.primary);diamond(ctx,cx,cy+r,11,o.primary);glow(ctx,o.secondary);circle(ctx,cx+Math.cos(a)*r,cy+Math.sin(a)*r,10,o.secondary,true);circle(ctx,cx+Math.cos(b)*r,cy+Math.sin(b)*r,10,o.secondary,true);resetGlow(ctx);}
+  },
+  {
+    id:"narrowPulse",title:"DARALAN NABIZ",mission:"Nabız hedef halkaya daraldığında dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+12,target=50,r=target+(1-p)*Math.min(w,h)*.26;dashedGuide(ctx,cx,cy,target,o.primary);ctx.globalAlpha=.2+.8*p;glow(ctx,o.secondary);circle(ctx,cx,cy,r,o.secondary,false,7);resetGlow(ctx);circle(ctx,cx,cy,9,"#fff",true);}
+  },
+  {
+    id:"ricochet",title:"SEKME SONU",mission:"Seken parçacık son hedefe ulaştığında dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const pts=[[w*.12,h*.28],[w*.78,h*.28],[w*.24,h*.5],[w*.74,h*.7]],q=p*3,i=Math.min(2,Math.floor(q)),t=Math.min(1,q-i),a=pts[i],b=pts[i+1],x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t;ctx.strokeStyle="rgba(255,255,255,.11)";ctx.setLineDash([5,8]);ctx.beginPath();pts.forEach((pt,j)=>j?ctx.lineTo(...pt):ctx.moveTo(...pt));ctx.stroke();resetGlow(ctx);dashedGuide(ctx,pts[3][0],pts[3][1],23,o.primary);glow(ctx,o.secondary);circle(ctx,x,y,12,o.secondary,true);resetGlow(ctx);}
+  },
+  {
+    id:"zipper",title:"IŞIK FERMUARI",mission:"Işık parçaları merkezde tamamen kapandığında dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+10,count=6;for(let i=0;i<count;i++){const y=cy-(count-1)*18/2+i*18,d=w*.34*(1-p),offset=i%2?8:-8;ctx.strokeStyle=i%2?o.primary:o.secondary;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(cx-d-35,y+offset);ctx.lineTo(cx-d,y);ctx.moveTo(cx+d,y);ctx.lineTo(cx+d+35,y-offset);ctx.stroke();}circle(ctx,cx,cy,6,"rgba(255,255,255,.4)",true);}
+  },
+  {
+    id:"radar",title:"RADAR İŞARETİ",mission:"Tarama çizgisi parlak sektöre geldiğinde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const v=variantOf(o,4),cx=w/2,cy=h/2+15,r=Math.min(w,h)*.24,start=-Math.PI*.95,target=-Math.PI*.2,a=start+(target-start)*p;circle(ctx,cx,cy,r,"rgba(255,255,255,.13)",false,2);ctx.strokeStyle=o.primary;ctx.lineWidth=7;ctx.beginPath();ctx.arc(cx,cy,r,target-.08,target+.08);ctx.stroke();ctx.strokeStyle=o.secondary;ctx.lineWidth=4;glow(ctx,o.secondary);ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);ctx.stroke();resetGlow(ctx);}
+  },
+  {
+    id:"crossBars",title:"ARTI HİZASI",mission:"Dönen çubuklar artı işaretine dönüştüğünde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+12,length=120,angle=(1-p)*Math.PI*.42;ctx.strokeStyle="rgba(255,255,255,.16)";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx-length/2,cy);ctx.lineTo(cx+length/2,cy);ctx.moveTo(cx,cy-length/2);ctx.lineTo(cx,cy+length/2);ctx.stroke();ctx.save();ctx.translate(cx,cy);ctx.rotate(angle);ctx.strokeStyle=o.secondary;ctx.lineWidth=7;glow(ctx,o.secondary);ctx.beginPath();ctx.moveTo(-length/2,0);ctx.lineTo(length/2,0);ctx.moveTo(0,-length/2);ctx.lineTo(0,length/2);ctx.stroke();ctx.restore();resetGlow(ctx);}
+  },
+  {
+    id:"droplets",title:"DAMLA BULUŞMASI",mission:"İki damla ortadaki halkada birleştiğinde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+12,d=h*.3*(1-p);dashedGuide(ctx,cx,cy,24,o.primary);glow(ctx,o.secondary);circle(ctx,cx,cy-d,13,o.secondary,true);resetGlow(ctx);glow(ctx,o.primary);diamond(ctx,cx,cy+d,13,o.primary);resetGlow(ctx);}
+  },
+  {
+    id:"magnet",title:"MANYETİK ÇEKİM",mission:"İki parça mıknatısın merkezinde birleştiğinde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+15,d=w*.34*(1-p),curve=Math.sin(p*Math.PI)*45;ctx.strokeStyle="rgba(255,255,255,.1)";ctx.setLineDash([4,7]);ctx.beginPath();ctx.moveTo(w*.12,cy);ctx.quadraticCurveTo(cx,cy-70,cx,cy);ctx.moveTo(w*.88,cy);ctx.quadraticCurveTo(cx,cy+70,cx,cy);ctx.stroke();resetGlow(ctx);ctx.strokeStyle=o.primary;ctx.lineWidth=6;ctx.beginPath();ctx.arc(cx,cy,34,0,Math.PI);ctx.stroke();diamond(ctx,cx-d,cy-curve,12,o.secondary);diamond(ctx,cx+d,cy+curve,12,o.primary);}
+  },
+  {
+    id:"kaleido",title:"DESEN KİLİDİ",mission:"Dönen desen sabit çizgilerle eşleştiğinde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+12,r=85,offset=(1-p)*Math.PI/5;ctx.lineCap="round";for(let i=0;i<6;i++){const guide=i*TAU/6;ctx.strokeStyle="rgba(255,255,255,.13)";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx+Math.cos(guide)*25,cy+Math.sin(guide)*25);ctx.lineTo(cx+Math.cos(guide)*r,cy+Math.sin(guide)*r);ctx.stroke();const a=guide+offset;ctx.strokeStyle=i%2?o.primary:o.secondary;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*25,cy+Math.sin(a)*25);ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);ctx.stroke();}}
+  },
+  {
+    id:"waveCrest",title:"DALGA TEPESİ",mission:"Dalganın tepesi merkez işaretine geldiğinde dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+15,amp=55,x=w*.1+(cx-w*.1)*p,y=cy-amp;ctx.strokeStyle="rgba(255,255,255,.16)";ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<=70;i++){const px=w*.08+i*w*.84/70,py=cy-Math.cos((px-x)/55)*amp;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.stroke();ctx.strokeStyle=o.primary;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx-25,cy-amp);ctx.lineTo(cx+25,cy-amp);ctx.stroke();glow(ctx,o.secondary);circle(ctx,x,y,11,o.secondary,true);resetGlow(ctx);}
+  },
+  {
+    id:"domino",title:"SON TAŞ",mission:"Işık sırası son taşa ulaştığında dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const count=7,cx=w/2,cy=h/2+15,active=Math.min(count-1,Math.floor(p*count));for(let i=0;i<count;i++){const x=cx-(count-1)*35/2+i*35,y=cy+(i%2?10:-10);ctx.fillStyle=i<=active?(i===count-1?o.primary:o.secondary):"rgba(255,255,255,.1)";ctx.fillRect(x-11,y-28,22,56);ctx.fillStyle="rgba(255,255,255,.55)";ctx.font="800 8px system-ui";ctx.textAlign="center";ctx.fillText(String(i+1),x,y+3);}}
+  },
+  {
+    id:"hourglass",title:"KUM SAATİ",mission:"Üst hazne tamamen boşaldığında dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+10,size=85;ctx.strokeStyle="rgba(255,255,255,.24)";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(cx-size,cy-size);ctx.lineTo(cx+size,cy-size);ctx.lineTo(cx-size,cy+size);ctx.lineTo(cx+size,cy+size);ctx.closePath();ctx.stroke();const topH=(1-p)*60,bottomH=p*60;ctx.fillStyle=o.secondary;ctx.beginPath();ctx.moveTo(cx-size*.7,cy-size+18);ctx.lineTo(cx+size*.7,cy-size+18);ctx.lineTo(cx,cy-size+18+topH);ctx.closePath();ctx.fill();ctx.fillStyle=o.primary;ctx.beginPath();ctx.moveTo(cx-size*.7,cy+size-18);ctx.lineTo(cx+size*.7,cy+size-18);ctx.lineTo(cx,cy+size-18-bottomH);ctx.closePath();ctx.fill();}
+  },
+  {
+    id:"quadrants",title:"DÖRTLÜ BİRLEŞİM",mission:"Dört parça merkez halkayı tamamladığında dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+12,d=Math.min(w,h)*.25*(1-p);for(let i=0;i<4;i++){const a=i*Math.PI/2,x=cx+Math.cos(a)*d,y=cy+Math.sin(a)*d;ctx.strokeStyle=i%2?o.primary:o.secondary;ctx.lineWidth=7;ctx.beginPath();ctx.arc(x,y,28,a,a+Math.PI/2);ctx.stroke();}dashedGuide(ctx,cx,cy,28,"rgba(255,255,255,.18)");}
+  },
+  {
+    id:"lensFocus",title:"NETLİK ANI",mission:"İki mercek tek ve net bir halka olduğunda dokun.",minRound:1,variants:4,
+    draw(ctx,w,h,p,now,o){const cx=w/2,cy=h/2+12,d=w*.25*(1-p);ctx.globalAlpha=.55;glow(ctx,o.secondary,28*(1-p)+5);circle(ctx,cx-d,cy,42,o.secondary,false,7);resetGlow(ctx);ctx.globalAlpha=.55;glow(ctx,o.primary,28*(1-p)+5);circle(ctx,cx+d,cy,42,o.primary,false,7);resetGlow(ctx);if(p>.88){ctx.globalAlpha=(p-.88)/.12;circle(ctx,cx,cy,42,"#fff",false,3);resetGlow(ctx);}}
   }
 ];
 
@@ -241,5 +322,5 @@ function drawParticles(ctx, particles, delta) {
 function makeParticles(x,y,colors,reducedMotion) {
   const count=reducedMotion?8:28;return Array.from({length:count},(_,i)=>{const angle=i/count*TAU+Math.random()*.25,speed=2+Math.random()*4,life=500+Math.random()*300;return{x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,size:1.5+Math.random()*2.5,life,maxLife:life,color:colors[i%colors.length]};});
 }
-window.TamRounds={roundTypes,drawParticles,makeParticles};
+window.TamRounds={roundTypes,drawParticles,makeParticles,helpers:{pendulumAngle}};
 })();
