@@ -8,7 +8,8 @@ const RESULT_LEVELS=[
   {max:400,rank:"weak",label:"ZAYIF",base:100},
   {max:Infinity,rank:"miss",label:"KAÇIRDIN",base:0}
 ];
-const MODE_LABELS={classic:"KLASİK",streak:"İSABET SERİSİ",timed:"60 SANİYE",daily:"GÜNLÜK İSABET"};
+const MODE_LABELS={classic:"KLASİK",streak:"İSABET SERİSİ",timed:"2 DAKİKA",daily:"GÜNLÜK İSABET"};
+const TIMED_SESSION_MS=120000;
 
 function hashSeed(value){let h=2166136261;for(let i=0;i<value.length;i++){h^=value.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
 function seededRandom(seed){let a=hashSeed(seed);return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -52,7 +53,7 @@ class Game {
     const base=Math.max(1420,2780-this.round*42),modeSpeed=this.mode==="timed"?-280:0,adaptive=this.mode==="daily"?0:this.adaptiveAdjustment();
     this.duration=Math.max(1200,base+modeSpeed+adaptive+this.random()*420);if(this.tutorial)this.duration=2500;
     this.toleranceScale=this.tutorial?1.55:Math.max(.76,1.18-this.round*.012);
-    const now=performance.now(),instructionDuration=this.tutorial?1500:(firstSeen?1200:850);this.startTime=now+instructionDuration;this.targetTime=this.startTime+this.duration;this.timeoutTime=this.targetTime+650*this.toleranceScale;if(this.mode==="timed"&&this.round===1)this.sessionEndTime=this.startTime+60000;this.lastFrame=now;this.particles=[];
+    const now=performance.now(),instructionDuration=this.tutorial?2800:(firstSeen?2800:2000);this.startTime=now+instructionDuration;this.targetTime=this.startTime+this.duration;this.timeoutTime=this.targetTime+650*this.toleranceScale;if(this.mode==="timed"&&this.round===1)this.sessionEndTime=now+TIMED_SESSION_MS;this.lastFrame=now;this.particles=[];
     this.el.resultCard.className="result-card";this.el.missionCard.classList.remove("hidden");this.el.missionKicker.textContent=this.tutorial?`EĞİTİM ${this.tutorialStep+1}/3`:this.currentType.title;this.el.missionText.textContent=this.currentType.mission;this.el.roundType.textContent=this.currentType.title;this.feedback.tone("start");
     clearTimeout(this.missionTimer);this.missionTimer=setTimeout(()=>{if(this.active&&!this.paused)this.el.missionCard.classList.add("hidden");},instructionDuration);this.raf=requestAnimationFrame(this.boundFrame);
   }

@@ -54,9 +54,9 @@ h1 span{color:var(--primary)}
 .arena{position:relative;flex:1;min-height:0;margin:0 10px;border:1px solid rgba(255,255,255,.07);border-radius:28px;overflow:hidden;background:radial-gradient(circle at center,rgba(78,210,255,.055),transparent 55%),rgba(3,7,24,.22);touch-action:none;user-select:none}
 .arena:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(circle,#000,transparent 75%)}
 #gameCanvas{position:absolute;inset:0;width:100%;height:100%}
-.mission-card{position:absolute;z-index:2;top:19px;left:50%;transform:translateX(-50%);width:max-content;max-width:90%;text-align:center;transition:.25s}
+.mission-card{position:absolute;z-index:6;top:50%;left:50%;transform:translate(-50%,-50%);width:max-content;max-width:90%;text-align:center;transition:.3s}
 .mission-card span{display:block;font-size:8px;letter-spacing:.22em;color:var(--primary);font-weight:900;margin-bottom:4px}.mission-card strong{font-size:12px;letter-spacing:.02em}
-.mission-card.hidden{opacity:0;transform:translate(-50%,-8px)}
+.mission-card.hidden{opacity:0;transform:translate(-50%,calc(-50% - 10px)) scale(.96);pointer-events:none}
 .tap-cue{position:absolute;z-index:2;left:50%;bottom:9%;transform:translateX(-50%);font-size:9px;font-weight:900;letter-spacing:.22em;color:rgba(255,255,255,.32);animation:tapCue 1.5s infinite}
 .result-card{position:absolute;z-index:5;left:50%;top:50%;transform:translate(-50%,-42%) scale(.75);opacity:0;text-align:center;pointer-events:none;width:90%;transition:.2s}
 .result-card.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
@@ -117,9 +117,9 @@ body[data-theme="sunset"]{--bg-1:#03131c;--bg-2:#09382f;--primary:#64ed9f;--prim
 body[data-theme="mint"]{--bg-1:#020d1c;--bg-2:#083047;--primary:#35df91;--primary-2:#71edb5;--secondary:#43cfbc;--accent:#1ba47f;--success:#72efaf}
 @media(max-height:690px){.secondary-grid .icon-btn{min-height:52px}.secondary-grid{gap:6px}.mode-card{min-height:70px;padding:9px 12px}}
 /* Tur başlamadan önce okunabilir kısa görev kartı */
-.mission-card{top:18px;width:calc(100% - 34px);max-width:360px;padding:12px 16px;border-radius:16px;background:rgba(11,16,40,.88);border:1px solid rgba(78,210,255,.2);box-shadow:0 10px 30px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.06);backdrop-filter:blur(14px)}
+.mission-card{top:50%;width:calc(100% - 42px);max-width:360px;padding:22px 20px;border-radius:20px;background:rgba(5,14,31,.94);border:1px solid color-mix(in srgb,var(--primary) 42%,transparent);box-shadow:0 18px 50px rgba(0,0,0,.46),0 0 28px color-mix(in srgb,var(--primary) 12%,transparent),inset 0 1px rgba(255,255,255,.08);backdrop-filter:blur(18px)}
 .mission-card span{color:var(--secondary)}
-.mission-card strong{display:block;line-height:1.35;font-size:13px}
+.mission-card strong{display:block;line-height:1.45;font-size:15px}
 
 /* Parlak yeşil butonlarda yüksek kontrastlı lacivert metin */
 .primary-btn{color:#032019;text-shadow:none}

@@ -45,7 +45,7 @@
       <div class="menu-actions">
         <button class="primary-btn pulse-btn" id="startBtn">
           <span class="play-icon">▶</span>
-          <span>OYUNA BAŞLA<small id="startModeLabel">Klasik · 3 enerji</small></span>
+          <span>OYUNA BAŞLA<small id="startModeLabel">2 dakika · En yüksek puan</small></span>
         </button>
         <div class="secondary-grid">
           <button class="icon-btn" id="tutorialBtn"><span>◎</span>Eğitim</button>
@@ -65,7 +65,7 @@
       <header class="game-header">
         <div class="hud-score"><small>SKOR</small><strong id="scoreValue">0</strong></div>
         <div class="round-badge"><small>TUR</small><strong id="roundValue">1</strong></div>
-        <div class="timer-badge hidden" id="timerValue">60.0</div>
+        <div class="timer-badge hidden" id="timerValue">120.0</div>
         <div class="energy" id="energy" aria-label="3 enerji">
           <i></i><i></i><i></i>
         </div>
@@ -138,7 +138,7 @@
           <div><small>En uzun seri</small><strong id="statCombo">0</strong></div>
           <div><small>Ort. fark</small><strong id="statAverage">—</strong></div>
           <div><small>Erken / Geç</small><strong id="statBalance">0 / 0</strong></div>
-          <div><small>60 sn rekoru</small><strong id="statTimed">0</strong></div>
+          <div><small>2 dk rekoru</small><strong id="statTimed">0</strong></div>
           <div><small>Tam seri rekoru</small><strong id="statStreak">0</strong></div>
         </div>
         <div class="daily-card glass" id="dailyCard"><span>GÜNLÜK GÖREV</span><strong id="dailyTaskText">Yükleniyor…</strong><small id="dailyTaskProgress">0 / 0</small></div>
@@ -155,7 +155,7 @@
       <div class="panel-content mode-list">
         <button class="mode-card glass" data-mode="classic"><span>◎</span><div><strong>Klasik</strong><small>Üç enerjiyle mümkün olan en yüksek skoru yap.</small></div><b>OYNA</b></button>
         <button class="mode-card glass" data-mode="streak"><span>✦</span><div><strong>İsabet Serisi</strong><small>Yalnızca Tam İsabet seriyi devam ettirir.</small></div><b>OYNA</b></button>
-        <button class="mode-card glass" data-mode="timed"><span>60</span><div><strong>60 Saniye</strong><small>Süre bitmeden olabildiğince çok puan topla.</small></div><b>OYNA</b></button>
+        <button class="mode-card glass" data-mode="timed"><span>2D</span><div><strong>2 Dakika</strong><small>İki dakika içinde mümkün olan en yüksek puanı topla.</small></div><b>OYNA</b></button>
         <button class="mode-card daily glass" data-mode="daily"><span>◫</span><div><strong>Günlük İsabet</strong><small>Her oyuncu için aynı 12 turluk günlük seri.</small></div><b>OYNA</b></button>
       </div>
     </section>
