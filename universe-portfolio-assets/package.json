@@ -1,0 +1,15 @@
+{
+  "name": "hcengiz-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preview": "node scripts/preview.mjs",
+    "check": "node scripts/check.mjs",
+    "test:browser": "node scripts/browser-check.mjs",
+    "refresh:blog": "node scripts/refresh-blog.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "1.62.1",
+    "sharp": "0.35.5"
+  }
+}

@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..'),read=file=>fs.readFileSync(path.join(root,file),'utf8');
+const html=read('index.html'),css=read('universe-portfolio-assets/css/site.css'),js=read('universe-portfolio-assets/js/site.js'),sprite=read('universe-portfolio-assets/universe-images/sprite.svg');
+assert.deepEqual(fs.readdirSync(root).sort(),['index.html','universe-portfolio-assets'],'The project has exactly two top-level entries');
+new vm.Script(js);new vm.Script(read('universe-portfolio-assets/js/blog-data.js'));
+for(const [,script]of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(script);
+assert.ok(!html.includes('base64,'),'No embedded media');assert.ok(!html.includes('world-share'),'Copy control removed');assert.ok(!js.includes('clipboard'),'Clipboard code removed');
+assert.equal((html.match(/googletagmanager.com\/gtag\/js\?id=G-7Y59QC84L5/g)||[]).length,1);assert.equal((html.match(/gtag\('config','G-7Y59QC84L5'\)/g)||[]).length,1);
+const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(ids.length,new Set(ids).size);
+for(const [,id]of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(id),'Missing anchor: '+id);
+for(const [,url]of html.matchAll(/(?:src|href|data-src)="(universe-portfolio-assets\/[^"#]+)(?:#[^"]*)?"/g))assert.ok(fs.existsSync(path.join(root,url)),'Missing file: '+url);
+for(const [,id]of html.matchAll(/sprite\.svg#([^"]+)/g))assert.ok(sprite.includes('id="'+id+'"'),'Missing symbol: '+id);
+for(const [,file]of css.matchAll(/url\('\.\.\/fonts\/([^']+)'\)/g)){const font=fs.readFileSync(path.join(root,'universe-portfolio-assets/fonts',file));assert.equal(font.toString('ascii',0,4),'wOFF');assert.equal(font.readUInt32BE(8),font.length);}
+assert.equal(css.split('{').length,css.split('}').length);assert.equal((html.match(/data-portrait-world=/g)||[]).length,4);assert.equal((html.match(/data-about-world=/g)||[]).length,4);
+for(const [,url]of html.matchAll(/(?:data-src|src)="([^"]+\.(?:webp|png|jpg))"/g))assert.ok(url.startsWith('universe-portfolio-assets/universe-images/'));
+assert.ok(!html.match(/<nav[^>]*id="navigation"[\s\S]*?<\/nav>/)[0].includes('aria-current'));
+assert.equal((js.match(/addEventListener\('scroll'/g)||[]).length,1,'One shared scroll listener');assert.ok(js.includes('desktop.matches&&!motionOff()&&heroVisible'));
+assert.ok(fs.statSync(path.join(root,'index.html')).size<60000);assert.ok(fs.statSync(path.join(root,'universe-portfolio-assets/js/site.js')).size<30000);
+const usage=html+css+js+read('universe-portfolio-assets/js/blog-data.js');
+for(const folder of ['universe-images','fonts','css','js'])for(const name of fs.readdirSync(path.join(root,'universe-portfolio-assets',folder)))assert.ok(usage.includes(name),'Unreferenced asset: '+name);
+console.log('Passed: media paths, SVG targets, WOFF integrity, Analytics, copy-control removal, theme images, navigation, syntax and asset budgets.');

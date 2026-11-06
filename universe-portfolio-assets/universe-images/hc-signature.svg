@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" shape-rendering="crispEdges">
+  <title>HC — Hakan Cengiz</title>
+  <defs><mask id="hc-letter-body" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><path fill="white" d="M0 0h64v64H0z"/><path fill="black" d="M4 10h4v4H4zM26 50h4v4h-4zM56 10h4v4h-4zM56 50h4v4h-4z"/></mask></defs>
+  <g mask="url(#hc-letter-body)">
+  <path data-letter="H" d="M4 10h8v18h10V10h8v44h-8V36H12v18H4z" fill="var(--ink,#242528)"/>
+  <path data-letter="C" d="M42 10h18v8H46v4h-4v20h4v4h14v8H42v-4h-8V18h8z" fill="var(--purple,#7554dc)"/>
+  </g>
+  <g fill="var(--ink,#242528)"><rect class="hc-loose-pixel" x="4" y="10" width="4" height="4" style="--pixel-x:-5px;--pixel-y:-4px;--pixel-delay:0ms"/><rect class="hc-loose-pixel" x="26" y="50" width="4" height="4" style="--pixel-x:-3px;--pixel-y:5px;--pixel-delay:35ms"/></g>
+  <g fill="var(--purple,#7554dc)"><rect class="hc-loose-pixel" x="56" y="10" width="4" height="4" style="--pixel-x:5px;--pixel-y:-4px;--pixel-delay:70ms"/><rect class="hc-loose-pixel" x="56" y="50" width="4" height="4" style="--pixel-x:4px;--pixel-y:5px;--pixel-delay:105ms"/></g>
+</svg>
