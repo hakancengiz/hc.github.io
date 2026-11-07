@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" fill="none">
+  <rect width="960" height="560" fill="#e9eefb"/>
+  <defs><pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#bac6df"/></pattern></defs>
+  <rect width="960" height="560" fill="url(#dots)"/>
+  <circle cx="480" cy="280" r="210" stroke="#c4cee5"/><ellipse cx="480" cy="280" rx="300" ry="135" transform="rotate(-25 480 280)" stroke="#c4cee5"/>
+  <g transform="rotate(-5 480 280)"><rect x="255" y="143" width="450" height="274" rx="18" fill="#1b293d"/>
+  <path d="M255 189h450" stroke="#354258"/><circle cx="280" cy="167" r="5" fill="#fa9b90"/><circle cx="298" cy="167" r="5" fill="#e7cf84"/><circle cx="316" cy="167" r="5" fill="#b6dc9b"/>
+  <path d="m382 249-47 35 47 35m196-70 47 35-47 35m-69-96-48 122" stroke="#c7efb4" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M337 376h82m16 0h116" stroke="#536787" stroke-width="5" stroke-linecap="round"/></g>
+  <circle cx="271" cy="104" r="10" fill="#365af2"/><circle cx="738" cy="380" r="6" fill="#365af2"/>
+  <path d="M730 100v49m-24-24h49" stroke="#365af2" stroke-width="6" stroke-linecap="round"/>
+</svg>

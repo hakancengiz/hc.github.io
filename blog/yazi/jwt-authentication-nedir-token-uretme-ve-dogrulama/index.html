@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JWT Authentication Nedir? Token Üretme ve Doğrulama — Hakan Cengiz</title>
+  <meta name="description" content="Modern web uygulamalarında en sık kullanılan kimlik doğrulama yöntemlerinden biri JWT (JSON Web Token) yapısıdır. JWT’yi sadece “login olunca verilen bir token” gibi düşü"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="JWT Authentication Nedir? Token Üretme ve Doğrulama"><meta property="og:description" content="Modern web uygulamalarında en sık kullanılan kimlik doğrulama yöntemlerinden biri JWT (JSON Web Token) yapısıdır. JWT’yi sadece “login olunca verilen bir token” gibi düşü">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*c4xQ6wPtgt8lU715WrYAGw.png"><meta property="article:published_time" content="2026-05-04T18:01:46.115Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/jwt-authentication-nedir-token-%C3%BCretme-ve-do%C4%9Frulama-f7d80c5b394e"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">9<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="JWT Nedir?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">JWT Nedir?</span></a><a href="#bolum-2" aria-label="JWT’nin Yapısı"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">JWT’nin Yapısı</span></a><a href="#bolum-3" aria-label="JWT nasıl çalışır? (Akış)"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">JWT nasıl çalışır? (Akış)</span></a><a href="#bolum-4" aria-label="ASP.NET Core ile JWT Üretimi"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">ASP.NET Core ile JWT Üretimi</span></a><a href="#bolum-5" aria-label="JWT neden bu kadar kullanılıyor?"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">JWT neden bu kadar kullanılıyor?</span></a><a href="#bolum-6" aria-label="En sık yapılan hatalar"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">En sık yapılan hatalar</span></a><a href="#bolum-7" aria-label="JWT’nin Yanlış Kullanımı (En Kritik Kısım)"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">JWT’nin Yanlış Kullanımı (En Kritik Kısım)</span></a><a href="#bolum-8" aria-label="JWT’nin en önemli olayı şudur:"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">JWT’nin en önemli olayı şudur:</span></a><a href="#bolum-9" aria-label="Sonuç"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Sonuç</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*c4xQ6wPtgt8lU715WrYAGw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>JWT Authentication Nedir? Token Üretme ve Doğrulama</h1>
+          <div class="reader-meta"><span>jwt</span><i aria-hidden="true">·</i><time datetime="2026-05-04T18:01:46.115Z">4 Mayıs 2026</time><i aria-hidden="true">·</i><span>~5 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*c4xQ6wPtgt8lU715WrYAGw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Modern web uygulamalarında en sık kullanılan kimlik doğrulama yöntemlerinden biri <strong>JWT (JSON Web Token)</strong> yapısıdır.</p><p>JWT’yi sadece “login olunca verilen bir token” gibi düşünmek eksik olur. Asıl mesele şu:</p><blockquote><em>Sunucu, kullanıcıyı her istekte tekrar tekrar kontrol etmek zorunda kalmadan güveni nasıl sürdürüyor?</em></blockquote><p>JWT burada devreye girer.</p><h3 id="bolum-1">JWT Nedir?</h3><p><code>JWT</code>, açılımıyla <strong>JSON Web Token</strong>, iki taraf arasında güvenli bilgi taşıyan bir token formatıdır.</p><p>Basitçe:</p><ul><li>Kullanıcı giriş yapar</li><li>Sunucu bir token üretir</li><li>Kullanıcı bu token ile tüm isteklerini yapar</li><li>Sunucu her istekte tekrar login sormaz</li></ul><h3 id="bolum-2">JWT’nin Yapısı</h3><p>JWT üç parçadan oluşur:</p><ul><li>Header (başlık)</li><li>Payload (içerik)</li><li>Signature (imza)</li></ul><p>Bu üç yapı nokta (<code>.</code>) ile ayrılır:</p><p>xxxxx.yyyyy.zzzzz</p><h4>1. Header&#160;(Başlık)</h4><p>Token’ın tipini ve kullanılan algoritmayı içerir.</p><p>Örneğin:</p><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"alg"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"HS256"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"typ"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"JWT"</span>
+<span class="hljs-punctuation">}</span></code></pre><ul><li><code>alg</code> → algoritma (örnek: HMAC SHA256)</li><li><code>typ</code> → token tipi</li></ul><h4>2. Payload (Veri&#160;kısmı)</h4><p>Kullanıcıya ait bilgiler burada taşınır.</p><p>Örnek:</p><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"userId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"test@test.com"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"role"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Admin"</span>
+<span class="hljs-punctuation">}</span></code></pre><p>Buradaki kritik nokta:</p><blockquote><em>Payload şifreli değildir, sadece imzalanmıştır.</em></blockquote><p>Yani okunabilir ama değiştirilemez.</p><h4>3. Signature (İmza)</h4><p>Token’ın değiştirilmediğini garanti eder.</p><p>Sunucu şu şekilde üretir:</p><pre><code class="hljs language-bash">HMACSHA256(
+  <span class="hljs-built_in">base64</span>(header) + <span class="hljs-string">"."</span> + <span class="hljs-built_in">base64</span>(payload),
+  secretKey
+)</code></pre><p>Buradaki <strong>secretKey</strong>, sadece sunucuda bilinen gizli anahtardır.</p><h3 id="bolum-3">JWT nasıl çalışır?&#160;(Akış)</h3><ul><li>Kullanıcı login olur</li><li>Sunucu kullanıcıyı doğrular</li><li>JWT oluşturur</li><li>Client’a gönderir</li><li>Client her istekte bu token’ı gönderir</li><li>Sunucu token’ı doğrular</li></ul><h3 id="bolum-4">ASP.NET Core ile JWT&#160;Üretimi</h3><p>Şimdi gerçek bir örnek yapalım.</p><h4>1. Gerekli&#160;paket</h4><pre><code class="hljs language-csharp">dotnet <span class="hljs-keyword">add</span> package Microsoft.AspNetCore.Authentication.JwtBearer</code></pre><h4>2. Token üretme&#160;servisi</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System; <span class="hljs-comment">// Temel sistem fonksiyonları için eklenir</span>
+<span class="hljs-keyword">using</span> System.IdentityModel.Tokens.Jwt; <span class="hljs-comment">// JWT oluşturmak için kullanılır</span>
+<span class="hljs-keyword">using</span> System.Security.Claims; <span class="hljs-comment">// Kullanıcı bilgilerini taşımak için kullanılır</span>
+<span class="hljs-keyword">using</span> System.Text; <span class="hljs-comment">// Encoding işlemleri için kullanılır</span>
+<span class="hljs-keyword">using</span> Microsoft.IdentityModel.Tokens; <span class="hljs-comment">// Güvenlik anahtarı işlemleri için kullanılır</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">JwtService</span> <span class="hljs-comment">// JWT işlemlerini yöneten servis sınıfı</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-built_in">string</span> _key = <span class="hljs-string">"super_secret_key_123"</span>; <span class="hljs-comment">// Token imzalamak için gizli anahtar</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> <span class="hljs-title">GenerateToken</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> userId, <span class="hljs-built_in">string</span> email</span>) <span class="hljs-comment">// Token üretme metodu</span></span>
+    {
+        <span class="hljs-keyword">var</span> claims = <span class="hljs-keyword">new</span>[] <span class="hljs-comment">// Token içine eklenecek bilgiler</span>
+        {
+            <span class="hljs-keyword">new</span> Claim(<span class="hljs-string">"userId"</span>, userId), <span class="hljs-comment">// Kullanıcı ID bilgisi eklenir</span>
+            <span class="hljs-keyword">new</span> Claim(<span class="hljs-string">"email"</span>, email) <span class="hljs-comment">// Kullanıcı email bilgisi eklenir</span>
+        };
+
+        <span class="hljs-keyword">var</span> key = <span class="hljs-keyword">new</span> SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key)); <span class="hljs-comment">// Gizli anahtar byte dizisine çevrilir</span>
+
+        <span class="hljs-keyword">var</span> creds = <span class="hljs-keyword">new</span> SigningCredentials(key, SecurityAlgorithms.HmacSha256); <span class="hljs-comment">// İmza algoritması belirlenir</span>
+
+        <span class="hljs-keyword">var</span> token = <span class="hljs-keyword">new</span> JwtSecurityToken( <span class="hljs-comment">// JWT token oluşturulur</span>
+            issuer: <span class="hljs-string">"myapi"</span>, <span class="hljs-comment">// Token’ı üreten sistem</span>
+            audience: <span class="hljs-string">"myapiUsers"</span>, <span class="hljs-comment">// Token’ın geçerli olduğu hedef</span>
+            claims: claims, <span class="hljs-comment">// Kullanıcı bilgileri eklenir</span>
+            expires: DateTime.Now.AddHours(<span class="hljs-number">1</span>), <span class="hljs-comment">// Token süresi belirlenir</span>
+            signingCredentials: creds <span class="hljs-comment">// İmza bilgisi eklenir</span>
+        );
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> JwtSecurityTokenHandler().WriteToken(token); <span class="hljs-comment">// Token string olarak döndürülür</span>
+    }
+}</code></pre><h4>3. Token doğrulama (Middleware ayarı)</h4><p>ASP.NET Core’da doğrulama otomatik yapılır.</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">using</span> <span class="hljs-title class_">Microsoft</span>.<span class="hljs-property">AspNetCore</span>.<span class="hljs-property">Authentication</span>.<span class="hljs-property">JwtBearer</span>; <span class="hljs-comment">// JWT authentication için gerekli</span>
+<span class="hljs-keyword">using</span> <span class="hljs-title class_">Microsoft</span>.<span class="hljs-property">IdentityModel</span>.<span class="hljs-property">Tokens</span>; <span class="hljs-comment">// Token doğrulama için gerekli</span>
+<span class="hljs-keyword">using</span> <span class="hljs-title class_">System</span>.<span class="hljs-property">Text</span>; <span class="hljs-comment">// Encoding işlemleri için gerekli</span>
+
+<span class="hljs-keyword">var</span> builder = <span class="hljs-title class_">WebApplication</span>.<span class="hljs-title class_">CreateBuilder</span>(args); <span class="hljs-comment">// Uygulama başlatılır</span>
+
+<span class="hljs-keyword">var</span> key = <span class="hljs-string">"super_secret_key_123"</span>; <span class="hljs-comment">// Aynı secret key kullanılmalı</span>
+
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddAuthentication</span>(<span class="hljs-title class_">JwtBearerDefaults</span>.<span class="hljs-property">AuthenticationScheme</span>) <span class="hljs-comment">// Authentication eklenir</span>
+    .<span class="hljs-title class_">AddJwtBearer</span>(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span> <span class="hljs-comment">// JWT ayarları yapılır</span>
+    {
+        options.<span class="hljs-property">TokenValidationParameters</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TokenValidationParameters</span> <span class="hljs-comment">// Doğrulama kuralları</span>
+        {
+            <span class="hljs-title class_">ValidateIssuer</span> = <span class="hljs-literal">true</span>, <span class="hljs-comment">// Issuer kontrol edilir</span>
+            <span class="hljs-title class_">ValidateAudience</span> = <span class="hljs-literal">true</span>, <span class="hljs-comment">// Audience kontrol edilir</span>
+            <span class="hljs-title class_">ValidateLifetime</span> = <span class="hljs-literal">true</span>, <span class="hljs-comment">// Token süresi kontrol edilir</span>
+            <span class="hljs-title class_">ValidateIssuerSigningKey</span> = <span class="hljs-literal">true</span>, <span class="hljs-comment">// İmza doğrulanır</span>
+
+            <span class="hljs-title class_">ValidIssuer</span> = <span class="hljs-string">"myapi"</span>, <span class="hljs-comment">// Geçerli issuer</span>
+            <span class="hljs-title class_">ValidAudience</span> = <span class="hljs-string">"myapiUsers"</span>, <span class="hljs-comment">// Geçerli audience</span>
+
+            <span class="hljs-title class_">IssuerSigningKey</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SymmetricSecurityKey</span>(<span class="hljs-title class_">Encoding</span>.<span class="hljs-property">UTF8</span>.<span class="hljs-title class_">GetBytes</span>(key)) <span class="hljs-comment">// İmza anahtarı</span>
+        };
+    });
+
+<span class="hljs-keyword">var</span> app = builder.<span class="hljs-title class_">Build</span>(); <span class="hljs-comment">// Uygulama oluşturulur</span>
+
+app.<span class="hljs-title class_">UseAuthentication</span>(); <span class="hljs-comment">// Authentication middleware aktif edilir</span>
+app.<span class="hljs-title class_">UseAuthorization</span>(); <span class="hljs-comment">// Authorization aktif edilir</span>
+
+app.<span class="hljs-title class_">MapGet</span>(<span class="hljs-string">"/secure"</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-string">"Giriş başarılı!"</span>); <span class="hljs-comment">// Korunan endpoint</span>
+
+app.<span class="hljs-title class_">Run</span>(); <span class="hljs-comment">// Uygulama çalıştırılır</span></code></pre><h3 id="bolum-5">JWT neden bu kadar kullanılıyor?</h3><p>Çünkü:</p><ul><li>Stateless çalışır (sunucu session tutmaz)</li><li>Ölçeklenebilir</li><li>Microservice mimarisine uygundur</li><li>Performanslıdır</li></ul><p>Kritik bir gerçek var. JWT güvenli değildir demek yanlış olur ama yanlış kullanılırsa ciddi risk oluşturur.</p><h3 id="bolum-6">En sık yapılan&#160;hatalar</h3><ul><li>Secret key’i zayıf tutmak</li><li>Token süresini çok uzun yapmak</li><li>Payload içine hassas veri koymak</li><li>HTTPS kullanmamak</li><li>Refresh token mekanizması kurmamak</li></ul><h3 id="bolum-7">JWT’nin Yanlış Kullanımı (En Kritik&#160;Kısım)</h3><p>JWT güçlü bir yapı olsa da yanlış kullanıldığında ciddi güvenlik ve mimari problemler yaratabilir.</p><h4>1. Payload içine hassas veri&#160;koymak</h4><p>JWT payload kısmı <strong>şifreli değildir</strong>, sadece imzalanır.</p><p>Yani herkes decode edip içeriği okuyabilir.</p><p>Yanlış kullanım örneği:</p><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"userId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"email"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"test@test.com"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"password"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"123456"</span>
+<span class="hljs-punctuation">}</span></code></pre><p>Burada ciddi bir hata var:</p><ul><li>Password gibi hassas veri asla JWT içinde tutulmaz</li><li>Çünkü token ele geçirildiğinde herkes okuyabilir</li></ul><h4>2. Secret key’i zayıf&#160;tutmak</h4><p>JWT güvenliği imzaya dayanır.</p><p>Eğer secret key zayıfsa:</p><ul><li>Token sahteciliği yapılabilir</li><li>Başka kullanıcı adına token üretilebilir</li></ul><p>Örnek kötü kullanım:</p><pre><code class="hljs language-csharp"><span class="hljs-built_in">string</span> secretKey = <span class="hljs-string">"1234"</span>; <span class="hljs-comment">// çok zayıf ve tahmin edilebilir</span></code></pre><p>Bu, sistemi neredeyse açık hale getirir.</p><h4>3. Token süresini çok uzun&#160;yapmak</h4><p>Token süresi çok uzunsa:</p><ul><li>Ele geçirilen token uzun süre kullanılabilir</li><li>Logout mekanizması etkisiz hale gelir</li></ul><p>Yanlış örnek:</p><pre><code class="hljs language-csharp">expires: DateTime.Now.AddYears(<span class="hljs-number">10</span>) <span class="hljs-comment">// aşırı uzun süre</span></code></pre><p>Bu pratikte güvenlik açığıdır.</p><h4>4. JWT’yi session yerine kullanmaya çalışmak</h4><p>JWT stateless bir yapıdır.</p><p>Ama bazı projelerde şu hata yapılır:</p><ul><li>Kullanıcı logout olur</li><li>Ama token hala geçerlidir</li><li>Sistem bunu “aktif session” gibi düşünmeye çalışır</li></ul><p>JWT tek başına session yönetimi değildir.</p><h4>5. HTTPS kullanmamak</h4><p>JWT ağ üzerinden taşındığı için:</p><ul><li>HTTP kullanılırsa token düz metin olarak yakalanabilir</li><li>Man-in-the-middle saldırılarına açık hale gelir</li></ul><p>Bu yüzden JWT <strong>HTTPS olmadan asla kullanılmamalıdır</strong>.</p><h4>JWT’nin en tehlikeli yanı&#160;şudur:</h4><blockquote><em>Sistem güvenli sanılır, ama aslında güvenlik tamamen geliştiricinin doğru kullanımına bağlıdır.</em></blockquote><p>Yani JWT:</p><ul><li>doğru kullanılırsa güçlüdür</li><li>yanlış kullanılırsa sahte kimlik üretmeye kadar gider</li></ul><h3 id="bolum-8">JWT’nin en önemli olayı&#160;şudur:</h3><p>Sunucu seni hatırlamak zorunda değildir.</p><p>Kim olduğunu, neye yetkin olduğunu token söyler.</p><p>Yani kimlik doğrulama artık “sunucu hafızası” değil,<br><strong>imzalanmış bir veri parçası</strong> üzerinden yapılır.</p><h3 id="bolum-9">Sonuç</h3><p>JWT:</p><ul><li>Login sonrası kimlik taşır</li><li>Sunucu yükünü azaltır</li><li>Dağıtık sistemlere uygundur</li><li>Ama doğru kullanılmazsa güvenlik açığı oluşturur</li></ul>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/jwt-authentication-nedir-token-%C3%BCretme-ve-do%C4%9Frulama-f7d80c5b394e" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:59:09.527Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #05 Güvenlik ve Kimlik Doğrulama</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*km7I_EhEc2IvB-68edBNSw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*km7I_EhEc2IvB-68edBNSw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-22T06:36:21.979Z">22 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #10 Final: MVC, API, Identity ve Middleware ile Genel Pratikler</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/hashing-ve-encryption-nedir-aralarindaki-kritik-farklar/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*YRZwY98FfxvODHOhMySwJw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*YRZwY98FfxvODHOhMySwJw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-04-20T20:04:54.092Z">20 Nis 2026</time><h3 class="article-title">Hashing ve Encryption Nedir? Aralarındaki Kritik Farklar</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

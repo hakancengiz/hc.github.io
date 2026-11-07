@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.Net Core Serisi — #02 Katmanlı Yapı ve Uygulama Mimarisi — Hakan Cengiz</title>
+  <meta name="description" content="Katmanlı Mimari Nedir? Katmanlı mimari (Layered Architecture), bir yazılım projesini sorumluluklara göre bölerek yönetilebilir hale getiren yaklaşımdır. Amaç: kodun okuna"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content=".Net Core Serisi — #02 Katmanlı Yapı ve Uygulama Mimarisi"><meta property="og:description" content="Katmanlı Mimari Nedir? Katmanlı mimari (Layered Architecture), bir yazılım projesini sorumluluklara göre bölerek yönetilebilir hale getiren yaklaşımdır. Amaç: kodun okuna">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*REQzWwmQHDKHXbclEx9MYw.png"><meta property="article:published_time" content="2025-10-18T20:31:04.773Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/net-core-serisi-02-katmanl%C4%B1-yap%C4%B1-ve-uygulama-mimarisi-3a0ccb278b16"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">6<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Katmanlı Mimari Nedir?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Katmanlı Mimari Nedir?</span></a><a href="#bolum-2" aria-label="Katmanların Görevleri"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Katmanların Görevleri</span></a><a href="#bolum-3" aria-label="Dependency Injection (DI)"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Dependency Injection (DI)</span></a><a href="#bolum-4" aria-label="Service Lifetime Türleri"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Service Lifetime Türleri</span></a><a href="#bolum-5" aria-label="Katmanlı Mimarinin Faydaları"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Katmanlı Mimarinin Faydaları</span></a><a href="#bolum-6" aria-label="Dikkat Edilmesi Gerekenler"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Dikkat Edilmesi Gerekenler</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*REQzWwmQHDKHXbclEx9MYw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>.Net Core Serisi — #02 Katmanlı Yapı ve Uygulama Mimarisi</h1>
+          <div class="reader-meta"><span>net-core</span><i aria-hidden="true">·</i><time datetime="2025-10-18T20:31:04.773Z">18 Ekim 2025</time><i aria-hidden="true">·</i><span>~4 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:20%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>.Net Core Serisi</span><span aria-hidden="true">·</span><span class="series-position">2/10</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label=".Net Core Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><span class="series-chapter-number" aria-hidden="true">01</span><span>Giriş ve Temeller</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">02</span><span>Katmanlı Yapı ve Uygulama Mimarisi</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-chapter-number" aria-hidden="true">03</span><span>Veri Katmanı ve ORM (Entity Framework Core)</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><span class="series-chapter-number" aria-hidden="true">04</span><span>Web API Geliştirme</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Güvenlik ve Kimlik Doğrulama</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><span class="series-chapter-number" aria-hidden="true">06</span><span>İleri Konular ve Performans</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Yayınlama, Test ve DevOps Süreçleri</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-chapter-number" aria-hidden="true">09</span><span>Bonus: İleri Seviye .NET Core Konuları</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*REQzWwmQHDKHXbclEx9MYw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><h3 id="bolum-1">Katmanlı Mimari&#160;Nedir?</h3><p>Katmanlı mimari (Layered Architecture), bir yazılım projesini <strong>sorumluluklara göre bölerek</strong> yönetilebilir hale getiren yaklaşımdır.<br>&#160;Amaç: kodun okunabilirliğini, test edilebilirliğini ve sürdürülebilirliğini artırmak.</p><p>Bir&#160;.NET Core uygulamasında bu yapı genellikle şu şekilde olur:</p><blockquote><svg aria-label="Dosya" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 7V5h6l2 2h10v13H3V7Z" /></svg> MyApp<br>&#160;┣ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyApp.API → Sunum (Presentation) katmanı<br>&#160;┣ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyApp.Business → İş kuralları (Service) katmanı<br>&#160;┣ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyApp.DataAccess → Veritabanı erişimi (Repository) katmanı<br>&#160;┗ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyApp.Entities → Modeller (Entity / DTO) katmanı</blockquote><h3 id="bolum-2">Katmanların Görevleri</h3><h4>1. Entities (Core&#160;Katmanı)</h4><p>Uygulamanın temel modelleri burada yer alır.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Entities/User.cs</span>
+<span class="hljs-comment">// Kullanıcı bilgisini tutan temel model sınıfı</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
+{
+    <span class="hljs-comment">// Her kullanıcı için benzersiz ID</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Id { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    <span class="hljs-comment">// Kullanıcının adı</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } = <span class="hljs-built_in">string</span>.Empty;
+
+    <span class="hljs-comment">// Kullanıcının e-posta adresi</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Email { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } = <span class="hljs-built_in">string</span>.Empty;
+}</code></pre><p>Bu katman, <strong>hiçbir dış bağımlılık içermez</strong>. Sadece veri yapısını tanımlar.</p><h4>2. DataAccess Katmanı</h4><p>Veritabanı işlemleri bu katmanda yapılır. Entity Framework Core veya Dapper gibi araçlar burada kullanılır.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// DataAccess/Repositories/UserRepository.cs</span>
+<span class="hljs-comment">// Kullanıcı verilerini veritabanından alan repository sınıfı</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserRepository</span> : <span class="hljs-title">IUserRepository</span>
+{
+    <span class="hljs-comment">// EF Core DbContext nesnesi (veritabanı bağlantısını temsil eder)</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> AppDbContext _context;
+
+    <span class="hljs-comment">// Constructor'da bağımlılık olarak DbContext enjekte edilir</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserRepository</span>(<span class="hljs-params">AppDbContext context</span>)</span>
+    {
+        _context = context;
+    }
+
+    <span class="hljs-comment">// Tüm kullanıcıları veritabanından asenkron şekilde getirir</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;List&lt;User&gt;&gt; GetAllAsync()
+    {
+        <span class="hljs-comment">// EF Core üzerinden "Users" tablosundaki tüm kayıtları çeker</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> _context.Users.ToListAsync();
+    }
+}</code></pre><p>Bu katman, sadece veriyle ilgilenir.<br>İş kuralı (örneğin “e-posta kontrolü”) burada yazılmaz.</p><h4>3. Business&#160;Katmanı</h4><p>Tüm iş kuralları burada tanımlanır.<br>Repository’den gelen veriler üzerinde iş mantığı uygulanır.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Business/Services/UserService.cs</span>
+<span class="hljs-comment">// Kullanıcıyla ilgili iş kurallarını yöneten servis sınıfı</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserService</span> : <span class="hljs-title">IUserService</span>
+{
+    <span class="hljs-comment">// Repository arayüzü (interface) üzerinden veri erişimi yapılır</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IUserRepository _userRepository;
+
+    <span class="hljs-comment">// Constructor Injection yöntemiyle repository enjekte edilir</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserService</span>(<span class="hljs-params">IUserRepository userRepository</span>)</span>
+    {
+        _userRepository = userRepository;
+    }
+
+    <span class="hljs-comment">// Aktif kullanıcıları (e-posta adresi dolu olanlar) döndürür</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;List&lt;User&gt;&gt; GetActiveUsersAsync()
+    {
+        <span class="hljs-comment">// Tüm kullanıcıları repository’den alır</span>
+        <span class="hljs-keyword">var</span> users = <span class="hljs-keyword">await</span> _userRepository.GetAllAsync();
+
+        <span class="hljs-comment">// E-postası boş olmayan kullanıcıları filtreler</span>
+        <span class="hljs-keyword">return</span> users.Where(u =&gt; !<span class="hljs-built_in">string</span>.IsNullOrEmpty(u.Email)).ToList();
+    }
+}</code></pre><p>Burada dikkat edilmesi gereken nokta:<br>&#160;→ <code>UserService</code>, <code>UserRepository</code>’yi <strong>interface üzerinden</strong> kullanır.<br>&#160;Bu sayede bağımlılıklar <strong>tersine çevrilmiş (Dependency Inversion)</strong> olur.</p><h4>4. API (Presentation Katmanı)</h4><p>Kullanıcıdan gelen istekleri (HTTP request) işler.<br>İş kurallarıyla doğrudan etkileşime geçmez, <strong>service katmanını çağırır</strong>.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// API/Controllers/UserController.cs</span>
+<span class="hljs-comment">// API isteğini alan ve kullanıcı verisini dönen controller sınıfı</span>
+[<span class="hljs-meta">ApiController</span>]
+[<span class="hljs-meta">Route(<span class="hljs-string">"api/[controller]"</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserController</span> : <span class="hljs-title">ControllerBase</span>
+{
+    <span class="hljs-comment">// Servis arayüzü (iş kurallarını temsil eder)</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IUserService _userService;
+
+    <span class="hljs-comment">// Dependency Injection ile IUserService alınır</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserController</span>(<span class="hljs-params">IUserService userService</span>)</span>
+    {
+        _userService = userService;
+    }
+
+    <span class="hljs-comment">// HTTP GET isteğini yakalar: /api/user</span>
+    [<span class="hljs-meta">HttpGet</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">GetUsers</span>()</span>
+    {
+        <span class="hljs-comment">// Servisten aktif kullanıcıları alır</span>
+        <span class="hljs-keyword">var</span> users = <span class="hljs-keyword">await</span> _userService.GetActiveUsersAsync();
+
+        <span class="hljs-comment">// 200 OK durum kodu ile listeyi döner</span>
+        <span class="hljs-keyword">return</span> Ok(users);
+    }
+}</code></pre><p>Böylece controller yalnızca “istek–cevap” akışını yönetir.<br>İş kuralları veya veritabanı işlemleri burada yer almaz.</p><h3 id="bolum-3">Dependency Injection (DI)</h3><p>.NET Core, <strong>yerleşik bağımlılık enjeksiyonu (DI)</strong> desteğiyle gelir.<br>&#160;Bu sayede katmanlar arasında <strong>gevşek bağlı</strong> bir yapı kurabiliriz.</p><p>Örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+<span class="hljs-comment">// Katmanlar arasındaki bağımlılıkların tanımlandığı yer</span>
+
+<span class="hljs-comment">// Her HTTP isteğinde birer örnek oluşturulacak servisleri tanımlar</span>
+builder.Services.AddScoped&lt;IUserRepository, UserRepository&gt;();
+builder.Services.AddScoped&lt;IUserService, UserService&gt;();</code></pre><p>Burada:</p><ul><li><code>IUserRepository</code> → <code>UserRepository</code></li><li><code>IUserService</code> → <code>UserService</code> olarak eşleştirilir.</li></ul><p>Artık bir Controller bu servisleri constructor aracılığıyla alabilir,<br>&#160;.NET Core bunları otomatik olarak enjekte eder.</p><h3 id="bolum-4">Service Lifetime&#160;Türleri</h3><h4><strong>1. Transient</strong></h4><ul><li>Her istekte yeni nesne oluşturur</li><li>Hafif işlemler, stateless servisler</li></ul><h4>2. Scoped</h4><ul><li>Her HTTP isteğinde bir örnek oluşturur</li><li>Web API servisleri için ideal</li></ul><h4>3. Singleton</h4><ul><li>Uygulama boyunca tek örnek kullanır</li><li>Konfigürasyon, cache servisleri</li></ul><p>Örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+
+<span class="hljs-comment">// Transient: Her çağrıda yeni EmailSender nesnesi</span>
+builder.Services.AddTransient&lt;IEmailSender, EmailSender&gt;();
+
+<span class="hljs-comment">// Scoped: Her HTTP isteğinde yeni UserService nesnesi</span>
+builder.Services.AddScoped&lt;IUserService, UserService&gt;();
+
+<span class="hljs-comment">// Singleton: Uygulama süresince tek bir FileLogger nesnesi</span>
+builder.Services.AddSingleton&lt;ILogger, FileLogger&gt;();</code></pre><h3 id="bolum-5">Katmanlı Mimarinin Faydaları</h3><ul><li><strong>Bağımsız geliştirme:</strong> Her katman ayrı test edilebilir.</li><li><strong>Kolay değişiklik:</strong> UI değişse bile Business katmanı etkilenmez.</li><li><strong>Sade yapı:</strong> Kodda net sorumluluk dağılımı vardır.</li><li><strong>Yeniden kullanılabilirlik:</strong> Servisler başka projelerde de kullanılabilir.</li></ul><h3 id="bolum-6">Dikkat Edilmesi Gerekenler</h3><ul><li>Katmanlar arası bağımlılıklar <strong>doğru yönlü</strong> olmalı<br>&#160;→ DataAccess → Business → API</li><li>Controller’lar direkt olarak veritabanına erişmemeli</li><li>Business katmanında <strong>sadece iş mantığı</strong> bulunmalı</li><li>Gereksiz soyutlamalardan kaçınılmalı (örneğin 2 satırlık repository’yi interface ile sarmamak)</li></ul><p>Temel prensip: <strong>her katman kendi işini yapmalı.</strong></p><p>Böylece projeler:</p><ul><li>Daha kolay test edilir,</li><li>Daha kolay genişletilir,</li><li>Ve uzun vadede bakım maliyetini azaltır.</li></ul>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>Giriş ve Temeller</strong></a><a class="series-next" data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Veri Katmanı ve ORM (Entity Framework Core)</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/net-core-serisi-02-katmanl%C4%B1-yap%C4%B1-ve-uygulama-mimarisi-3a0ccb278b16" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:58:01.853Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #04 Web API Geliştirme</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:30:13.116Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #01 Giriş ve Temeller</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:50.631Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #03 Veri Katmanı ve ORM (Entity Framework Core)</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

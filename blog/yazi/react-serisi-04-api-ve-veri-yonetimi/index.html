@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>React Serisi — #04 API ve Veri Yönetimi — Hakan Cengiz</title>
+  <meta name="description" content="1. Fetch API / Axios ile Veri Çekme React’te dış bir API’den veri almak için genellikle iki popüler yöntem vardır: Fetch API (tarayıcıda gömülü gelir) Axios (daha gelişmi"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="React Serisi — #04 API ve Veri Yönetimi"><meta property="og:description" content="1. Fetch API / Axios ile Veri Çekme React’te dış bir API’den veri almak için genellikle iki popüler yöntem vardır: Fetch API (tarayıcıda gömülü gelir) Axios (daha gelişmi">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png"><meta property="article:published_time" content="2025-10-25T08:36:35.869Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/react-serisi-04-api-ve-veri-y%C3%B6netimi-5e5e700c6f2f"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">6<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. Fetch API / Axios ile Veri Çekme"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Fetch API / Axios ile Veri Çekme</span></a><a href="#bolum-2" aria-label="2. CRUD İşlemleri: Tam Uygulama Örneği"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">CRUD İşlemleri: Tam Uygulama Örneği</span></a><a href="#bolum-3" aria-label="3. React Query (TanStack Query) ile Veri Yönetimi"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">React Query (TanStack Query) ile Veri Yönetimi</span></a><a href="#bolum-4" aria-label="4. State Yönetiminde Redux veya Zustand Kullanımı"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">State Yönetiminde Redux veya Zustand Kullanımı</span></a><a href="#bolum-5" aria-label="5. LocalStorage ve SessionStorage Kullanımı"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">LocalStorage ve SessionStorage Kullanımı</span></a><a href="#bolum-6" aria-label="Özet"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Özet</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>React Serisi — #04 API ve Veri Yönetimi</h1>
+          <div class="reader-meta"><span>react</span><i aria-hidden="true">·</i><time datetime="2025-10-25T08:36:35.869Z">25 Ekim 2025</time><i aria-hidden="true">·</i><span>~5 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:36%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>React Serisi</span><span aria-hidden="true">·</span><span class="series-position">4/11</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label="React Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><span class="series-chapter-number" aria-hidden="true">01</span><span>React Nedir? Neden Kullanılır?</span></a></li><li><a data-article-link href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>React ile Uygulama Mantığı</span></a></li><li><a data-article-link href="../../yazi/react-serisi-03-react-hook-larina-derin-dalis/"><span class="series-chapter-number" aria-hidden="true">03</span><span>React Hook’larına Derin Dalış</span></a></li><li><a data-article-link href="../../yazi/react-serisi-04-api-ve-veri-yonetimi/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">04</span><span>API ve Veri Yönetimi</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/react-serisi-05-redux-ile-uygulama-durum-yonetimi/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Redux ile Uygulama Durum Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-06-react-router-ve-sayfa-yonetimi/"><span class="series-chapter-number" aria-hidden="true">06</span><span>React Router ve Sayfa Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-07-performans-optimizasyonu/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Performans Optimizasyonu</span></a></li><li><a data-article-link href="../../yazi/react-serisi-08-formik-ve-yup-ile-gelismis-form-yonetimi/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Formik ve Yup ile Gelişmiş Form Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-09-react-testing-library-ve-jest-ile-test-etme/"><span class="series-chapter-number" aria-hidden="true">09</span><span>React Testing Library ve Jest ile Test Etme</span></a></li><li><a data-article-link href="../../yazi/react-serisi-10-proje-yapilandirmasi-ve-en-iyi-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Proje Yapılandırması ve En İyi Pratikler</span></a></li><li><a data-article-link href="../../yazi/react-serisi-11-typescript-ile-react/"><span class="series-chapter-number" aria-hidden="true">11</span><span>TypeScript ile React</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><h3 id="bolum-1">1. Fetch API / Axios ile Veri&#160;Çekme</h3><p>React’te dış bir API’den veri almak için genellikle iki popüler yöntem vardır:</p><ul><li><strong>Fetch API</strong> (tarayıcıda gömülü gelir)</li><li><strong>Axios</strong> (daha gelişmiş bir kütüphane)</li></ul><h4>Fetch API ile Veri&#160;Çekme</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { useEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">FetchExample</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [users, setUsers] = <span class="hljs-title function_">useState</span>([]);
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-comment">// API'den veri çekme işlemi</span>
+    <span class="hljs-title function_">fetch</span>(<span class="hljs-string">"https://jsonplaceholder.typicode.com/users"</span>)
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> response.<span class="hljs-title function_">json</span>()) <span class="hljs-comment">// gelen veriyi JSON'a çeviriyoruz</span>
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> <span class="hljs-title function_">setUsers</span>(data)) <span class="hljs-comment">// state'e aktarıyoruz</span>
+      .<span class="hljs-title function_">catch</span>(<span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">"Veri alınırken hata:"</span>, error));
+  }, []);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>Kullanıcı Listesi (Fetch)<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {users.map((u) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{u.id}</span>&gt;</span>{u.name}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">FetchExample</span>;</code></pre><h4>Axios ile Veri&#160;Çekme</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">"axios"</span>;
+<span class="hljs-keyword">import</span> { useEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">AxiosExample</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [posts, setPosts] = <span class="hljs-title function_">useState</span>([]);
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-comment">// Axios ile veri çekme</span>
+    axios
+      .<span class="hljs-title function_">get</span>(<span class="hljs-string">"https://jsonplaceholder.typicode.com/posts"</span>)
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> <span class="hljs-title function_">setPosts</span>(res.<span class="hljs-property">data</span>))
+      .<span class="hljs-title function_">catch</span>(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">"Axios hatası:"</span>, err));
+  }, []);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>Gönderiler (Axios)<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {posts.slice(0, 5).map((p) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{p.id}</span>&gt;</span>{p.title}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">AxiosExample</span>;</code></pre><blockquote>Axios, Fetch’e göre hata yönetimi, interceptors, timeout gibi özelliklerde daha avantajlıdır.</blockquote><h3 id="bolum-2">2. CRUD İşlemleri: Tam Uygulama&#160;Örneği</h3><p>Aşağıda basit bir <strong>“Kullanıcı Yönetimi”</strong> uygulaması yapıyoruz.<br>Veriler JSONPlaceholder API’sinden alınacak ve <strong>Create, Read, Update, Delete</strong> işlemleri Axios ile yapılacak.</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { useEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+<span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">"axios"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">UserCrudApp</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [users, setUsers] = <span class="hljs-title function_">useState</span>([]);
+  <span class="hljs-keyword">const</span> [newUser, setNewUser] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">""</span>);
+  <span class="hljs-keyword">const</span> [editingUser, setEditingUser] = <span class="hljs-title function_">useState</span>(<span class="hljs-literal">null</span>);
+
+  <span class="hljs-comment">// Kullanıcıları yükle</span>
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-title function_">getUsers</span>();
+  }, []);
+
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">getUsers</span> = (<span class="hljs-params"></span>) =&gt; {
+    axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">"https://jsonplaceholder.typicode.com/users"</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
+      <span class="hljs-title function_">setUsers</span>(res.<span class="hljs-property">data</span>);
+    });
+  };
+
+  <span class="hljs-comment">// Yeni kullanıcı ekle (CREATE)</span>
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">addUser</span> = (<span class="hljs-params"></span>) =&gt; {
+    axios
+      .<span class="hljs-title function_">post</span>(<span class="hljs-string">"https://jsonplaceholder.typicode.com/users"</span>, { <span class="hljs-attr">name</span>: newUser })
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
+        <span class="hljs-title function_">setUsers</span>([...users, res.<span class="hljs-property">data</span>]);
+        <span class="hljs-title function_">setNewUser</span>(<span class="hljs-string">""</span>);
+      });
+  };
+
+  <span class="hljs-comment">// Kullanıcıyı sil (DELETE)</span>
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">deleteUser</span> = (<span class="hljs-params">id</span>) =&gt; {
+    axios
+      .<span class="hljs-title function_">delete</span>(<span class="hljs-string">`https://jsonplaceholder.typicode.com/users/<span class="hljs-subst">${id}</span>`</span>)
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setUsers</span>(users.<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">u</span>) =&gt;</span> u.<span class="hljs-property">id</span> !== id)));
+  };
+
+  <span class="hljs-comment">// Kullanıcıyı düzenle (UPDATE)</span>
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateUser</span> = (<span class="hljs-params">id</span>) =&gt; {
+    axios
+      .<span class="hljs-title function_">put</span>(<span class="hljs-string">`https://jsonplaceholder.typicode.com/users/<span class="hljs-subst">${id}</span>`</span>, { <span class="hljs-attr">name</span>: editingUser.<span class="hljs-property">name</span> })
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
+        <span class="hljs-title function_">setUsers</span>(users.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">u</span>) =&gt;</span> (u.<span class="hljs-property">id</span> === id ? res.<span class="hljs-property">data</span> : u)));
+        <span class="hljs-title function_">setEditingUser</span>(<span class="hljs-literal">null</span>);
+      });
+  };
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>Kullanıcı Yönetimi<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+
+      {/* Yeni kullanıcı ekleme alanı */}
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{newUser}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setNewUser(e.target.value)}
+        placeholder="Yeni kullanıcı adı"
+      /&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{addUser}</span>&gt;</span>Ekle<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {users.slice(0, 5).map((u) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{u.id}</span>&gt;</span>
+            {editingUser?.id === u.id ? (
+              <span class="hljs-tag">&lt;&gt;</span>
+                {/* Düzenleme modu */}
+                <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+                  <span class="hljs-attr">value</span>=<span class="hljs-string">{editingUser.name}</span>
+                  <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setEditingUser({ ...editingUser, name: e.target.value })}
+                /&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> updateUser(u.id)}&gt;Kaydet<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+              <span class="hljs-tag">&lt;/&gt;</span>
+            ) : (
+              <span class="hljs-tag">&lt;&gt;</span>
+                {u.name}
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> setEditingUser(u)}&gt;Düzenle<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> deleteUser(u.id)}&gt;Sil<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+              <span class="hljs-tag">&lt;/&gt;</span>
+            )}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span></span>
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">UserCrudApp</span>;</code></pre><blockquote>Bu örnekte API sahte olsa da, mantık aynıdır:<br><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> — CRUD işlemlerinin temeli.</blockquote><h3 id="bolum-3">3. React Query (TanStack Query) ile Veri&#160;Yönetimi</h3><p><code>React Query</code>, veri çekme işlemlerini <strong>önbelleğe alma (caching)</strong>, <strong>otomatik yeniden fetch etme</strong>, <strong>loading/hata yönetimi</strong> gibi kolaylıklarla optimize eder.</p><h4>Kurulum</h4><pre><code class="hljs language-typescript">npm install <span class="hljs-meta">@tanstack</span>/react-query</code></pre><h4>Örnek Kullanım</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { useQuery } <span class="hljs-keyword">from</span> <span class="hljs-string">"@tanstack/react-query"</span>;
+<span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">"axios"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">ReactQueryExample</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-comment">// useQuery: veriyi cache'li ve otomatik yönetir</span>
+  <span class="hljs-keyword">const</span> { data, isLoading, isError } = <span class="hljs-title function_">useQuery</span>({
+    <span class="hljs-attr">queryKey</span>: [<span class="hljs-string">"posts"</span>], <span class="hljs-comment">// 🔹 cache anahtarı</span>
+    <span class="hljs-attr">queryFn</span>: <span class="hljs-function">() =&gt;</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">"https://jsonplaceholder.typicode.com/posts"</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> res.<span class="hljs-property">data</span>),
+  });
+
+  <span class="hljs-keyword">if</span> (isLoading) <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Yükleniyor...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>;
+  <span class="hljs-keyword">if</span> (isError) <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Bir hata oluştu.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>;
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>React Query ile Gönderiler<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {data.slice(0, 5).map((post) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{post.id}</span>&gt;</span>{post.title}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">ReactQueryExample</span>;</code></pre><blockquote>React Query, veri çekme mantığını <code>useEffect</code> + <code>useState</code> kombinasyonundan çok daha verimli hale getirir.</blockquote><h3 id="bolum-4">4. State Yönetiminde Redux veya Zustand Kullanımı</h3><p>React Query uzak (server) veriyi yönetirken,<br><strong>Redux</strong> veya <strong>Zustand</strong> genellikle <strong>uygulama içi (client) state</strong> yönetiminde kullanılır.</p><h4>Redux Toolkit (Modern&#160;Redux)</h4><pre><code class="hljs language-typescript">npm install <span class="hljs-meta">@reduxjs</span>/toolkit react-redux</code></pre><pre><code class="hljs language-javascript"><span class="hljs-comment">// store.js</span>
+<span class="hljs-keyword">import</span> { configureStore, createSlice } <span class="hljs-keyword">from</span> <span class="hljs-string">"@reduxjs/toolkit"</span>;
+
+<span class="hljs-comment">// slice: state + reducer'ı birleştirir</span>
+<span class="hljs-keyword">const</span> counterSlice = <span class="hljs-title function_">createSlice</span>({
+  <span class="hljs-attr">name</span>: <span class="hljs-string">"counter"</span>,
+  <span class="hljs-attr">initialState</span>: { <span class="hljs-attr">value</span>: <span class="hljs-number">0</span> },
+  <span class="hljs-attr">reducers</span>: {
+    <span class="hljs-attr">increment</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> { state.<span class="hljs-property">value</span> += <span class="hljs-number">1</span> },
+    <span class="hljs-attr">decrement</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> { state.<span class="hljs-property">value</span> -= <span class="hljs-number">1</span> },
+  },
+});
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> { increment, decrement } = counterSlice.<span class="hljs-property">actions</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> store = <span class="hljs-title function_">configureStore</span>({ <span class="hljs-attr">reducer</span>: { <span class="hljs-attr">counter</span>: counterSlice.<span class="hljs-property">reducer</span> } });</code></pre><pre><code class="hljs language-javascript"><span class="hljs-comment">// App.jsx</span>
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Provider</span>, useDispatch, useSelector } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-redux"</span>;
+<span class="hljs-keyword">import</span> { store, increment, decrement } <span class="hljs-keyword">from</span> <span class="hljs-string">"./store"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">Counter</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> value = <span class="hljs-title function_">useSelector</span>(<span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.<span class="hljs-property">counter</span>.<span class="hljs-property">value</span>);
+  <span class="hljs-keyword">const</span> dispatch = <span class="hljs-title function_">useDispatch</span>();
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Sayım: {value}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> dispatch(increment())}&gt;+<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> dispatch(decrement())}&gt;-<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Provider</span> <span class="hljs-attr">store</span>=<span class="hljs-string">{store}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Provider</span>&gt;</span></span>
+  );
+}</code></pre><h4>Zustand — Minimalist Alternatif</h4><pre><code class="hljs language-plaintext">npm install zustand</code></pre><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { create } <span class="hljs-keyword">from</span> <span class="hljs-string">"zustand"</span>;
+
+<span class="hljs-comment">// store oluşturuluyor</span>
+<span class="hljs-keyword">const</span> useStore = <span class="hljs-title function_">create</span>(<span class="hljs-function">(<span class="hljs-params">set</span>) =&gt;</span> ({
+  <span class="hljs-attr">count</span>: <span class="hljs-number">0</span>,
+  <span class="hljs-attr">increment</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">set</span>(<span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> ({ <span class="hljs-attr">count</span>: state.<span class="hljs-property">count</span> + <span class="hljs-number">1</span> })),
+  <span class="hljs-attr">decrement</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">set</span>(<span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> ({ <span class="hljs-attr">count</span>: state.<span class="hljs-property">count</span> - <span class="hljs-number">1</span> })),
+}));
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">CounterZustand</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> { count, increment, decrement } = <span class="hljs-title function_">useStore</span>();
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Sayım: {count}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{increment}</span>&gt;</span>+<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{decrement}</span>&gt;</span>-<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">CounterZustand</span>;</code></pre><blockquote>Zustand, Redux’un sadeleştirilmiş halidir — özellikle küçük projelerde tercih edilir.</blockquote><h3 id="bolum-5">5. LocalStorage ve SessionStorage Kullanımı</h3><p>React’te bu yapılar, kullanıcı verilerini <strong>tarayıcıda kalıcı olarak saklamak</strong> için kullanılır.</p><h4>LocalStorage Örneği</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { useEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">LocalStorageExample</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [name, setName] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">""</span>);
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-comment">// Sayfa yenilendiğinde kayıtlı isim varsa al</span>
+    <span class="hljs-keyword">const</span> saved = <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">"username"</span>);
+    <span class="hljs-keyword">if</span> (saved) <span class="hljs-title function_">setName</span>(saved);
+  }, []);
+
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">saveName</span> = (<span class="hljs-params"></span>) =&gt; {
+    <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">"username"</span>, name); <span class="hljs-comment">// kalıcı olarak sakla</span>
+  };
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{name}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setName(e.target.value)}
+        placeholder="İsmini gir"
+      /&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{saveName}</span>&gt;</span>Kaydet<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">LocalStorageExample</span>;</code></pre><h4>SessionStorage Örneği</h4><pre><code class="hljs language-javascript"><span class="hljs-comment">// Oturum boyunca saklanır, sekme kapatılınca silinir</span>
+<span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">"theme"</span>, <span class="hljs-string">"dark"</span>);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">"theme"</span>)); <span class="hljs-comment">// "dark"</span></code></pre><h3 id="bolum-6">Özet</h3><pre><code class="hljs language-sql"><span class="hljs-operator">|</span> Konu                <span class="hljs-operator">|</span> Açıklama                                 <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-comment">------------------- | ---------------------------------------- |</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span><span class="hljs-keyword">Fetch</span> <span class="hljs-operator">/</span> Axios<span class="hljs-operator">*</span><span class="hljs-operator">*</span>   <span class="hljs-operator">|</span> API’den veri çekmek iç<span class="hljs-keyword">in</span> kullanılır      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>CRUD<span class="hljs-operator">*</span><span class="hljs-operator">*</span>            <span class="hljs-operator">|</span> Veri ekleme, silme, güncelleme işlemleri <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>React Query<span class="hljs-operator">*</span><span class="hljs-operator">*</span>     <span class="hljs-operator">|</span> Veri önbellekleme ve otomatik yenileme   <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Redux <span class="hljs-operator">/</span> Zustand<span class="hljs-operator">*</span><span class="hljs-operator">*</span> <span class="hljs-operator">|</span> Uygulama içi state yönetimi              <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>LocalStorage<span class="hljs-operator">*</span><span class="hljs-operator">*</span>    <span class="hljs-operator">|</span> Kalıcı veri saklama                      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>SessionStorage<span class="hljs-operator">*</span><span class="hljs-operator">*</span>  <span class="hljs-operator">|</span> Geçici (oturumluk) veri saklama          <span class="hljs-operator">|</span></code></pre>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/react-serisi-03-react-hook-larina-derin-dalis/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>React Hook’larına Derin Dalış</strong></a><a class="series-next" data-article-link href="../../yazi/react-serisi-05-redux-ile-uygulama-durum-yonetimi/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Redux ile Uygulama Durum Yönetimi</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/react-serisi-04-api-ve-veri-y%C3%B6netimi-5e5e700c6f2f" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:16:28.490Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #01 React Nedir? Neden Kullanılır?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:17:14.115Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #02 React ile Uygulama Mantığı</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-05-redux-ile-uygulama-durum-yonetimi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*4AbKABbCtm5QDXLduGGpTQ.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*4AbKABbCtm5QDXLduGGpTQ.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-25T08:37:06.700Z">25 Eki 2025</time><h3 class="article-title">React Serisi — #05 Redux ile Uygulama Durum Yönetimi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

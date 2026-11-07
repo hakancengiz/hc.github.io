@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.Net Core Serisi — #04 Web API Geliştirme — Hakan Cengiz</title>
+  <meta name="description" content=".NET Core’da Controller, Routing, DTO ve Validation ile Güçlü API Tasarımı Web API Nedir? Web API (Application Programming Interface), uygulamalar arasında veri alışveriş"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content=".Net Core Serisi — #04 Web API Geliştirme"><meta property="og:description" content=".NET Core’da Controller, Routing, DTO ve Validation ile Güçlü API Tasarımı Web API Nedir? Web API (Application Programming Interface), uygulamalar arasında veri alışveriş">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png"><meta property="article:published_time" content="2025-10-19T20:58:01.853Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/net-core-serisi-04-web-api-geli%C5%9Ftirme-942843e175fc"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">8<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Web API Nedir?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Web API Nedir?</span></a><a href="#bolum-2" aria-label="ASP.NET Core Web API’nin Mimarisi"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">ASP.NET Core Web API’nin Mimarisi</span></a><a href="#bolum-3" aria-label="Controller Mantığı"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Controller Mantığı</span></a><a href="#bolum-4" aria-label="DTO (Data Transfer Object)"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">DTO (Data Transfer Object)</span></a><a href="#bolum-5" aria-label="Model Validation (Doğrulama)"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Model Validation (Doğrulama)</span></a><a href="#bolum-6" aria-label="Routing Mantığı"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Routing Mantığı</span></a><a href="#bolum-7" aria-label="Middleware: İsteklerin Geçtiği Filtre Zinciri"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Middleware: İsteklerin Geçtiği Filtre Zinciri</span></a><a href="#bolum-8" aria-label="HTTP Status Kodları"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">HTTP Status Kodları</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>.Net Core Serisi — #04 Web API Geliştirme</h1>
+          <div class="reader-meta"><span>net-core</span><i aria-hidden="true">·</i><time datetime="2025-10-19T20:58:01.853Z">19 Ekim 2025</time><i aria-hidden="true">·</i><span>~4 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:40%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>.Net Core Serisi</span><span aria-hidden="true">·</span><span class="series-position">4/10</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label=".Net Core Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><span class="series-chapter-number" aria-hidden="true">01</span><span>Giriş ve Temeller</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>Katmanlı Yapı ve Uygulama Mimarisi</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-chapter-number" aria-hidden="true">03</span><span>Veri Katmanı ve ORM (Entity Framework Core)</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-04-web-api-gelistirme/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">04</span><span>Web API Geliştirme</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Güvenlik ve Kimlik Doğrulama</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><span class="series-chapter-number" aria-hidden="true">06</span><span>İleri Konular ve Performans</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Yayınlama, Test ve DevOps Süreçleri</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-chapter-number" aria-hidden="true">09</span><span>Bonus: İleri Seviye .NET Core Konuları</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>.NET Core’da Controller, Routing, DTO ve Validation ile Güçlü API Tasarımı</p><h3 id="bolum-1">Web API&#160;Nedir?</h3><p><strong>Web API (Application Programming Interface)</strong>, uygulamalar arasında veri alışverişini sağlayan bir arabirimdir.<br>Bir kullanıcı arayüzü yerine, <strong>HTTP protokolü üzerinden</strong> veri döner.</p><p>Örnek:<br>Bir mobil uygulama, arka plandaki sunucudan veriyi <strong>API çağrısı</strong> ile alır.<br>Tarayıcıda görmesek bile, her işlem <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> gibi HTTP metotlarıyla yapılır.</p><h3 id="bolum-2">ASP.NET Core Web API’nin&#160;Mimarisi</h3><p>Bir Web API projesinde temel yapı şöyledir;</p><pre><code class="hljs language-plaintext">📁 MyApp
+ ┣ 📂 Controllers     → İstekleri karşılayan sınıflar
+ ┣ 📂 Services        → İş mantığı
+ ┣ 📂 Repositories    → Veritabanı erişimi
+ ┣ 📂 Models / DTOs   → Veri transfer objeleri
+ ┗ Program.cs         → Uygulamanın giriş noktası</code></pre><p>Her katman kendi sorumluluğunu taşır:</p><ul><li><strong>Controller</strong>: İstekleri alır, doğru servise yönlendirir.</li><li><strong>Service</strong>: İş kurallarını uygular.</li><li><strong>Repository</strong>: Veritabanı işlemlerini yapar.</li></ul><h3 id="bolum-3">Controller Mantığı</h3><p>Controller, Web API’nin <strong>beyni</strong> gibidir.<br>Her HTTP isteği (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) bir <strong>Action</strong> metoduna yönlendirilir.</p><p>Aşağıda örnek bir kullanıcı API’si görebilirsin</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// API/Controllers/UserController.cs</span>
+<span class="hljs-comment">// Kullanıcı işlemlerini yöneten Web API controller sınıfı</span>
+
+<span class="hljs-comment">// [ApiController]: Otomatik model doğrulama, HTTP yanıt dönüşü gibi kolaylıklar sağlar</span>
+<span class="hljs-comment">// [Route]: Bu controller’ın temel URL adresini tanımlar</span>
+[<span class="hljs-meta">ApiController</span>]
+[<span class="hljs-meta">Route(<span class="hljs-string">"api/[controller]"</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserController</span> : <span class="hljs-title">ControllerBase</span>
+{
+    <span class="hljs-comment">// Servis katmanını temsil eden arayüz</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IUserService _userService;
+
+    <span class="hljs-comment">// Dependency Injection ile servis enjekte edilir</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserController</span>(<span class="hljs-params">IUserService userService</span>)</span>
+    {
+        _userService = userService;
+    }
+
+    <span class="hljs-comment">// HTTP GET isteğini karşılar: /api/user</span>
+    [<span class="hljs-meta">HttpGet</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">GetUsers</span>()</span>
+    {
+        <span class="hljs-comment">// Servis katmanından tüm kullanıcıları alır</span>
+        <span class="hljs-keyword">var</span> users = <span class="hljs-keyword">await</span> _userService.GetActiveUsersAsync();
+
+        <span class="hljs-comment">// 200 OK yanıtı döner ve veriyi JSON olarak gönderir</span>
+        <span class="hljs-keyword">return</span> Ok(users);
+    }
+
+    <span class="hljs-comment">// HTTP GET isteğiyle belirli bir kullanıcıyı getirir: /api/user/5</span>
+    [<span class="hljs-meta">HttpGet(<span class="hljs-string">"{id}"</span>)</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">GetUserById</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> id</span>)</span>
+    {
+        <span class="hljs-comment">// Servisten kullanıcıyı getirir</span>
+        <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> _userService.GetByIdAsync(id);
+
+        <span class="hljs-comment">// Eğer kullanıcı yoksa 404 Not Found döner</span>
+        <span class="hljs-keyword">if</span> (user == <span class="hljs-literal">null</span>)
+            <span class="hljs-keyword">return</span> NotFound(<span class="hljs-string">$"Kullanıcı bulunamadı: <span class="hljs-subst">{id}</span>"</span>);
+
+        <span class="hljs-comment">// Aksi halde 200 OK ile kullanıcıyı döner</span>
+        <span class="hljs-keyword">return</span> Ok(user);
+    }
+
+    <span class="hljs-comment">// HTTP POST isteğiyle yeni kullanıcı ekler</span>
+    [<span class="hljs-meta">HttpPost</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">AddUser</span>(<span class="hljs-params">UserDto userDto</span>)</span>
+    {
+        <span class="hljs-comment">// Servis katmanına DTO’yu iletir</span>
+        <span class="hljs-keyword">await</span> _userService.AddAsync(userDto);
+
+        <span class="hljs-comment">// 201 Created yanıtı döner</span>
+        <span class="hljs-keyword">return</span> CreatedAtAction(<span class="hljs-keyword">nameof</span>(GetUserById), <span class="hljs-keyword">new</span> { id = userDto.Id }, userDto);
+    }
+
+    <span class="hljs-comment">// HTTP DELETE isteğiyle kullanıcı siler</span>
+    [<span class="hljs-meta">HttpDelete(<span class="hljs-string">"{id}"</span>)</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">DeleteUser</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> id</span>)</span>
+    {
+        <span class="hljs-comment">// Servisten silme işlemini yapar</span>
+        <span class="hljs-keyword">var</span> result = <span class="hljs-keyword">await</span> _userService.DeleteAsync(id);
+
+        <span class="hljs-comment">// Başarısızsa 404 döner</span>
+        <span class="hljs-keyword">if</span> (!result)
+            <span class="hljs-keyword">return</span> NotFound(<span class="hljs-string">"Kullanıcı bulunamadı."</span>);
+
+        <span class="hljs-comment">// Başarılıysa 204 No Content döner</span>
+        <span class="hljs-keyword">return</span> NoContent();
+    }
+}</code></pre><h3 id="bolum-4">DTO (Data Transfer&#160;Object)</h3><p><strong>DTO</strong>, katmanlar arası veri taşımak için kullanılır.<br>Entity modellerini doğrudan istemciye döndürmek yerine DTO kullanmak, veri gizliliğini ve kontrolünü artırır.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Entities/DTOs/UserDto.cs</span>
+<span class="hljs-comment">// API’de dış dünyaya sunulan kullanıcı modeli</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserDto</span>
+{
+    <span class="hljs-comment">// ID sunulabilir</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Id { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    <span class="hljs-comment">// İsim zorunlu bir alandır</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } = <span class="hljs-built_in">string</span>.Empty;
+
+    <span class="hljs-comment">// E-posta, kullanıcı doğrulama işlemlerinde kullanılır</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Email { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } = <span class="hljs-built_in">string</span>.Empty;
+}</code></pre><h4>DTO Kullanmanın Faydaları</h4><p><svg aria-label="Onay" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m5 12 4 4L19 6" /></svg> Gereksiz alanları dış dünyaya açmazsın<br><svg aria-label="Onay" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m5 12 4 4L19 6" /></svg> Veri dönüşlerini sadeleştirir<br><svg aria-label="Onay" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m5 12 4 4L19 6" /></svg> Güvenlik ve performans artar</p><h3 id="bolum-5">Model Validation (Doğrulama)</h3><p>ASP.NET Core, veri doğrulamasını <code>DataAnnotations</code> aracılığıyla sağlar.<br>DTO üzerinde doğrudan yapılabilir;</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Entities/DTOs/UserDto.cs</span>
+<span class="hljs-comment">// Kullanıcı ekleme sırasında model doğrulama örneği</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">CreateUserDto</span>
+{
+    [<span class="hljs-meta">Required(ErrorMessage = <span class="hljs-string">"Ad alanı zorunludur."</span>)</span>]
+    [<span class="hljs-meta">MaxLength(50, ErrorMessage = <span class="hljs-string">"Ad 50 karakterden uzun olamaz."</span>)</span>]
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } = <span class="hljs-built_in">string</span>.Empty;
+
+    [<span class="hljs-meta">Required(ErrorMessage = <span class="hljs-string">"E-posta adresi zorunludur."</span>)</span>]
+    [<span class="hljs-meta">EmailAddress(ErrorMessage = <span class="hljs-string">"Geçerli bir e-posta adresi girin."</span>)</span>]
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Email { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } = <span class="hljs-built_in">string</span>.Empty;
+}</code></pre><p>Eğer model geçersizse, <code>[ApiController]</code> özelliği sayesinde<br>framework otomatik olarak <code>400 Bad Request</code> döner.</p><h3 id="bolum-6">Routing Mantığı</h3><p>Routing, HTTP isteğinin hangi metoda yönlendirileceğini belirler.<br>ASP.NET Core’da <code>[Route]</code> ve <code>[Http...]</code> öznitelikleriyle tanımlanır.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// /api/user → GetUsers()</span>
+<span class="hljs-comment">// /api/user/5 → GetUserById()</span>
+<span class="hljs-comment">// /api/user → AddUser()</span>
+<span class="hljs-comment">// /api/user/5 → DeleteUser()</span></code></pre><p>Ayrıca özel route tanımlamak da mümkündür;</p><pre><code class="hljs language-csharp">[<span class="hljs-meta">HttpGet(<span class="hljs-string">"byemail/{email}"</span>)</span>]
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">GetUserByEmail</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> email</span>)</span>
+{
+    <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> _userService.GetByEmailAsync(email);
+    <span class="hljs-keyword">if</span> (user == <span class="hljs-literal">null</span>)
+        <span class="hljs-keyword">return</span> NotFound();
+    <span class="hljs-keyword">return</span> Ok(user);
+}</code></pre><h3 id="bolum-7">Middleware: İsteklerin Geçtiği Filtre&#160;Zinciri</h3><p>Middleware, gelen isteklerin geçtiği <strong>ara katmanlardır</strong>.<br>Örneğin loglama, hata yönetimi veya kimlik doğrulama gibi işlemler burada yapılır.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+<span class="hljs-keyword">var</span> builder = WebApplication.CreateBuilder(<span class="hljs-keyword">args</span>);
+builder.Services.AddControllers();
+
+<span class="hljs-keyword">var</span> app = builder.Build();
+
+<span class="hljs-comment">// 1️⃣ Hata yönetimi</span>
+app.UseExceptionHandler(<span class="hljs-string">"/error"</span>);
+
+<span class="hljs-comment">// 2️⃣ HTTPS yönlendirmesi</span>
+app.UseHttpsRedirection();
+
+<span class="hljs-comment">// 3️⃣ Yetkilendirme kontrolü</span>
+app.UseAuthorization();
+
+<span class="hljs-comment">// 4️⃣ Controller endpoint'lerini aktif et</span>
+app.MapControllers();
+
+app.Run();</code></pre><p>Middleware zinciri, <strong>istek geldiğinde sırasıyla çalışır.</strong><br>Her biri isteği işleyebilir veya bir sonrakine aktarabilir.</p><h3 id="bolum-8">HTTP Status&#160;Kodları</h3><pre><code class="hljs language-javascript">| <span class="hljs-title class_">Kod</span> | <span class="hljs-title class_">Anlam</span>ı                | Açıklama               |
+| --- | --------------------- | ---------------------- |
+| <span class="hljs-number">200</span> | <span class="hljs-variable constant_">OK</span>                    | <span class="hljs-title class_">Ba</span>şarılı işlem         |
+| <span class="hljs-number">201</span> | <span class="hljs-title class_">Created</span>               | <span class="hljs-title class_">Yeni</span> kayıt oluşturuldu |
+| <span class="hljs-number">204</span> | <span class="hljs-title class_">No</span> <span class="hljs-title class_">Content</span>            | <span class="hljs-title class_">Ba</span>şarılı ama veri yok  |
+| <span class="hljs-number">400</span> | <span class="hljs-title class_">Bad</span> <span class="hljs-title class_">Request</span>           | <span class="hljs-title class_">Hatal</span>ı istek           |
+| <span class="hljs-number">404</span> | <span class="hljs-title class_">Not</span> <span class="hljs-title class_">Found</span>             | <span class="hljs-title class_">Kay</span>ıt bulunamadı       |
+| <span class="hljs-number">500</span> | <span class="hljs-title class_">Internal</span> <span class="hljs-title class_">Server</span> <span class="hljs-title class_">Error</span> | <span class="hljs-title class_">Sunucu</span> hatası          |</code></pre><p>Bu kodlar sayesinde istemci, API’nin ne yaptığını net şekilde anlar.</p>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>Veri Katmanı ve ORM (Entity Framework Core)</strong></a><a class="series-next" data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Güvenlik ve Kimlik Doğrulama</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/net-core-serisi-04-web-api-geli%C5%9Ftirme-942843e175fc" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:30:13.116Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #01 Giriş ve Temeller</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:50.631Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #03 Veri Katmanı ve ORM (Entity Framework Core)</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*REQzWwmQHDKHXbclEx9MYw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*REQzWwmQHDKHXbclEx9MYw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:04.773Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #02 Katmanlı Yapı ve Uygulama Mimarisi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

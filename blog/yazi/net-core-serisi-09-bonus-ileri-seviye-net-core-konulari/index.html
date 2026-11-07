@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.Net Core Serisi — #09 Bonus: İleri Seviye .NET Core Konuları — Hakan Cengiz</title>
+  <meta name="description" content="Artık temel .NET Core yapısını, mimariyi, güvenliği ve DevOps konularından noktadan sonra hedef artık daha derin, daha akıllı, daha verimli kod yazmak. Bu bonus serisinde"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content=".Net Core Serisi — #09 Bonus: İleri Seviye .NET Core Konuları"><meta property="og:description" content="Artık temel .NET Core yapısını, mimariyi, güvenliği ve DevOps konularından noktadan sonra hedef artık daha derin, daha akıllı, daha verimli kod yazmak. Bu bonus serisinde">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png"><meta property="article:published_time" content="2025-10-20T21:45:42.211Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/net-core-serisi-09-bonus-i%CC%87leri-seviye-net-core-konular%C4%B1-d4893c786e62"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">8<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. Custom Middleware — Akışı Kontrol Etmenin Gücü"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Custom Middleware — Akışı Kontrol Etmenin Gücü</span></a><a href="#bolum-2" aria-label="2. Action Filters — Controller Seviyesinde Otomasyon"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Action Filters — Controller Seviyesinde Otomasyon</span></a><a href="#bolum-3" aria-label="3. Background Jobs — Arka Plan Görevleri (Hangfire)"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Background Jobs — Arka Plan Görevleri (Hangfire)</span></a><a href="#bolum-4" aria-label="4. CQRS &amp; Mediator Pattern — Okuma ve Yazma Ayrımı"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">CQRS &amp; Mediator Pattern — Okuma ve Yazma Ayrımı</span></a><a href="#bolum-5" aria-label="5. SignalR — Gerçek Zamanlı İletişim"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">SignalR — Gerçek Zamanlı İletişim</span></a><a href="#bolum-6" aria-label="6. API Versioning"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">API Versioning</span></a><a href="#bolum-7" aria-label="7. Performans İzleme (Application Insights)"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Performans İzleme (Application Insights)</span></a><a href="#bolum-8" aria-label="8. Hangi Alanda Derinleşebilirim?"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Hangi Alanda Derinleşebilirim?</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>.Net Core Serisi — #09 Bonus: İleri Seviye .NET Core Konuları</h1>
+          <div class="reader-meta"><span>aspnetcore</span><i aria-hidden="true">·</i><time datetime="2025-10-20T21:45:42.211Z">21 Ekim 2025</time><i aria-hidden="true">·</i><span>~4 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:90%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>.Net Core Serisi</span><span aria-hidden="true">·</span><span class="series-position">9/10</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label=".Net Core Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><span class="series-chapter-number" aria-hidden="true">01</span><span>Giriş ve Temeller</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>Katmanlı Yapı ve Uygulama Mimarisi</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-chapter-number" aria-hidden="true">03</span><span>Veri Katmanı ve ORM (Entity Framework Core)</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><span class="series-chapter-number" aria-hidden="true">04</span><span>Web API Geliştirme</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Güvenlik ve Kimlik Doğrulama</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><span class="series-chapter-number" aria-hidden="true">06</span><span>İleri Konular ve Performans</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Yayınlama, Test ve DevOps Süreçleri</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">09</span><span>Bonus: İleri Seviye .NET Core Konuları</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Artık temel&#160;.NET Core yapısını, mimariyi, güvenliği ve DevOps konularından noktadan sonra hedef artık <strong>daha derin</strong>, <strong>daha akıllı</strong>, <strong>daha verimli</strong> kod yazmak.</p><p>Bu bonus serisinde, <strong>deneyimli geliştiricilerin gerçek projelerde fark yarattığı</strong> konulara odaklanacağız:</p><ul><li>Custom Middleware’ler</li><li>Global Filters</li><li>Background Jobs (Hangfire)</li><li>CQRS ve Mediator Pattern</li><li>SignalR ile Gerçek Zamanlı Haberleşme</li><li>API versiyonlama ve performans ölçümü</li></ul><h3 id="bolum-1">1. Custom Middleware — Akışı Kontrol Etmenin&#160;Gücü</h3><p>Middleware, bir isteğin API’ye ulaşmadan önce geçtiği ara katmanlardır.<br>İsteği yakalayabilir, yönlendirebilir veya loglayabilirsin.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Middleware/RequestLoggingMiddleware.cs</span>
+<span class="hljs-comment">// Her isteği loglayan özel middleware</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">RequestLoggingMiddleware</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> RequestDelegate _next;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ILogger&lt;RequestLoggingMiddleware&gt; _logger;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">RequestLoggingMiddleware</span>(<span class="hljs-params">RequestDelegate next, ILogger&lt;RequestLoggingMiddleware&gt; logger</span>)</span>
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task <span class="hljs-title">InvokeAsync</span>(<span class="hljs-params">HttpContext context</span>)</span>
+    {
+        <span class="hljs-comment">// 1️⃣ İstek zamanı</span>
+        <span class="hljs-keyword">var</span> start = DateTime.Now;
+
+        <span class="hljs-comment">// 2️⃣ İstek bilgilerini logla</span>
+        _logger.LogInformation(<span class="hljs-string">$"İstek: <span class="hljs-subst">{context.Request.Method}</span> <span class="hljs-subst">{context.Request.Path}</span>"</span>);
+
+        <span class="hljs-comment">// 3️⃣ Zincirdeki bir sonraki middleware'e geç</span>
+        <span class="hljs-keyword">await</span> _next(context);
+
+        <span class="hljs-comment">// 4️⃣ Yanıt süresini hesapla</span>
+        <span class="hljs-keyword">var</span> duration = DateTime.Now - start;
+        _logger.LogInformation(<span class="hljs-string">$"Yanıt süresi: <span class="hljs-subst">{duration.TotalMilliseconds}</span> ms"</span>);
+    }
+}</code></pre><p>Kayıt:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+app.UseMiddleware&lt;RequestLoggingMiddleware&gt;();</code></pre><p><strong>Gerçek Senaryo:</strong><br>Bu yapı, API performansını izlemek ve gereksiz sorguları tespit etmek için harikadır.</p><h3 id="bolum-2">2. Action Filters — Controller Seviyesinde Otomasyon</h3><p>Filters, Controller veya Action seviyesinde <strong>önce / sonra çalıştırılacak</strong> işlemleri tanımlar. Örneğin her API çağrısından önce kimlik kontrolü, sonra loglama yapılabilir.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Filters/ExecutionTimeFilter.cs</span>
+<span class="hljs-comment">// Her Action'ın çalışma süresini ölçen filter</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ExecutionTimeFilter</span> : <span class="hljs-title">IActionFilter</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ILogger&lt;ExecutionTimeFilter&gt; _logger;
+    <span class="hljs-keyword">private</span> Stopwatch _stopwatch;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ExecutionTimeFilter</span>(<span class="hljs-params">ILogger&lt;ExecutionTimeFilter&gt; logger</span>)</span>
+    {
+        _logger = logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">OnActionExecuting</span>(<span class="hljs-params">ActionExecutingContext context</span>)</span>
+    {
+        <span class="hljs-comment">// Action başlamadan süreyi başlat</span>
+        _stopwatch = Stopwatch.StartNew();
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">OnActionExecuted</span>(<span class="hljs-params">ActionExecutedContext context</span>)</span>
+    {
+        <span class="hljs-comment">// Action bittikten sonra süreyi durdur</span>
+        _stopwatch.Stop();
+        _logger.LogInformation(<span class="hljs-string">$"[<span class="hljs-subst">{context.ActionDescriptor.DisplayName}</span>] <span class="hljs-subst">{ _stopwatch.ElapsedMilliseconds }</span> ms sürdü."</span>);
+    }
+}</code></pre><p>Kayıt:</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// Program.cs</span>
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddControllers</span>(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+{
+    options.<span class="hljs-property">Filters</span>.<span class="hljs-property">Add</span>&lt;<span class="hljs-title class_">ExecutionTimeFilter</span>&gt;();
+});</code></pre><p><strong>Avantaj:</strong><br>Loglama, performans takibi, validasyon gibi işler controller koduna dağılmaz.</p><h3 id="bolum-3">3. Background Jobs — Arka Plan Görevleri (Hangfire)</h3><p>Bazı işler kullanıcıyı bekletmeden arka planda yapılmalıdır.<br>Örneğin: e-posta gönderimi, log arşivleme, rapor oluşturma gibi.</p><h4>Hangfire kurulumu</h4><pre><code class="hljs language-csharp">dotnet <span class="hljs-keyword">add</span> package Hangfire
+dotnet <span class="hljs-keyword">add</span> package Hangfire.AspNetCore</code></pre><h4>Kullanım:</h4><pre><code class="hljs language-javascript"><span class="hljs-comment">// Program.cs</span>
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddHangfire</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.<span class="hljs-title class_">UseSqlServerStorage</span>(<span class="hljs-string">"Server=.;Database=MyApp;Trusted_Connection=True;"</span>));
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddHangfireServer</span>();
+
+app.<span class="hljs-title class_">UseHangfireDashboard</span>(); <span class="hljs-comment">// /hangfire adresinden izlenebilir</span>
+
+<span class="hljs-comment">// Arka plan işi tanımlama</span>
+<span class="hljs-title class_">BackgroundJob</span>.<span class="hljs-title class_">Enqueue</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Console</span>.<span class="hljs-title class_">WriteLine</span>(<span class="hljs-string">"Rapor gönderildi!"</span>));</code></pre><p>Avantaj: Kuyruk sistemiyle zamanlanmış görevler oluşturabilir, tekrar eden işleri planlayabilirsin.</p><h3 id="bolum-4">4. CQRS &amp; Mediator Pattern — Okuma ve Yazma&#160;Ayrımı</h3><p>Gerçek hayatta büyük sistemlerde okuma (query) ve yazma (command) işlemleri <strong>farklı katmanlarda</strong> ele alınır. Bu prensip <strong>CQRS (Command Query Responsibility Segregation)</strong> olarak bilinir.</p><p>Örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Application/Commands/CreateUserCommand.cs</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">record</span> <span class="hljs-title">CreateUserCommand</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> Name, <span class="hljs-built_in">string</span> Email</span>) : IRequest&lt;User&gt;</span>;</code></pre><p>Handler:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Application/Handlers/CreateUserHandler.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">CreateUserHandler</span> : <span class="hljs-title">IRequestHandler</span>&lt;<span class="hljs-title">CreateUserCommand</span>, <span class="hljs-title">User</span>&gt;
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IUserRepository _repository;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CreateUserHandler</span>(<span class="hljs-params">IUserRepository repository</span>)</span>
+    {
+        _repository = repository;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;User&gt; <span class="hljs-title">Handle</span>(<span class="hljs-params">CreateUserCommand request, CancellationToken cancellationToken</span>)</span>
+    {
+        <span class="hljs-comment">// 1️⃣ Yeni kullanıcı oluştur</span>
+        <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User { Name = request.Name, Email = request.Email };
+
+        <span class="hljs-comment">// 2️⃣ Veritabanına ekle</span>
+        <span class="hljs-keyword">await</span> _repository.AddAsync(user);
+
+        <span class="hljs-comment">// 3️⃣ Kaydı geri döndür</span>
+        <span class="hljs-keyword">return</span> user;
+    }
+}</code></pre><p>CQRS genellikle <strong>MediatR</strong> kütüphanesiyle kullanılır:</p><pre><code class="hljs language-csharp">dotnet <span class="hljs-keyword">add</span> package MediatR</code></pre><p>Avantajlar:</p><ul><li>Kodun sorumlulukları ayrılır</li><li>Test etmek kolaylaşır</li><li>Okuma/yazma trafiği optimize edilir</li></ul><h3 id="bolum-5">5. SignalR — Gerçek Zamanlı&#160;İletişim</h3><p>SignalR, WebSocket tabanlı <strong>gerçek zamanlı</strong> mesajlaşma altyapısıdır.<br>Örneğin:</p><ul><li>Canlı bildirimler</li><li>Dashboard verileri</li><li>Chat uygulamaları</li></ul><p>Örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Hubs/NotificationHub.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">NotificationHub</span> : <span class="hljs-title">Hub</span>
+{
+    <span class="hljs-comment">// İstemciye mesaj gönderen metod</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task <span class="hljs-title">SendMessage</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> user, <span class="hljs-built_in">string</span> message</span>)</span>
+    {
+        <span class="hljs-keyword">await</span> Clients.All.SendAsync(<span class="hljs-string">"ReceiveMessage"</span>, user, message);
+    }
+}</code></pre><p>Program.cs:</p><pre><code class="hljs language-csharp">builder.Services.AddSignalR();
+
+app.MapHub&lt;NotificationHub&gt;(<span class="hljs-string">"/hubs/notification"</span>);</code></pre><p>Frontend (JavaScript):</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">const</span> connection = <span class="hljs-keyword">new</span> signalR.<span class="hljs-title class_">HubConnectionBuilder</span>()
+    .<span class="hljs-title function_">withUrl</span>(<span class="hljs-string">"/hubs/notification"</span>)
+    .<span class="hljs-title function_">build</span>();
+
+connection.<span class="hljs-title function_">on</span>(<span class="hljs-string">"ReceiveMessage"</span>, <span class="hljs-function">(<span class="hljs-params">user, message</span>) =&gt;</span> {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${user}</span>: <span class="hljs-subst">${message}</span>`</span>);
+});
+
+connection.<span class="hljs-title function_">start</span>();</code></pre><p><strong>Gerçek Senaryo:</strong><br>Admin panelinde canlı işlem akışı, borsa ekranı, mesajlaşma vb.</p><h3 id="bolum-6">6. API Versioning</h3><p>Gerçek dünyada API’ler zamanla değişir.<br>Yeni sürümler, eski istemcilerle uyumlu olmalıdır.</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// Program.cs</span>
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddApiVersioning</span>(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+{
+    options.<span class="hljs-property">DefaultApiVersion</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ApiVersion</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>);
+    options.<span class="hljs-property">AssumeDefaultVersionWhenUnspecified</span> = <span class="hljs-literal">true</span>;
+    options.<span class="hljs-property">ReportApiVersions</span> = <span class="hljs-literal">true</span>;
+});</code></pre><p>Controller:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// v1</span>
+[<span class="hljs-meta">ApiVersion(<span class="hljs-string">"1.0"</span>)</span>]
+[<span class="hljs-meta">Route(<span class="hljs-string">"api/v{version:apiVersion}/user"</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserV1Controller</span> : <span class="hljs-title">ControllerBase</span>
+{
+    [<span class="hljs-meta">HttpGet</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Get</span>()</span> =&gt; Ok(<span class="hljs-string">"V1: Eski versiyon kullanıcı listesi"</span>);
+}
+
+<span class="hljs-comment">// v2</span>
+[<span class="hljs-meta">ApiVersion(<span class="hljs-string">"2.0"</span>)</span>]
+[<span class="hljs-meta">Route(<span class="hljs-string">"api/v{version:apiVersion}/user"</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserV2Controller</span> : <span class="hljs-title">ControllerBase</span>
+{
+    [<span class="hljs-meta">HttpGet</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Get</span>()</span> =&gt; Ok(<span class="hljs-string">"V2: Gelişmiş kullanıcı listesi"</span>);
+}</code></pre><p>İstemci, <code>api/v1/user</code> veya <code>api/v2/user</code> çağırarak istediği sürümü seçebilir.</p><h3 id="bolum-7">7. Performans İzleme (Application Insights)</h3><p>Uygulamanın “ne kadar hızlı” ve “nerede takıldığını” ölçmek için Application Insights kullanılabilir.</p><pre><code class="hljs language-csharp">dotnet <span class="hljs-keyword">add</span> package Microsoft.ApplicationInsights.AspNetCore</code></pre><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+builder.Services.AddApplicationInsightsTelemetry();</code></pre><p>Bu sistem:</p><ul><li>Her isteğin süresini ölçer</li><li>Hataları ve SQL sorgu sürelerini loglar</li><li>Azure portalından canlı izlenebilir</li></ul><h3 id="bolum-8">8. Hangi Alanda Derinleşebilirim?</h3><pre><code class="hljs language-sql"><span class="hljs-operator">|</span> İlgi Alanı                 <span class="hljs-operator">|</span> Derinleşme Yönü                    <span class="hljs-operator">|</span> Önerilen Teknolojiler           <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-comment">-------------------------- | ---------------------------------- | ------------------------------- |</span>
+<span class="hljs-operator">|</span> Performans                 <span class="hljs-operator">|</span> Caching, Profiling, GC tuning      <span class="hljs-operator">|</span> Redis, BenchmarkDotNet          <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Gerçek Zamanlı Uygulamalar <span class="hljs-operator">|</span> Canlı bildirim, socket yönetimi    <span class="hljs-operator">|</span> SignalR, WebSocket              <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Mikroservis Mimarisi       <span class="hljs-operator">|</span> Bağımsız servis yapıları           <span class="hljs-operator">|</span> Docker, gRPC, RabbitMQ          <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Bulut Geliştirme           <span class="hljs-operator">|</span> Azure, AWS entegrasyonu            <span class="hljs-operator">|</span> Azure App Service, <span class="hljs-type">Blob</span> Storage <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Test Otomasyonu            <span class="hljs-operator">|</span> Gelişmiş test altyapısı            <span class="hljs-operator">|</span> xUnit, FluentAssertions, Moq    <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Güvenlik                   <span class="hljs-operator">|</span> Kimlik ve yetkilendirme sistemleri <span class="hljs-operator">|</span> IdentityServer, OAuth2, JWT     <span class="hljs-operator">|</span></code></pre>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</strong></a><a class="series-next" data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/net-core-serisi-09-bonus-i%CC%87leri-seviye-net-core-konular%C4%B1-d4893c786e62" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*5KswOq1EyOW3d7Lrekw1Gg.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*5KswOq1EyOW3d7Lrekw1Gg.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T21:00:05.442Z">20 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #06 İleri Konular ve Performans</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:30:13.116Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #01 Giriş ve Temeller</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:59:09.527Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #05 Güvenlik ve Kimlik Doğrulama</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

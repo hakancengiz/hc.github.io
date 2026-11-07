@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.Net Core Serisi — #01 Giriş ve Temeller — Hakan Cengiz</title>
+  <meta name="description" content=".NET Core Nedir? .NET Core, Microsoft tarafından geliştirilen, açık kaynaklı, platformlar arası bir uygulama geliştirme altyapısıdır. Windows, macOS ve Linux üzerinde çal"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content=".Net Core Serisi — #01 Giriş ve Temeller"><meta property="og:description" content=".NET Core Nedir? .NET Core, Microsoft tarafından geliştirilen, açık kaynaklı, platformlar arası bir uygulama geliştirme altyapısıdır. Windows, macOS ve Linux üzerinde çal">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png"><meta property="article:published_time" content="2025-10-18T20:30:13.116Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/net-core-serisi-01-giri%C5%9F-ve-temeller-0e294a2112a2"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">6<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label=".NET Core Nedir?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">.NET Core Nedir?</span></a><a href="#bolum-2" aria-label=".NET Framework ile .NET Core Arasındaki Farklar"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">.NET Framework ile .NET Core Arasındaki Farklar</span></a><a href="#bolum-3" aria-label="SDK, Runtime, CLI Nedir? — Yapının Anatomisi"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">SDK, Runtime, CLI Nedir? — Yapının Anatomisi</span></a><a href="#bolum-4" aria-label="Visual Studio ve CLI ile İlk .NET Core Projesi"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Visual Studio ve CLI ile İlk .NET Core Projesi</span></a><a href="#bolum-5" aria-label="Program.cs ve Startup.cs Dosyalarının Rolü"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Program.cs ve Startup.cs Dosyalarının Rolü</span></a><a href="#bolum-6" aria-label="Appsettings.json — Konfigürasyon Yönetimi"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Appsettings.json — Konfigürasyon Yönetimi</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>.Net Core Serisi — #01 Giriş ve Temeller</h1>
+          <div class="reader-meta"><span>net-core</span><i aria-hidden="true">·</i><time datetime="2025-10-18T20:30:13.116Z">18 Ekim 2025</time><i aria-hidden="true">·</i><span>~3 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:10%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>.Net Core Serisi</span><span aria-hidden="true">·</span><span class="series-position">1/10</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label=".Net Core Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">01</span><span>Giriş ve Temeller</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>Katmanlı Yapı ve Uygulama Mimarisi</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-chapter-number" aria-hidden="true">03</span><span>Veri Katmanı ve ORM (Entity Framework Core)</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><span class="series-chapter-number" aria-hidden="true">04</span><span>Web API Geliştirme</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Güvenlik ve Kimlik Doğrulama</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><span class="series-chapter-number" aria-hidden="true">06</span><span>İleri Konular ve Performans</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Yayınlama, Test ve DevOps Süreçleri</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-chapter-number" aria-hidden="true">09</span><span>Bonus: İleri Seviye .NET Core Konuları</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><h3 id="bolum-1">.NET Core&#160;Nedir?</h3><p>.NET Core, Microsoft tarafından geliştirilen, <strong>açık kaynaklı</strong>, <strong>platformlar arası</strong> bir uygulama geliştirme altyapısıdır.<br>Windows, macOS ve Linux üzerinde çalışabilir.<br>Amaç aynı kod tabanıyla web, masaüstü, mobil ve bulut uygulamaları geliştirebilmektir.</p><p>.NET Framework’ün “Windows’a özel” yapısını aşmak için ortaya çıkmıştır. Bugün artık tek bir çatı altında&#160;<strong>.NET 8</strong> gibi birleşik sürümlerle “tek&#160;.NET ekosistemi” haline gelmiştir.</p><h3 id="bolum-2">.NET Framework ile&#160;.NET Core Arasındaki Farklar</h3><pre><code class="hljs language-sql"><span class="hljs-operator">|</span> Özellik            <span class="hljs-operator">|</span> .NET Framework        <span class="hljs-operator">|</span> .NET Core <span class="hljs-operator">/</span> .NET                   <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-comment">------------------ | --------------------- | ---------------------------------- |</span>
+<span class="hljs-operator">|</span> Platform           <span class="hljs-operator">|</span> Sadece Windows        <span class="hljs-operator">|</span> Windows, macOS, Linux              <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Açıklık            <span class="hljs-operator">|</span> Kapalı kaynak         <span class="hljs-operator">|</span> Açık kaynak                        <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Performans         <span class="hljs-operator">|</span> Görece düşük          <span class="hljs-operator">|</span> Daha hızlı, hafif                  <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Dağıtım            <span class="hljs-operator">|</span> <span class="hljs-keyword">Global</span> Assembly Cache <span class="hljs-operator">|</span> Uygulamayla birlikte taşınabilir   <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Modern API Desteği <span class="hljs-operator">|</span> Sınırlı               <span class="hljs-operator">|</span> Minimal API, Blazor, gRPC destekli <span class="hljs-operator">|</span></code></pre><p>Kısacası,&#160;.NET Core sadece “.NET’in yeni sürümü” değil, <strong>modern mimarinin yeniden tasarlanmış hâlidir</strong>.</p><h3 id="bolum-3"><strong>SDK, Runtime, CLI Nedir? — Yapının Anatomisi</strong></h3><ol><li><strong>SDK (Software Development Kit)</strong><br>&#160;→ Geliştirme araçlarını içerir (<code>dotnet build</code>, <code>dotnet run</code>, <code>dotnet new</code> gibi).<br>&#160;→ Uygulama geliştirirken kullanılır.</li><li><strong>Runtime</strong><br>&#160;→ Çalışan uygulamanın ihtiyaç duyduğu ortamdır.<br>&#160;→ Kullanıcıya dağıtılır, uygulamayı “çalıştıran” kısımdır.</li><li><strong>CLI (Command Line Interface)</strong><br>&#160;→ <code>dotnet</code> komutlarını yazdığımız konsol aracıdır.<br>&#160;→ Örnek:</li></ol><pre><code class="hljs language-csharp">dotnet <span class="hljs-keyword">new</span> webapi -n MyApp <span class="hljs-meta"># Yeni Web API projesi oluşturur</span>
+dotnet run <span class="hljs-meta"># Projeyi çalıştırır</span></code></pre><h3 id="bolum-4">Visual Studio ve CLI ile İlk&#160;.NET Core&#160;Projesi</h3><p>Proje oluşturmanın iki temel yolu vardır:</p><h4>1. Visual Studio&#160;(GUI)</h4><ul><li>“Yeni Proje” → “ASP.NET Core Web API” seç.</li><li>.NET 8 (veya geçerli sürüm) seçimini yap.</li><li>Projeyi oluştur, çalıştır.</li><li>Tarayıcıda <code>https://localhost:5001/swagger</code> sayfası otomatik açılır.</li></ul><h4>2. CLI (Terminal)</h4><pre><code class="hljs language-csharp">dotnet <span class="hljs-keyword">new</span> webapi -n MyFirstApi
+cd MyFirstApi
+dotnet run</code></pre><p>Bu komutlarla aynı sonucu alırsın. CLI yöntemini bilmek önemlidir çünkü otomasyon, CI/CD ve Docker gibi süreçlerde hep CLI kullanılır.</p><h3 id="bolum-5">Program.cs ve Startup.cs Dosyalarının Rolü</h3><p>.NET 5 öncesinde uygulamalar iki ana dosyayla başlardı:</p><ul><li><strong>Program.cs:</strong> Uygulamanın başlangıç noktası</li><li><strong>Startup.cs:</strong> Servisleri ve middleware’leri yapılandırır</li></ul><h4>1. Klasik Yapı (Startup.cs olan sürümler)</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Program</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] <span class="hljs-keyword">args</span></span>)</span>
+    {
+        CreateHostBuilder(<span class="hljs-keyword">args</span>).Build().Run(); <span class="hljs-comment">// Uygulama burada başlatılır</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IHostBuilder <span class="hljs-title">CreateHostBuilder</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] <span class="hljs-keyword">args</span></span>)</span> =&gt;
+        Host.CreateDefaultBuilder(<span class="hljs-keyword">args</span>)
+            .ConfigureWebHostDefaults(webBuilder =&gt;
+            {
+                webBuilder.UseStartup&lt;Startup&gt;(); <span class="hljs-comment">// Startup sınıfını çağırır</span>
+            });
+}</code></pre><pre><code class="hljs language-csharp"><span class="hljs-comment">// Startup.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Startup</span>
+{
+    <span class="hljs-comment">// Bağımlılıkların (DI) tanımlandığı yer</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ConfigureServices</span>(<span class="hljs-params">IServiceCollection services</span>)</span>
+    {
+        services.AddControllers(); <span class="hljs-comment">// Controller’ları ekler</span>
+    }
+
+    <span class="hljs-comment">// Middleware (ara katman) pipeline’ı burada kurulur</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Configure</span>(<span class="hljs-params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span>
+    {
+        <span class="hljs-keyword">if</span> (env.IsDevelopment())
+            app.UseDeveloperExceptionPage();
+
+        app.UseRouting(); <span class="hljs-comment">// URL yönlendirmelerini etkinleştirir</span>
+        app.UseAuthorization(); <span class="hljs-comment">// Yetkilendirmeyi aktif eder</span>
+        app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
+    }
+}</code></pre><p><strong>Açıklama:</strong></p><ul><li><code>CreateHostBuilder</code> uygulamayı başlatır.</li><li><code>ConfigureServices</code> kısmı bağımlılıkları yönetir.</li><li><code>Configure</code> kısmı HTTP isteğinin geçtiği pipeline’ı belirler.</li></ul><h4>2.&#160;.NET 6+ Minimal API&#160;Dönemi</h4><p>.NET 6 ile birlikte <strong>Startup.cs kalktı</strong>, yapı sadeleştirildi:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs (.NET 6+)</span>
+<span class="hljs-keyword">var</span> builder = WebApplication.CreateBuilder(<span class="hljs-keyword">args</span>);
+
+<span class="hljs-comment">// Servis ekleme</span>
+builder.Services.AddControllers();
+
+<span class="hljs-keyword">var</span> app = builder.Build();
+
+<span class="hljs-comment">// Middleware pipeline</span>
+app.UseRouting();
+app.UseAuthorization();
+
+app.MapControllers(); <span class="hljs-comment">// Controller’ları endpoint olarak ekler</span>
+
+app.Run(); <span class="hljs-comment">// Uygulamayı çalıştırır</span></code></pre><p><strong>Minimal API yapısında</strong> her şey <code>Program.cs</code> içinde toplanır.<br>Küçük projelerde kod okunabilirliğini artırır; büyük projelerde ise modüler hale getirilebilir.</p><h3 id="bolum-6">Appsettings.json — Konfigürasyon Yönetimi</h3><p><code>appsettings.json</code>, uygulama ayarlarını merkezi olarak saklayan dosyadır.<br>&#160;Veritabanı bağlantıları, log ayarları, e-posta servis bilgileri gibi yapılandırmalar burada tutulur.</p><p>Örnek:</p><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"Logging"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"LogLevel"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"Default"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Information"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"Microsoft.AspNetCore"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Warning"</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"ConnectionStrings"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"DefaultConnection"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Server=.;Database=MyDb;Trusted_Connection=True;"</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre><p>Program.cs içinde kullanımı:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">var</span> builder = WebApplication.CreateBuilder(<span class="hljs-keyword">args</span>);
+
+<span class="hljs-comment">// appsettings.json otomatik olarak okunur</span>
+<span class="hljs-keyword">var</span> connectionString = builder.Configuration.GetConnectionString(<span class="hljs-string">"DefaultConnection"</span>);
+<span class="hljs-comment">// Örnek: bu bağlantıyı EF Core’da kullanabiliriz</span>
+builder.Services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
+    options.UseSqlServer(connectionString));</code></pre><blockquote><strong>İpucu:</strong><br>&#160;<code>appsettings.Development.json</code>, <code>appsettings.Production.json</code> gibi environment bazlı yapılandırmalar da mümkündür.<br>&#160;Bu sayede test ortamında farklı, üretimde farklı ayarlar kullanabilirsin.</blockquote>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-next" data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Katmanlı Yapı ve Uygulama Mimarisi</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/net-core-serisi-01-giri%C5%9F-ve-temeller-0e294a2112a2" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:58:01.853Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #04 Web API Geliştirme</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:50.631Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #03 Veri Katmanı ve ORM (Entity Framework Core)</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*REQzWwmQHDKHXbclEx9MYw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*REQzWwmQHDKHXbclEx9MYw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:04.773Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #02 Katmanlı Yapı ve Uygulama Mimarisi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

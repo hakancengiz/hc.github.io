@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>React’te Performans Sorunlarının %80’i Bu 5 Hatanın Sonucu — Hakan Cengiz</title>
+  <meta name="description" content="React güçlü bir yapı. Doğru kullanıldığında hızlı, düzenli ve bakım açısından rahat bir uygulama kurmanı sağlar. Ama işin zor tarafı şu: React’te performans problemi çoğu"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="React’te Performans Sorunlarının %80’i Bu 5 Hatanın Sonucu"><meta property="og:description" content="React güçlü bir yapı. Doğru kullanıldığında hızlı, düzenli ve bakım açısından rahat bir uygulama kurmanı sağlar. Ama işin zor tarafı şu: React’te performans problemi çoğu">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*mxCP0ba1yOwGK1jUynICDg.png"><meta property="article:published_time" content="2026-04-01T20:29:17.461Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/reactte-performans-sorunlar%C4%B1n%C4%B1n-80-i-bu-5-hatan%C4%B1n-sonucu-1d8b8d148b92"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">7<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1) Gereksiz yeniden render üretmek"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Gereksiz yeniden render üretmek</span></a><a href="#bolum-2" aria-label="2) Aynı fonksiyonları ve nesneleri her render’da yeniden oluşturmak"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Aynı fonksiyonları ve nesneleri her render’da yeniden oluşturmak</span></a><a href="#bolum-3" aria-label="3) Büyük listeleri tek seferde ekrana basmak"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Büyük listeleri tek seferde ekrana basmak</span></a><a href="#bolum-4" aria-label="4) useEffect’i yanlış kullanmak"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">useEffect’i yanlış kullanmak</span></a><a href="#bolum-5" aria-label="5) State’i yanlış yerde tutmak"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">State’i yanlış yerde tutmak</span></a><a href="#bolum-6" aria-label="Bu beş hata neden bu kadar yaygın?"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Bu beş hata neden bu kadar yaygın?</span></a><a href="#bolum-7" aria-label="Sonuç"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Sonuç</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*mxCP0ba1yOwGK1jUynICDg.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>React’te Performans Sorunlarının %80’i Bu 5 Hatanın Sonucu</h1>
+          <div class="reader-meta"><span>react</span><i aria-hidden="true">·</i><time datetime="2026-04-01T20:29:17.461Z">1 Nisan 2026</time><i aria-hidden="true">·</i><span>~8 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*mxCP0ba1yOwGK1jUynICDg.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>React güçlü bir yapı. Doğru kullanıldığında hızlı, düzenli ve bakım açısından rahat bir uygulama kurmanı sağlar. Ama işin zor tarafı şu: React’te performans problemi çoğu zaman framework’ün kendisinden değil, geliştiricinin yaptığı küçük ama etkili hatalardan çıkar.</p><p>İlk bakışta uygulama düzgün çalışıyor gibi görünür. Sayfalar açılır, butonlar tepki verir, veriler ekrana gelir. Fakat veri büyüdükçe, component sayısı arttıkça ve kullanıcı etkileşimi yoğunlaştıkça sistem ağırlaşmaya başlar. İşte o noktada problem görünür olur.</p><h3 id="bolum-1">1) Gereksiz yeniden render&#160;üretmek</h3><p>React’te en temel kavramlardan biri <strong>render</strong>’dır. Render, component’in ekrana nasıl çizileceği anlamına gelir. Bir component yeniden render olduğunda, React o component’in çıktısını yeniden hesaplar.</p><p>Buradaki sorun şu: Her yeniden render kötü değildir. Ama gereksiz yeniden render sayısı arttıkça uygulama yavaşlar.</p><p>En sık yapılan hata, state’i yanlış yerde tutmak veya her değişiklikte tüm component ağacını tekrar çalıştırmaktır. Özellikle üst component’te tuttuğun küçük bir state, alttaki birçok child component’i de gereksiz yere yeniden çalıştırabilir.</p><h4>Yanlış örnek</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [text, setText] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">""</span>);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{text}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setText(e.target.value)} // Her tuşta state değişir ve component yeniden render olur
+      /&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-name">HeavyList</span> /&gt;</span> {/* Bu component, input ile ilgisi olmasa bile tekrar render olabilir */}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">HeavyList</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> items = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>({ <span class="hljs-attr">length</span>: <span class="hljs-number">10000</span> }, <span class="hljs-function">(<span class="hljs-params">_, i</span>) =&gt;</span> i);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+      {items.map((item) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{item}</span>&gt;</span>{item}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><p>Bu örnekte input’a her harf yazıldığında <code>App</code> yeniden render olur. Bu da <code>HeavyList</code>’in tekrar hesaplanmasına yol açabilir. <code>HeavyList</code> çok ağırsa, kullanıcı gecikme hisseder.</p><h4>Doğru yaklaşım</h4><p>Ağır çalışan bölümü ayrıştırmak ve sadece gerektiğinde render etmek gerekir.</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState, memo } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [text, setText] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">""</span>);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{text}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setText(e.target.value)} // Sadece input state'i değişiyor
+      /&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-name">HeavyList</span> /&gt;</span> {/* memo ile sarıldığında gereksiz render'lar azaltılabilir */}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">HeavyList</span> = <span class="hljs-title function_">memo</span>(<span class="hljs-keyword">function</span> <span class="hljs-title function_">HeavyList</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> items = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>({ <span class="hljs-attr">length</span>: <span class="hljs-number">10000</span> }, <span class="hljs-function">(<span class="hljs-params">_, i</span>) =&gt;</span> i);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+      {items.map((item) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{item}</span>&gt;</span>{item}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>
+  );
+});
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><p>Buradaki <code>memo</code>, bir component’in props’ları değişmedikçe tekrar render olmasını engellemeye yardımcı olur. Bu işleme <strong>memoization</strong> denir. Memoization, daha önce hesaplanmış sonucu saklayıp aynı hesaplamayı tekrar yapmamak demektir.</p><h3 id="bolum-2">2) Aynı fonksiyonları ve nesneleri her render’da yeniden oluşturmak</h3><p>React’te bir component her render olduğunda, içindeki fonksiyonlar ve nesneler de yeniden oluşturulur. Bu durum çoğu zaman fark edilmez ama özellikle child component’lere props olarak verilen fonksiyonlarda ciddi sorun çıkarabilir.</p><p>Örneğin <code>onClick</code>, <code>onChange</code> gibi callback fonksiyonlarını her render’da yeniden tanımlarsan, child component “prop değişti” diye tekrar render olabilir.</p><h4>Yanlış örnek</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState, memo } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [count, setCount] = <span class="hljs-title function_">useState</span>(<span class="hljs-number">0</span>);
+
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">handleClick</span> = (<span class="hljs-params"></span>) =&gt; {
+    <span class="hljs-title function_">setCount</span>(count + <span class="hljs-number">1</span>); <span class="hljs-comment">// Her render'da yeni bir fonksiyon referansı oluşur</span>
+  };
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{handleClick}</span>&gt;</span>Arttır<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Child</span> <span class="hljs-attr">onAction</span>=<span class="hljs-string">{handleClick}</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">Child</span> = <span class="hljs-title function_">memo</span>(<span class="hljs-keyword">function</span> <span class="hljs-title function_">Child</span>(<span class="hljs-params">{ onAction }</span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{onAction}</span>&gt;</span>
+      Child Butonu
+    <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+  );
+});
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Parent</span>;</code></pre><p>Burada <code>Child</code> component’i <code>memo</code> ile sarılmış olsa bile, <code>handleClick</code> her render’da yeni bir referans olduğu için child tekrar render olabilir.</p><h4>Doğru yaklaşım</h4><p><code>useCallback</code> kullanmak bu durumda faydalıdır. <code>useCallback</code>, bir fonksiyonun referansını belirli bağımlılıklar değişmedikçe sabit tutar.</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState, useCallback, memo } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">Parent</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [count, setCount] = <span class="hljs-title function_">useState</span>(<span class="hljs-number">0</span>);
+
+  <span class="hljs-keyword">const</span> handleClick = <span class="hljs-title function_">useCallback</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-title function_">setCount</span>(<span class="hljs-function">(<span class="hljs-params">prev</span>) =&gt;</span> prev + <span class="hljs-number">1</span>); <span class="hljs-comment">// Önceki değeri kullanmak daha güvenlidir</span>
+  }, []); <span class="hljs-comment">// Bağımlılık boş olduğu için fonksiyon referansı sabit kalır</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{handleClick}</span>&gt;</span>Arttır<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Child</span> <span class="hljs-attr">onAction</span>=<span class="hljs-string">{handleClick}</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">Child</span> = <span class="hljs-title function_">memo</span>(<span class="hljs-keyword">function</span> <span class="hljs-title function_">Child</span>(<span class="hljs-params">{ onAction }</span>) {
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{onAction}</span>&gt;</span>Child Butonu<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>;
+});
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Parent</span>;</code></pre><p>Buradaki önemli terim şu: <strong>referans</strong>. JavaScript’te iki nesne veya fonksiyon dışarıdan aynı görünse bile, bellekte farklı referanslara sahip olabilir. React da çoğu zaman bunu kontrol eder.</p><h3 id="bolum-3">3) Büyük listeleri tek seferde ekrana&#160;basmak</h3><p>Bir listedeki öğe sayısı azsa sorun olmaz. Ama yüzlerce ya da binlerce satır render ediyorsan performans düşebilir. Özellikle tablo, ürün listesi, mesaj ekranı, log görünümü gibi alanlarda bu çok sık yaşanır.</p><p>Bu durumda kullanılan kavramlardan biri <strong>virtualization</strong>’dır. Virtualization, sadece ekranda görünür olan elemanları render etmek anlamına gelir. Yani listedeki tüm öğeleri aynı anda çizmek yerine, kullanıcı hangi kısmı görüyorsa sadece o kısmı üretirsin.</p><h4>Yanlış yaklaşım</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">BigList</span>(<span class="hljs-params">{ items }</span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+      {items.map((item) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{item.id}</span>&gt;</span>
+          {item.name}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>
+  );
+}</code></pre><p>Bu yapı küçük listelerde sorun çıkarmaz. Ama 10.000 öğe varsa, hepsini tek seferde DOM’a basmak kullanıcı deneyimini ağırlaştırabilir.</p><p>DOM, tarayıcının sayfadaki elemanları tuttuğu yapı anlamına gelir. DOM büyüdükçe tarayıcının işi zorlaşır.</p><h4>Daha doğru&#160;yaklaşım</h4><p>Gerçek projelerde bunun için <code>react-window</code> veya <code>react-virtualized</code> gibi kütüphaneler kullanılır. Aşağıda mantığı göstermek için sade bir örnek var:</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">SimpleVirtualLikeList</span>(<span class="hljs-params">{ items, startIndex, visibleCount }</span>) {
+  <span class="hljs-keyword">const</span> visibleItems = items.<span class="hljs-title function_">slice</span>(startIndex, startIndex + visibleCount); <span class="hljs-comment">// Sadece görünen kısmı alıyoruz</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+      {visibleItems.map((item) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{item.id}</span>&gt;</span>
+          {item.name} {/* Ekranda yalnızca bu aralıktaki elemanlar çizilir */}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">SimpleVirtualLikeList</span>;</code></pre><p>Bu gerçek bir virtualization kütüphanesi kadar gelişmiş değildir ama mantığı anlatır: Hepsini render etme, yalnızca görünen kısmı çiz.</p><h3 id="bolum-4">4) <code>useEffect</code>’i yanlış kullanmak</h3><p><code>useEffect</code>, React’te yan etki yönetmek için kullanılır. <strong>Yan etki</strong> derken kastedilen şey, component’in doğrudan render sürecine ait olmayan ama sonradan yapılması gereken işlerdir. Örneğin veri çekmek, event listener eklemek, localStorage okumak gibi işlemler.</p><p>Sorun şu: <code>useEffect</code> yanlış dependency ile kullanılırsa gereksiz tekrar çalışır. <strong>Dependency</strong>, effect’in hangi değerler değişince yeniden çalışacağını belirleyen listedir.</p><h4>Yanlış örnek</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState, useEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">UserList</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [users, setUsers] = <span class="hljs-title function_">useState</span>([]);
+  <span class="hljs-keyword">const</span> [search, setSearch] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">""</span>);
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-title function_">fetch</span>(<span class="hljs-string">"/api/users"</span>)
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> res.<span class="hljs-title function_">json</span>())
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> <span class="hljs-title function_">setUsers</span>(data)); <span class="hljs-comment">// Bu effect yanlışlıkla gereksiz yere tekrar çalışabilir</span>
+  }, [users]); <span class="hljs-comment">// users değişince tekrar çalışır, bu da döngü yaratabilir</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{search}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setSearch(e.target.value)} // Arama alanı sadece state güncelliyor
+      /&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {users.map((user) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{user.id}</span>&gt;</span>{user.name}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">UserList</span>;</code></pre><p>Burada <code>users</code> dependency olarak verildiği için <code>users</code> güncellenince effect tekrar çalışır. Bu da tekrar fetch atılmasına ve hatta sonsuz döngüye kadar gidebilir.</p><h4>Doğru kullanım</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState, useEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">UserList</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [users, setUsers] = <span class="hljs-title function_">useState</span>([]);
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-title function_">fetch</span>(<span class="hljs-string">"/api/users"</span>)
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> res.<span class="hljs-title function_">json</span>())
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> <span class="hljs-title function_">setUsers</span>(data)); <span class="hljs-comment">// Veri yalnızca component ilk yüklendiğinde çekilir</span>
+  }, []); <span class="hljs-comment">// Boş bağımlılık listesi = sadece ilk render sonrası çalışır</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+      {users.map((user) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{user.id}</span>&gt;</span>{user.name}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">UserList</span>;</code></pre><p>Buradaki temel hata çoğu zaman şudur: <code>useEffect</code> “ne zaman çalışmalı?” sorusuna net cevap vermeden kullanılır. Bu da performans sorunlarına ve gereksiz ağ isteğine yol açar.</p><h3 id="bolum-5">5) State’i yanlış yerde&#160;tutmak</h3><p>React’te state, component’in değişen verisini tutar. Ama state’i nereye koyduğun çok önemlidir. Çünkü state hangi component’te tutuluyorsa, o component ve onun altındaki tüm component’ler yeniden render olabilir.</p><p>En sık yapılan hata, çok küçük bir değişkeni en üst seviyede tutmaktır. Bu durumda sistem gereksiz yere geniş bir alanı yeniden çalıştırır.</p><h4>Yanlış örnek</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [inputValue, setInputValue] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">""</span>); <span class="hljs-comment">// Küçük bir state en üstte tutuluyor</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">SearchBox</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{inputValue}</span> <span class="hljs-attr">onChange</span>=<span class="hljs-string">{setInputValue}</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ExpensiveSection</span> /&gt;</span> {/* Input değiştikçe bu bölüm de etkilenebilir */}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">SearchBox</span>(<span class="hljs-params">{ value, onChange }</span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+      <span class="hljs-attr">value</span>=<span class="hljs-string">{value}</span>
+      <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> onChange(e.target.value)} // Her yazışta üst state güncelleniyor
+    /&gt;</span>
+  );
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">ExpensiveSection</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> items = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>({ <span class="hljs-attr">length</span>: <span class="hljs-number">5000</span> }, <span class="hljs-function">(<span class="hljs-params">_, i</span>) =&gt;</span> i);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      {items.map((item) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{item}</span>&gt;</span>{item}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><p>Buradaki sorun şu: <code>inputValue</code> yalnızca arama kutusunu ilgilendiriyor ama en üstte tutulduğu için daha geniş alanı etkiliyor.</p><h4>Daha iyi&#160;yaklaşım</h4><p>State’i sadece ihtiyaç duyulan yerde tutmak gerekir.</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">SearchBox</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ExpensiveSection</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">SearchBox</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [value, setValue] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">""</span>); <span class="hljs-comment">// State sadece bu component'e ait</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+      <span class="hljs-attr">value</span>=<span class="hljs-string">{value}</span>
+      <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setValue(e.target.value)} // Sadece bu alan yeniden çalışır
+    /&gt;</span>
+  );
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">ExpensiveSection</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> items = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>({ <span class="hljs-attr">length</span>: <span class="hljs-number">5000</span> }, <span class="hljs-function">(<span class="hljs-params">_, i</span>) =&gt;</span> i);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      {items.map((item) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{item}</span>&gt;</span>{item}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><p>Bu yaklaşımda arama kutusu değişse bile ağır çalışan bölüm doğrudan etkilenmez.</p><h3 id="bolum-6">Bu beş hata neden bu kadar&#160;yaygın?</h3><p>Çünkü React başlangıçta çok kolay görünür. Component yazarsın, state eklersin, ekrana basarsın. Uygulama çalışınca her şey yolunda sanırsın. Ama performans problemleri genellikle “çalışmıyor” diye bağırmaz. Sessiz gelir.</p><p>Bir uygulama şunları yapıyorsa bu hatalardan birini yaşıyor olma ihtimali yüksektir:</p><ul><li>yazı yazarken gecikme hissediliyorsa,</li><li>liste kaydırılırken kasıyorsa,</li><li>bir butona basınca fazla bölüm yeniden çalışıyorsa,</li><li>ağ istekleri gereksiz tekrar ediyorsa,</li><li>kullanıcı sayısı veya veri büyüdükçe sistem ağırlaşıyorsa.</li></ul><p>Bu noktada çözüm genelde daha fazla teknoloji eklemek değil, mevcut yapıyı doğru kurmaktır.</p><h3 id="bolum-7">Sonuç</h3><p>React’te performansın büyük kısmı ileri seviye numaralardan değil, temel hataları yapmamaktan gelir.</p><p>En kritik beş hata şunlardır:</p><ol><li>Gereksiz yeniden render üretmek</li><li>Fonksiyon ve nesneleri her render’da yeniden oluşturmak</li><li>Büyük listeleri tek seferde ekrana basmak</li><li><code>useEffect</code>’i yanlış kullanmak</li><li>State’i yanlış yerde tutmak</li></ol><p>Bu hataları düzeltmek, çoğu projede ek kütüphane eklemekten daha fazla fayda sağlar. Çünkü sorun çoğu zaman React’in sınırında değil, kullanım biçimindedir.</p><p>İyi bir React geliştiricisi, sadece component yazan kişi değildir. Aynı zamanda neyin gereksiz yere tekrar çalıştığını gören, state’i doğru konumlandıran ve kullanıcı deneyimini düşürmeden yapıyı sade tutabilen kişidir.</p>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/reactte-performans-sorunlar%C4%B1n%C4%B1n-80-i-bu-5-hatan%C4%B1n-sonucu-1d8b8d148b92" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:16:28.490Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #01 React Nedir? Neden Kullanılır?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:17:14.115Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #02 React ile Uygulama Mantığı</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-04-api-ve-veri-yonetimi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-25T08:36:35.869Z">25 Eki 2025</time><h3 class="article-title">React Serisi — #04 API ve Veri Yönetimi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

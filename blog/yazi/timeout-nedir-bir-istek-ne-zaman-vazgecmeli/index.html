@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Timeout Nedir? Bir İstek Ne Zaman Vazgeçmeli? — Hakan Cengiz</title>
+  <meta name="description" content="Yazılımda en kritik sorulardan biri şudur: Bir istek ne kadar beklemeli, ne zaman bırakmalı? Bu sorunun cevabı timeout kavramında gizlidir. Türkçede zaman aşımı diyebilir"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="Timeout Nedir? Bir İstek Ne Zaman Vazgeçmeli?"><meta property="og:description" content="Yazılımda en kritik sorulardan biri şudur: Bir istek ne kadar beklemeli, ne zaman bırakmalı? Bu sorunun cevabı timeout kavramında gizlidir. Türkçede zaman aşımı diyebilir">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*FFmEHZvYX8T19OTcaSawMg.png"><meta property="article:published_time" content="2026-04-24T21:24:24.916Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/timeout-nedir-bir-i%CC%87stek-ne-zaman-vazge%C3%A7meli-494a478e439b"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">18<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Timeout tam olarak nedir?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Timeout tam olarak nedir?</span></a><a href="#bolum-2" aria-label="Neden timeout gerekir?"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Neden timeout gerekir?</span></a><a href="#bolum-3" aria-label="Timeout ile cancellation aynı şey mi?"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Timeout ile cancellation aynı şey mi?</span></a><a href="#bolum-4" aria-label="Hangi durumlarda timeout kullanılmalı?"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Hangi durumlarda timeout kullanılmalı?</span></a><a href="#bolum-5" aria-label="Timeout koymazsan ne olur?"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Timeout koymazsan ne olur?</span></a><a href="#bolum-6" aria-label="Gerçek hayattan örnek"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Gerçek hayattan örnek</span></a><a href="#bolum-7" aria-label="Timeout her yerde aynı süre olmalı mı?"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Timeout her yerde aynı süre olmalı mı?</span></a><a href="#bolum-8" aria-label="Çok kısa timeout ne yapar?"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Çok kısa timeout ne yapar?</span></a><a href="#bolum-9" aria-label="Çok uzun timeout ne yapar?"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Çok uzun timeout ne yapar?</span></a><a href="#bolum-10" aria-label="Timeout ile retry ilişkisi"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Timeout ile retry ilişkisi</span></a><a href="#bolum-11" aria-label="Bir istek ne zaman vazgeçmeli?"><span class="toc-number" aria-hidden="true">11</span><span class="toc-title">Bir istek ne zaman vazgeçmeli?</span></a><a href="#bolum-12" aria-label="En kritik fark: beklemek ile ısrar etmek aynı şey değildir"><span class="toc-number" aria-hidden="true">12</span><span class="toc-title">En kritik fark: beklemek ile ısrar etmek aynı şey değildir</span></a><a href="#bolum-13" aria-label="C# ile timeout örneği"><span class="toc-number" aria-hidden="true">13</span><span class="toc-title">C# ile timeout örneği</span></a><a href="#bolum-14" aria-label="C# ile daha kontrollü timeout örneği"><span class="toc-number" aria-hidden="true">14</span><span class="toc-title">C# ile daha kontrollü timeout örneği</span></a><a href="#bolum-15" aria-label="Timeout ile “başarısızlık” aynı şey değil"><span class="toc-number" aria-hidden="true">15</span><span class="toc-title">Timeout ile “başarısızlık” aynı şey değil</span></a><a href="#bolum-16" aria-label="Timeout tasarlarken ne düşünmelisin?"><span class="toc-number" aria-hidden="true">16</span><span class="toc-title">Timeout tasarlarken ne düşünmelisin?</span></a><a href="#bolum-17" aria-label="En sık yapılan hatalar"><span class="toc-number" aria-hidden="true">17</span><span class="toc-title">En sık yapılan hatalar</span></a><a href="#bolum-18" aria-label="Kısa özet"><span class="toc-number" aria-hidden="true">18</span><span class="toc-title">Kısa özet</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*FFmEHZvYX8T19OTcaSawMg.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>Timeout Nedir? Bir İstek Ne Zaman Vazgeçmeli?</h1>
+          <div class="reader-meta"><span>time-out</span><i aria-hidden="true">·</i><time datetime="2026-04-24T21:24:24.916Z">25 Nisan 2026</time><i aria-hidden="true">·</i><span>~8 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*FFmEHZvYX8T19OTcaSawMg.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Yazılımda en kritik sorulardan biri şudur:<br>Bir istek ne kadar beklemeli, ne zaman bırakmalı?</p><p>Bu sorunun cevabı <strong>timeout</strong> kavramında gizlidir.<br>Türkçede <strong>zaman aşımı</strong> diyebiliriz.</p><p>Timeout, bir işlemin belirlenen süre içinde tamamlanmaması durumunda sistemin o işlemi artık beklememesi demektir.</p><p>Bu kavram basit görünür ama gerçekte çok önemlidir.<br>Çünkü sonsuza kadar bekleyen sistemler yavaşlar, kilitlenir, kaynak tüketir ve sonunda kullanıcı deneyimini bozar.</p><p>Asıl mesele şudur:<br>Her istek tamamlanmak zorunda değildir.<br>Bazı istekler, süresi geçtiğinde artık değer üretmez. O noktada vazgeçmek gerekir.</p><h3 id="bolum-1">Timeout tam olarak&#160;nedir?</h3><p>Timeout, bir işlemin belirli bir süre içinde sonuç vermemesi durumunda beklemeyi sonlandırma mekanizmasıdır.</p><p>Örneğin bir API çağrısı yapıyorsun.<br>Sunucu cevap vermezse, istemci sonsuza kadar beklemesin diye bir süre sınırı koyarsın.</p><p>Bu süre dolarsa işlem başarısız sayılır.</p><p>Buradaki <strong>istemci</strong>, isteği başlatan taraftır.<br>Bu bir uygulama, bir servis, bir tarayıcı ya da başka bir sistem olabilir.</p><p>Timeout’un temel amacı şudur:</p><ul><li>Sistemi sonsuz beklemeden korumak</li><li>Kaynakları serbest bırakmak</li><li>Hataları kontrol edilebilir hale getirmek</li><li>Kullanıcıya daha net bir deneyim sunmak</li></ul><h3 id="bolum-2">Neden timeout&#160;gerekir?</h3><p>Çünkü sistemler her zaman sağlıklı çalışmaz.</p><p>Bazen:</p><ul><li>Sunucu yavaşlar</li><li>Ağ gecikir</li><li>Veri tabanı kilitlenir</li><li>Üçüncü parti servis cevap vermez</li><li>İç servislerden biri takılır</li></ul><p>Eğer timeout yoksa, bir istek bekler, bekler, bekler.<br>Bu sırada thread, connection, socket veya başka kaynaklar boş yere tutulur.</p><p>Buradaki <strong>thread</strong>, işlem yapan çalışma akışı demektir.<br><strong>Connection</strong> ise iki sistem arasındaki bağlantıdır.</p><p>Bir sistemin bu kaynakları uzun süre kilitli tutması, domino etkisi yaratır.</p><p>Timeout sadece “beklemeyi kesmek” değildir.Aslında sistemin kendi sağlığını koruma yöntemidir.</p><p>Yani timeout şu mesajı verir: “Bu işlem artık geç kaldı. Ben başka işe geçiyorum.”</p><p>Bu küçük karar, büyük sistemleri ayakta tutar.</p><h3 id="bolum-3">Timeout ile cancellation aynı şey&#160;mi?</h3><p>Hayır, aynı şey değildir. Ama çok karıştırılır.</p><p><strong>Cancellation</strong> Türkçede <strong>iptal etme</strong> demektir.<br>Yani bir işlemi dışarıdan bilinçli şekilde durdurmaktır.</p><p>Timeout ise süre dolduğu için otomatik vazgeçmektir.</p><p>Farkı net söyleyelim:</p><ul><li>Timeout: Süre bitti, ben bıraktım.</li><li>Cancellation: Birisi ya da bir şey beni bilerek durdurdu.</li></ul><p>Bu ayrım önemlidir çünkü davranışları farklıdır.</p><h3 id="bolum-4">Hangi durumlarda timeout kullanılmalı?</h3><p>Timeout özellikle şu durumlarda gerekir:</p><ul><li>API çağrılarında</li><li>Veri tabanı bağlantılarında</li><li>Dış servis entegrasyonlarında</li><li>Dosya işlemlerinde</li><li>Kuyruk tüketiminde</li><li>Kullanıcıya cevap verilmesi gereken yerlerde</li></ul><p>Bir işlemin ne kadar bekleyebileceği önceden bilinmiyorsa timeout koymak gerekir.</p><p>Çünkü “belki gelir” diye sonsuz beklemek iyi bir strateji değildir.</p><h3 id="bolum-5">Timeout koymazsan ne&#160;olur?</h3><p>Sonuç çoğu zaman kötüdür:</p><ul><li>Uygulama yavaşlar</li><li>Kullanıcı ekran başında bekler</li><li>Thread havuzu dolar</li><li>Connection’lar tükenir</li><li>Bellek ve CPU gereksiz kullanılır</li><li>Zincirleme gecikmeler oluşur</li></ul><p>Buradaki <strong>thread pool</strong>, sistemin işlemleri yürütmek için kullandığı hazır çalışma havuzudur.<br>Bunu doldurursan yeni işler sıraya girer ve sistem nefes alamaz.</p><h3 id="bolum-6">Gerçek hayattan&#160;örnek</h3><p>Bir ödeme ekranı düşün.</p><p>Kullanıcı “Öde” butonuna basıyor.<br>Uygulama bankaya istek gönderiyor.<br>Bankanın servisleri yavaşlamış olabilir.</p><p>Eğer timeout yoksa kullanıcı ekranda dakikalarca bekler.<br>Bu kabul edilemez.</p><p>Ama makul bir timeout varsa sistem der ki:</p><p>“Bu işlem beklediğim sürede sonuç vermedi. Tekrar deneyebiliriz.” İşte iyi sistem davranışı budur.</p><h3 id="bolum-7">Timeout her yerde aynı süre olmalı&#160;mı?</h3><p>Hayır.</p><p>Timeout süresi işlemin türüne göre değişir.</p><p>Örneğin:</p><ul><li>Basit bir profil sorgusu için kısa timeout</li><li>Büyük rapor üretimi için daha uzun timeout</li><li>Dosya indirme için ortalama timeout</li><li>Kritik ödeme işlemi için dikkatli belirlenmiş timeout</li></ul><p>Yani tek bir sayı her yere uymaz.</p><p>Burada önemli olan, işlemden beklenen süreyi gerçekçi belirlemektir.</p><h3 id="bolum-8">Çok kısa timeout ne&#160;yapar?</h3><p>Aşırı kısa timeout da sorun çıkarır.</p><p>İşlem aslında normal sürede tamamlanabilecekken, sen çok erken vazgeçersen gereksiz hata üretirsin.</p><p>Bu da kötü bir deneyimdir.</p><p>Yani amaç en kısa süreyi koymak değil, <strong>mantıklı süreyi koymaktır</strong>.</p><h3 id="bolum-9">Çok uzun timeout ne&#160;yapar?</h3><p>Bu da kötü olabilir. Çünkü işlem bozuksa, çok uzun süre beklemek sistemi yorar. Kullanıcı için de gereksiz bir bekleyiş olur.</p><p>Doğru timeout, ne erken pes eden ne de gereksiz inat eden süredir.</p><p>Bu denge önemlidir.</p><h3 id="bolum-10">Timeout ile retry&#160;ilişkisi</h3><p><strong>Retry</strong>, yeniden denemek demektir.</p><p>Timeout dolduğunda sistem bazen yeniden deneyebilir.<br>Ama burada dikkatli olmak gerekir.</p><p>Çünkü her retry güvenli değildir.</p><p>Örneğin aynı ödemeyi tekrar denemek, çift çekime yol açabilir.<br>Bu yüzden timeout ve retry birlikte tasarlanmalıdır.</p><p>Buradaki kritik nokta şudur:<br>Timeout bir işlemi durdurur, retry ise ona ikinci şans verir.<br>Ama ikinci şans, her zaman masum değildir.</p><h3 id="bolum-11">Bir istek ne zaman vazgeçmeli?</h3><p>En sade cevap şu:</p><p>İşlem, bekleme süresi işin değerini aşmaya başladığında vazgeçmelidir.</p><p>Daha açık söyleyelim:</p><ul><li>İşlem artık kullanıcı için anlamlı değilse</li><li>Sistem kaynakları gereksiz yere tutuluyorsa</li><li>Sonucun geç gelmesi hiçbir şeyi değiştirmiyorsa</li><li>Daha yeni bir istek daha değerliyse</li><li>Gecikme iş mantığını bozuyorsa</li></ul><p>o zaman vazgeçmek doğrudur.</p><p>Bu, başarısızlık değil; bilinçli tasarımdır.</p><h3 id="bolum-12">En kritik fark: beklemek ile ısrar etmek aynı şey&#160;değildir</h3><p>Bazı sistemler “ne olursa olsun bekleyelim” mantığıyla yazılır.<br>Bu çok tehlikelidir.</p><p>Çünkü beklemek bazen sabır değil, kaynak israfıdır.</p><p>İyi sistemler şunu bilir:</p><ul><li>Her iş sonsuza kadar beklenmez</li><li>Her gecikme değerli değildir</li><li>Bazı istekler zamanında gelmezse artık geç kalmıştır</li></ul><p>Bu bakış açısı seni daha olgun bir sistem tasarımına götürür.</p><h3 id="bolum-13">C# ile timeout&#160;örneği</h3><p>Aşağıdaki örnek, bir HTTP isteğine timeout koymayı gösterir.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System; <span class="hljs-comment">// Temel sistem sınıflarını kullanmak için eklenir.</span>
+<span class="hljs-keyword">using</span> System.Net.Http; <span class="hljs-comment">// HTTP istekleri göndermek için gerekli sınıfları içerir.</span>
+<span class="hljs-keyword">using</span> System.Threading.Tasks; <span class="hljs-comment">// Asenkron işlemler için gerekli türleri içerir.</span>
+<span class="hljs-keyword">using</span> System.Threading; <span class="hljs-comment">// CancellationToken gibi iptal mekanizmaları için kullanılır.</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ApiClient</span> <span class="hljs-comment">// HTTP istekleri gönderen bir istemci sınıfı tanımlanır.</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> HttpClient _httpClient; <span class="hljs-comment">// Tekrar kullanılacak HttpClient nesnesi saklanır.</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ApiClient</span>() <span class="hljs-comment">// Sınıfın kurucu metodu tanımlanır.</span></span>
+    {
+        _httpClient = <span class="hljs-keyword">new</span> HttpClient(); <span class="hljs-comment">// HttpClient nesnesi oluşturulur.</span>
+        _httpClient.Timeout = TimeSpan.FromSeconds(<span class="hljs-number">5</span>); <span class="hljs-comment">// İstekler için 5 saniyelik timeout belirlenir.</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;<span class="hljs-built_in">string</span>&gt; <span class="hljs-title">GetDataAsync</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> url</span>) <span class="hljs-comment">// Verilen URL'den veri alan asenkron metot tanımlanır.</span></span>
+    {
+        <span class="hljs-keyword">try</span> <span class="hljs-comment">// Olası timeout ve ağ hatalarını yakalamak için try bloğu açılır.</span>
+        {
+            HttpResponseMessage response = <span class="hljs-keyword">await</span> _httpClient.GetAsync(url); <span class="hljs-comment">// HTTP GET isteği gönderilir ve cevap beklenir.</span>
+            response.EnsureSuccessStatusCode(); <span class="hljs-comment">// HTTP hata kodu varsa istisna fırlatılır.</span>
+            <span class="hljs-built_in">string</span> content = <span class="hljs-keyword">await</span> response.Content.ReadAsStringAsync(); <span class="hljs-comment">// Gelen cevap metin olarak okunur.</span>
+            <span class="hljs-keyword">return</span> content; <span class="hljs-comment">// Okunan içerik geri döndürülür.</span>
+        }
+        <span class="hljs-keyword">catch</span> (TaskCanceledException) <span class="hljs-comment">// İstek zaman aşımına uğrarsa bu hata yakalanır.</span>
+        {
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"İstek zaman aşımına uğradı."</span>; <span class="hljs-comment">// Kullanıcıya anlaşılır bir mesaj döndürülür.</span>
+        }
+        <span class="hljs-keyword">catch</span> (HttpRequestException ex) <span class="hljs-comment">// Ağ veya HTTP seviyesinde hata olursa bu hata yakalanır.</span>
+        {
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"HTTP hatası oluştu: "</span> + ex.Message; <span class="hljs-comment">// Hata bilgisi döndürülür.</span>
+        }
+    }
+}</code></pre><p>Bu örnekte <code>_httpClient.Timeout = TimeSpan.FromSeconds(5);</code> satırı, isteğin en fazla 5 saniye bekleyeceğini söyler.</p><p>Süre dolarsa <code>TaskCanceledException</code> yakalanır.<br>Bu, işlemin artık devam etmediği anlamına gelir.</p><p>Buradaki <strong>exception</strong>, hata fırlatma mekanizmasıdır.<br>Yani işlem normal devam edemediğinde ortaya çıkan durumdur.</p><h3 id="bolum-14">C# ile daha kontrollü timeout&#160;örneği</h3><p>Bazen sadece HttpClient timeout yetmez.<br>Daha kontrollü bir yapı için <code>CancellationTokenSource</code> kullanılır.</p><p>Buradaki <strong>CancellationTokenSource</strong>, iptal sinyali üreten yapıdır.<br><strong>CancellationToken</strong> ise bu iptal sinyalini taşıyan nesnedir.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System; <span class="hljs-comment">// Temel sistem sınıflarını kullanmak için eklenir.</span>
+<span class="hljs-keyword">using</span> System.Net.Http; <span class="hljs-comment">// HTTP istemcisi için gerekli sınıfları içerir.</span>
+<span class="hljs-keyword">using</span> System.Threading; <span class="hljs-comment">// CancellationToken ve CancellationTokenSource için kullanılır.</span>
+<span class="hljs-keyword">using</span> System.Threading.Tasks; <span class="hljs-comment">// Asenkron metotlar için gereklidir.</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">TimeoutExample</span> <span class="hljs-comment">// Timeout örneğini içeren sınıf tanımlanır.</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> HttpClient _httpClient = <span class="hljs-keyword">new</span> HttpClient(); <span class="hljs-comment">// HTTP istekleri için istemci oluşturulur.</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;<span class="hljs-built_in">string</span>&gt; <span class="hljs-title">GetWithCustomTimeoutAsync</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> url</span>) <span class="hljs-comment">// Özel timeout ile veri çeken asenkron metot tanımlanır.</span></span>
+    {
+        <span class="hljs-keyword">using</span> (CancellationTokenSource cts = <span class="hljs-keyword">new</span> CancellationTokenSource()) <span class="hljs-comment">// İptal kaynağı oluşturulur.</span>
+        {
+            cts.CancelAfter(TimeSpan.FromSeconds(<span class="hljs-number">3</span>)); <span class="hljs-comment">// 3 saniye sonra otomatik iptal tetiklenir.</span>
+
+            <span class="hljs-keyword">try</span> <span class="hljs-comment">// Olası iptal ve ağ hatalarını yakalamak için try bloğu açılır.</span>
+            {
+                HttpResponseMessage response = <span class="hljs-keyword">await</span> _httpClient.GetAsync(url, cts.Token); <span class="hljs-comment">// İstek gönderilir ve iptal token'ı ile takip edilir.</span>
+                response.EnsureSuccessStatusCode(); <span class="hljs-comment">// Başarılı olmayan HTTP kodlarında hata fırlatılır.</span>
+                <span class="hljs-built_in">string</span> content = <span class="hljs-keyword">await</span> response.Content.ReadAsStringAsync(); <span class="hljs-comment">// Cevap içeriği okunur.</span>
+                <span class="hljs-keyword">return</span> content; <span class="hljs-comment">// İçerik geri döndürülür.</span>
+            }
+            <span class="hljs-keyword">catch</span> (OperationCanceledException) <span class="hljs-comment">// Süre dolduğu için işlem iptal edilirse bu hata yakalanır.</span>
+            {
+                <span class="hljs-keyword">return</span> <span class="hljs-string">"İşlem zaman aşımı nedeniyle durduruldu."</span>; <span class="hljs-comment">// Anlaşılır bir mesaj döndürülür.</span>
+            }
+            <span class="hljs-keyword">catch</span> (HttpRequestException ex) <span class="hljs-comment">// HTTP seviyesindeki hatalar yakalanır.</span>
+            {
+                <span class="hljs-keyword">return</span> <span class="hljs-string">"HTTP hatası oluştu: "</span> + ex.Message; <span class="hljs-comment">// Hata mesajı geri verilir.</span>
+            }
+        }
+    }
+}</code></pre><p>Bu örnekte işlem, 3 saniye sonra bilinçli olarak durdurulur.<br>Bu daha esnek bir yaklaşımdır.</p><p>Neden? Çünkü iptal mantığını sen yönetirsin.</p><h3 id="bolum-15">Timeout ile “başarısızlık” aynı şey&#160;değil</h3><p>Bir işlem timeout’a düşebilir ama bu, her zaman sistemin bozuk olduğu anlamına gelmez.</p><p>Bazen sadece şu an için çok yavaştır.<br>&#160;Bazen dış servis yanıt vermiyordur.<br>&#160;Bazen ağ gecikmiştir.<br>&#160;Bazen işlem gerçekten artık gereksizdir.</p><p>Yani timeout, duruma göre bir koruma mekanizmasıdır.</p><h3 id="bolum-16">Timeout tasarlarken ne düşünmelisin?</h3><p>İyi bir timeout ayarı için şu sorular sorulmalı:</p><ul><li>Bu işlem normalde ne kadar sürer?</li><li>Gecikirse kullanıcı ne hisseder?</li><li>Bu işlem yeniden denenebilir mi?</li><li>Timeout olursa veri tutarlılığı bozulur mu?</li><li>İşlem yarım kalırsa ne olur?</li></ul><p>Bu sorulara cevap vermeden konulan timeout, genellikle ya çok kısa ya çok uzun olur.</p><h3 id="bolum-17">En sık yapılan&#160;hatalar</h3><h4>1. Her yere aynı timeout’u koymak</h4><p>Yanlış. İşlemler farklıdır.</p><h4>2. Timeout’u çok uzun&#160;tutmak</h4><p>Sistemi gereksiz yere bekletir.</p><h4>3. Timeout’u çok kısa&#160;tutmak</h4><p>Sağlıklı istekleri bile başarısız yapar.</p><h4>4. Timeout ile retry’ı körlemesine birleştirmek</h4><p>Çift işlem riskini artırır.</p><h4>5. Kritik işlemlerde timeout sonrası ne olacağını düşünmemek</h4><p>Yarım kalan işler sorun çıkarır.</p><p>Timeout, çoğu zaman “işlem tamamlanamadı” mesajından çok daha fazlasıdır.<br>&#160;Aslında sistemin, kendi sınırını bilme becerisidir.</p><p>İyi yazılmış bir uygulama, her isteği kahramanca sonuna kadar kovalamaz.<br>Bazen en doğru davranış, zamanında geri çekilmektir.</p><h3 id="bolum-18">Kısa özet</h3><p>Timeout:</p><ul><li>Bir işlemin bekleme süresini sınırlar</li><li>Sonsuz beklemeyi engeller</li><li>Kaynak tüketimini azaltır</li><li>Kullanıcı deneyimini korur</li><li>Retry ve cancellation ile birlikte düşünülmelidir</li></ul><p>Bir istek, artık sonuç üretme ihtimali düşükse ya da bekleme maliyeti değeri aşıyorsa vazgeçilmelidir.</p>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/timeout-nedir-bir-i%CC%87stek-ne-zaman-vazge%C3%A7meli-494a478e439b" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-da-middleware-akisi-istek-sisteme-nasil-girer-nasil-cikar/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*FPYoxoJcdhm5Jv88tPSdbw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*FPYoxoJcdhm5Jv88tPSdbw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-03-28T19:31:14.879Z">28 Mar 2026</time><h3 class="article-title">.NET Core’da Middleware Akışı: İstek Sisteme Nasıl Girer, Nasıl Çıkar?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/eventually-consistent-nedir-verinin-bir-sure-yanlis-olmasi-nasil-dogru-olabilir/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*1HExMfwYDL-NP8rBABxctA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*1HExMfwYDL-NP8rBABxctA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-04-27T19:28:54.102Z">27 Nis 2026</time><h3 class="article-title">Eventually Consistent Nedir? Verinin Bir Süre Yanlış Olması Nasıl Doğru Olabilir?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/idempotency-nedir-ayni-istegi-10-kere-gonderirsen-ne-olur/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*htdMuwU4viKqmecJ4cwkdQ.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*htdMuwU4viKqmecJ4cwkdQ.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-04-23T18:50:26.747Z">23 Nis 2026</time><h3 class="article-title">Idempotency Nedir? Aynı İsteği 10 Kere Gönderirsen Ne Olur?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

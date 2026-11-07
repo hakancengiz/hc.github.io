@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flexbox Nedir? Ortalamaya Çalışırken Neden Deliriyorsun? — Hakan Cengiz</title>
+  <meta name="description" content="CSS öğrenen çoğu kişi şu noktada takılır: “Bir şeyi ortaya almak neden bu kadar zor?” Aslında sorun senin yanlış yapman değil. Sorun, sayfanın yerleşim mantığını tam otur"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="Flexbox Nedir? Ortalamaya Çalışırken Neden Deliriyorsun?"><meta property="og:description" content="CSS öğrenen çoğu kişi şu noktada takılır: “Bir şeyi ortaya almak neden bu kadar zor?” Aslında sorun senin yanlış yapman değil. Sorun, sayfanın yerleşim mantığını tam otur">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*yyUEmYP6mnXBt9apOdpJcg.png"><meta property="article:published_time" content="2026-05-01T18:04:57.135Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/flexbox-nedir-ortalamaya-%C3%A7al%C4%B1%C5%9F%C4%B1rken-neden-deliriyorsun-6054ec5a572f"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">16<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Flexbox ne işe yarar?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Flexbox ne işe yarar?</span></a><a href="#bolum-2" aria-label="Flexbox’ın temel mantığı"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Flexbox’ın temel mantığı</span></a><a href="#bolum-3" aria-label="En çok karıştırılan iki özellik: justify-content ve align-items"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">En çok karıştırılan iki özellik: justify-content ve align-items</span></a><a href="#bolum-4" aria-label="justify-content"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">justify-content</span></a><a href="#bolum-5" aria-label="align-items"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">align-items</span></a><a href="#bolum-6" aria-label="Flexbox neden bazen çalışmıyor gibi görünür?"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Flexbox neden bazen çalışmıyor gibi görünür?</span></a><a href="#bolum-7" aria-label="Basit bir merkezleme örneği"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Basit bir merkezleme örneği</span></a><a href="#bolum-8" aria-label="Flex-direction neden önemli?"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Flex-direction neden önemli?</span></a><a href="#bolum-9" aria-label="Flex-wrap ne işe yarar?"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Flex-wrap ne işe yarar?</span></a><a href="#bolum-10" aria-label="Kartları düzgün yerleştirme örneği"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Kartları düzgün yerleştirme örneği</span></a><a href="#bolum-11" aria-label="Flex shorthand nedir?"><span class="toc-number" aria-hidden="true">11</span><span class="toc-title">Flex shorthand nedir?</span></a><a href="#bolum-12" aria-label="Flexbox ile sık yapılan hatalar"><span class="toc-number" aria-hidden="true">12</span><span class="toc-title">Flexbox ile sık yapılan hatalar</span></a><a href="#bolum-13" aria-label="Flexbox ile Grid arasındaki fark"><span class="toc-number" aria-hidden="true">13</span><span class="toc-title">Flexbox ile Grid arasındaki fark</span></a><a href="#bolum-14" aria-label="Flexbox neden bu kadar önemli?"><span class="toc-number" aria-hidden="true">14</span><span class="toc-title">Flexbox neden bu kadar önemli?</span></a><a href="#bolum-15" aria-label="Sonuç"><span class="toc-number" aria-hidden="true">15</span><span class="toc-title">Sonuç</span></a><a href="#bolum-16" aria-label="Bonus: Flexbox ile Modern Kart Arayüzü Örneği"><span class="toc-number" aria-hidden="true">16</span><span class="toc-title">Bonus: Flexbox ile Modern Kart Arayüzü Örneği</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*yyUEmYP6mnXBt9apOdpJcg.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>Flexbox Nedir? Ortalamaya Çalışırken Neden Deliriyorsun?</h1>
+          <div class="reader-meta"><span>flexbox</span><i aria-hidden="true">·</i><time datetime="2026-05-01T18:04:57.135Z">1 Mayıs 2026</time><i aria-hidden="true">·</i><span>~12 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*yyUEmYP6mnXBt9apOdpJcg.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>CSS öğrenen çoğu kişi şu noktada takılır:<br>“Bir şeyi ortaya almak neden bu kadar zor?”</p><p>Aslında sorun senin yanlış yapman değil. Sorun, sayfanın yerleşim mantığını tam oturtmadan ilerlemen olabilir.<br>İşte Flexbox tam burada devreye girer.</p><p>Flexbox, Türkçesiyle kabaca <strong>esnek kutu düzeni</strong> demektir.<br>Bu sistem, bir kapsayıcının içindeki öğeleri hizalamayı, dağıtmayı ve sıralamayı kolaylaştırır.</p><p>En önemli fark şu: Flexbox, her şeyi bir anda sihirli şekilde çözmez.<br>Ama doğru mantıkla kullanıldığında, özellikle yatay ya da dikey hizalamada inanılmaz rahatlık sağlar.</p><p>Buradaki “kapsayıcı” kelimesi, içindeki öğeleri düzenleyen ana kutu demektir. “Öğe” ise o kapsayıcının içindeki çocuk elemanlardır.</p><h3 id="bolum-1">Flexbox ne işe&#160;yarar?</h3><p>Flexbox, bir alan içindeki elemanları şu işlerde düzenlemek için kullanılır:</p><ul><li>Yan yana dizmek</li><li>Ortalamak</li><li>Aralarında boşluk bırakmak</li><li>Taşınca yeni satıra geçirmek</li><li>Ekran boyutuna göre daha esnek davranmak</li></ul><p>Burada “esnek” kelimesi çok önemli.<br>Çünkü Flexbox, elemanların sabit bir kalıba zorla sokulmasından ziyade, alanın durumuna göre uyumlu davranmasını sağlar.</p><p>Bu yüzden birçok modern arayüzde Flexbox kullanılır.<br>Menüler, kart listeleri, buton grupları, header alanları, küçük responsive tasarımlar… Hepsi için çok uygundur.</p><h3 id="bolum-2">Flexbox’ın temel&#160;mantığı</h3><p>Flexbox’ı anlamak için iki kavramı net bilmek gerekir:</p><ul><li><strong>Ana eksen</strong>: Elemanların dizildiği ana yön</li><li><strong>Çapraz eksen</strong>: Ana eksene dik olan yön</li></ul><p>Buradaki “eksen”, yön anlamına gelir.<br>Yani Flexbox’ta hizalama yaparken “sağa-sola mı çalışıyorum, yukarı-aşağı mı?” sorusunun cevabı çok önemlidir.</p><p>Varsayılan durumda Flexbox yatay çalışır.<br>Yani elemanlar soldan sağa dizilir.</p><p>Ama <code>flex-direction</code> ile bunu değiştirebilirsin.<br>Mesela sütun düzenine geçersen ana eksen dikey hale gelir.</p><p>İşte çoğu karışıklık burada başlar.<br>İnsanlar “neden <code>justify-content</code> işe yaramadı?” diye sorar.<br>Çünkü hangi eksenin ana eksen olduğunu bilmeden bu özellikleri kullanırlar.</p><h3 id="bolum-3">En çok karıştırılan iki özellik: justify-content ve align-items</h3><p>Bu ikisi çok önemli.</p><h3 id="bolum-4"><code>justify-content</code></h3><p>Ana eksen üzerindeki hizalamayı kontrol eder.</p><h3 id="bolum-5"><code>align-items</code></h3><p>Çapraz eksen üzerindeki hizalamayı kontrol eder.</p><p>Bu ayrım ilk başta kafa karıştırır.<br>Ama bir kere oturunca çok şey değişir.</p><p>Şunu akılda tut:</p><ul><li>Ana eksen boyunca hizalama = <code>justify-content</code></li><li>Çapraz eksen boyunca hizalama = <code>align-items</code></li></ul><p>Eğer yön yataysa, yatay hizalama <code>justify-content</code> ile çözülür.<br>Dikey ortalama ise <code>align-items</code> ile gelir.</p><p>Ama yön değişirse bu mantık da eksene göre değişir.<br>Özelliklerin anlamı sabit görünür, ama sonuç eksene göre değişir.</p><h3 id="bolum-6">Flexbox neden bazen çalışmıyor gibi&#160;görünür?</h3><p>Çünkü çoğu kişi sadece özelliği yazar, konteynerin davranışını düşünmez.</p><p>En sık yapılan hatalar şunlardır:</p><ul><li>Flex özelliğini yanlış elemana yazmak</li><li>Container yerine item’a <code>justify-content</code> vermek</li><li>Ana ekseni yanlış anlamak</li><li>Yüksekliği olmayan bir alanda dikey ortalama beklemek</li><li><code>flex-direction</code> değiştiği halde eksen mantığını değiştirmemek</li></ul><p>Bu son madde çok önemli.<br><code>flex-direction</code> değişince eksenler de düşünsel olarak değişir.</p><p>Yani “ben dikey ortalamak istiyorum” diyorsan, önce container’ın hangi yönde akacağını bilmen gerekir.</p><h3 id="bolum-7">Basit bir merkezleme örneği</h3><p>En klasik sorun budur: Bir kutuyu tam ortaya almak.</p><p>Aşağıdaki örnekte hem yatay hem dikey ortalama yapıyoruz.</p><pre><code class="hljs language-xml"><span class="hljs-comment">&lt;!-- Sayfanın temel HTML yapısı başlar --&gt;</span>
+<span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span> <span class="hljs-comment">&lt;!-- Tarayıcıya bunun HTML5 belgesi olduğunu söyler --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"tr"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Sayfanın dili Türkçe olarak belirtilir --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span> <span class="hljs-comment">&lt;!-- Sayfanın başlık ve stil gibi meta bilgileri burada tutulur --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Türkçe karakterlerin doğru görünmesini sağlar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Mobil cihazlarda doğru ölçekleme sağlar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Flexbox Merkezleme Örneği<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span> <span class="hljs-comment">&lt;!-- Tarayıcı sekmesinde görünen başlık belirlenir --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css"> <span class="hljs-comment">/* CSS stilleri burada başlar */</span>
+        <span class="hljs-selector-tag">body</span> { <span class="hljs-comment">/* Tüm sayfa gövdesi için stil tanımlanır */</span>
+            <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>; <span class="hljs-comment">/* Varsayılan dış boşluk kaldırılır */</span>
+            <span class="hljs-attribute">height</span>: <span class="hljs-number">100vh</span>; <span class="hljs-comment">/* Sayfa yüksekliği ekran yüksekliği kadar yapılır */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Body elemanı flex container haline getirilir */</span>
+            <span class="hljs-attribute">justify-content</span>: center; <span class="hljs-comment">/* İçindeki öğe ana eksende ortalanır */</span>
+            <span class="hljs-attribute">align-items</span>: center; <span class="hljs-comment">/* İçindeki öğe çapraz eksende ortalanır */</span>
+            <span class="hljs-attribute">font-family</span>: Arial, sans-serif; <span class="hljs-comment">/* Yazı tipi ayarlanır */</span>
+            <span class="hljs-attribute">background</span>: <span class="hljs-number">#f4f4f4</span>; <span class="hljs-comment">/* Arka plan rengi verilir */</span>
+        } <span class="hljs-comment">/* Body stil bloğu biter */</span>
+
+        <span class="hljs-selector-class">.box</span> { <span class="hljs-comment">/* Ortalanacak kutu için stil tanımlanır */</span>
+            <span class="hljs-attribute">width</span>: <span class="hljs-number">300px</span>; <span class="hljs-comment">/* Kutunun genişliği belirlenir */</span>
+            <span class="hljs-attribute">height</span>: <span class="hljs-number">150px</span>; <span class="hljs-comment">/* Kutunun yüksekliği belirlenir */</span>
+            <span class="hljs-attribute">background</span>: white; <span class="hljs-comment">/* Arka plan rengi beyaz yapılır */</span>
+            <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">12px</span>; <span class="hljs-comment">/* Köşeler yumuşatılır */</span>
+            <span class="hljs-attribute">box-shadow</span>: <span class="hljs-number">0</span> <span class="hljs-number">4px</span> <span class="hljs-number">12px</span> <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>); <span class="hljs-comment">/* Hafif gölge eklenir */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Kutunun içi de flex yapılır */</span>
+            <span class="hljs-attribute">justify-content</span>: center; <span class="hljs-comment">/* İçerik yatayda ortalanır */</span>
+            <span class="hljs-attribute">align-items</span>: center; <span class="hljs-comment">/* İçerik dikeyde ortalanır */</span>
+            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* Yazı boyutu ayarlanır */</span>
+            <span class="hljs-attribute">font-weight</span>: bold; <span class="hljs-comment">/* Yazı kalınlaştırılır */</span>
+        } <span class="hljs-comment">/* Box stil bloğu biter */</span>
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span> <span class="hljs-comment">&lt;!-- CSS stilleri biter --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span> <span class="hljs-comment">&lt;!-- Head bölümü biter --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span> <span class="hljs-comment">&lt;!-- Görünen içerik burada başlar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"box"</span>&gt;</span>Ortadayım<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Ortalanmış kutu ekrana yerleştirilir --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span> <span class="hljs-comment">&lt;!-- Body bölümü biter --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span> <span class="hljs-comment">&lt;!-- HTML belgesi sona erer --&gt;</span></code></pre><p>Bu örnekte dikkat etmen gereken şey şu:<br><code>justify-content</code> ve <code>align-items</code> sadece flex container üzerinde çalışır.<br>Yani bu özellikleri ortalamak istediğin elemana değil, onu taşıyan elemana yazarsın.</p><p>İşte çok kişi burada hata yapar.<br>Kutuyu ortalamak ister, ama özelliği kutunun içine yazar. Sonra “çalışmıyor” der.</p><h3 id="bolum-8">Flex-direction neden&#160;önemli?</h3><p><code>flex-direction</code>, elemanların hangi yönde dizileceğini belirler.</p><p>En sık kullanılan değerler:</p><ul><li><code>row</code>: soldan sağa</li><li><code>column</code>: yukarıdan aşağıya</li></ul><p>Buradaki “row” satır demektir.<br>&#160;“column” sütun demektir.</p><p>Bu özellik değişince ana eksen de değişir.<br>İşte en kafa karıştıran nokta budur.</p><p>Mesela <code>row</code> kullanıyorsan:</p><ul><li>ana eksen yataydır</li><li><code>justify-content</code> yatay hizalar</li><li><code>align-items</code> dikey hizalar</li></ul><p>Ama <code>column</code> kullanırsan:</p><ul><li>ana eksen dikey olur</li><li><code>justify-content</code> dikey hizalar</li><li><code>align-items</code> yatay hizalar</li></ul><p>Bu yüzden aynı kod, farklı yönlerde farklı hissettirebilir.</p><h3 id="bolum-9">Flex-wrap ne işe&#160;yarar?</h3><p><code>flex-wrap</code>, öğelerin tek satırda mı kalacağını yoksa taşınca yeni satıra mı geçeceğini belirler.</p><p>“Wrap” kelimesi, sarma ya da satır kırma gibi düşünebilirsin.</p><p>Varsayılan davranış çoğu durumda <code>nowrap</code> gibidir; yani elemanlar tek satırda kalmaya çalışır.<br>Ama ekran daralınca bu bazen kötü görünür.</p><p>Özellikle kart listelerinde <code>flex-wrap: wrap;</code> çok işe yarar.<br>Böylece alan daraldığında öğeler alt satıra geçer.</p><h3 id="bolum-10">Kartları düzgün yerleştirme örneği</h3><p>Aşağıdaki örnekte kartları yan yana diziyor, aralarında boşluk bırakıyor ve dar ekranda alt satıra geçmelerini sağlıyoruz.</p><pre><code class="hljs language-xml"><span class="hljs-comment">&lt;!-- HTML belgesi başlar --&gt;</span>
+<span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span> <span class="hljs-comment">&lt;!-- Tarayıcıya HTML5 kullanıldığını bildirir --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"tr"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Sayfa dili Türkçe olarak tanımlanır --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span> <span class="hljs-comment">&lt;!-- Başlık ve stil bilgileri burada yer alır --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Karakter kodlamasını doğru ayarlar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Mobil uyumlu görünüm sağlar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Flexbox Kart Düzeni<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span> <span class="hljs-comment">&lt;!-- Sekme başlığı belirlenir --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css"> <span class="hljs-comment">/* CSS başlangıcı */</span>
+        <span class="hljs-selector-class">.container</span> { <span class="hljs-comment">/* Kartları taşıyan ana kapsayıcı tanımlanır */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Kapsayıcı flex container yapılır */</span>
+            <span class="hljs-attribute">flex-wrap</span>: wrap; <span class="hljs-comment">/* Kartlar sığmazsa alt satıra geçer */</span>
+            <span class="hljs-attribute">gap</span>: <span class="hljs-number">16px</span>; <span class="hljs-comment">/* Kartlar arasında boşluk bırakılır */</span>
+            <span class="hljs-attribute">justify-content</span>: center; <span class="hljs-comment">/* Kartlar yatayda ortalanır */</span>
+            <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* İç boşluk verilir */</span>
+            <span class="hljs-attribute">background</span>: <span class="hljs-number">#f7f7f7</span>; <span class="hljs-comment">/* Arka plan rengi verilir */</span>
+        } <span class="hljs-comment">/* Container stili biter */</span>
+
+        <span class="hljs-selector-class">.card</span> { <span class="hljs-comment">/* Her kart için stil tanımlanır */</span>
+            <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>; <span class="hljs-comment">/* Kart genişliği belirlenir */</span>
+            <span class="hljs-attribute">height</span>: <span class="hljs-number">120px</span>; <span class="hljs-comment">/* Kart yüksekliği belirlenir */</span>
+            <span class="hljs-attribute">background</span>: white; <span class="hljs-comment">/* Kart arka planı beyaz yapılır */</span>
+            <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">10px</span>; <span class="hljs-comment">/* Köşeler yuvarlatılır */</span>
+            <span class="hljs-attribute">box-shadow</span>: <span class="hljs-number">0</span> <span class="hljs-number">2px</span> <span class="hljs-number">8px</span> <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.08</span>); <span class="hljs-comment">/* Hafif gölge eklenir */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Kart içeriği de flex ile yönetilir */</span>
+            <span class="hljs-attribute">justify-content</span>: center; <span class="hljs-comment">/* Kart içindeki yazı yatayda ortalanır */</span>
+            <span class="hljs-attribute">align-items</span>: center; <span class="hljs-comment">/* Kart içindeki yazı dikeyde ortalanır */</span>
+            <span class="hljs-attribute">font-family</span>: Arial, sans-serif; <span class="hljs-comment">/* Yazı tipi ayarlanır */</span>
+            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>; <span class="hljs-comment">/* Yazı boyutu ayarlanır */</span>
+        } <span class="hljs-comment">/* Card stili biter */</span>
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span> <span class="hljs-comment">&lt;!-- CSS biter --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span> <span class="hljs-comment">&lt;!-- Head biter --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span> <span class="hljs-comment">&lt;!-- Görünen sayfa burada başlar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"container"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Kartların bulunduğu ana alan açılır --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card"</span>&gt;</span>Kart 1<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- İlk kart eklenir --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card"</span>&gt;</span>Kart 2<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- İkinci kart eklenir --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card"</span>&gt;</span>Kart 3<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Üçüncü kart eklenir --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card"</span>&gt;</span>Kart 4<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Dördüncü kart eklenir --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Ana kapsayıcı kapanır --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span> <span class="hljs-comment">&lt;!-- Body kapanır --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span> <span class="hljs-comment">&lt;!-- HTML kapanır --&gt;</span></code></pre><p>Burada <code>gap</code> çok rahatlatıcı bir özelliktir.<br>Eskiden insanlar kartlar arasına tek tek margin verirdi.<br>Şimdi <code>gap</code> ile bu iş çok daha temiz yapılır.</p><p>Layout kurmak için eskiden çok satır yazarken, Flexbox ile aynı işi daha anlaşılır ve daha az kodla yapabilirsin.</p><h3 id="bolum-11">Flex shorthand nedir?</h3><p><strong>Shorthand</strong>, Türkçede “kısa yazım” demektir.</p><p>Flexbox’ta sık kullanılan bir kısa yazım vardır: <code>flex</code>.</p><p>Bu yapı genelde şu üç şeyi bir arada ifade eder:</p><ul><li><code>flex-grow</code>: büyüme payı</li><li><code>flex-shrink</code>: küçülme payı</li><li><code>flex-basis</code>: başlangıç genişliği</li></ul><p>Bu üçlü ilk duyulduğunda göz korkutabilir.<br>Ama mantığı basittir:</p><ul><li><strong>grow</strong>: boş alan varsa büyüsün mü</li><li><strong>shrink</strong>: alan daralırsa küçülsün mü</li><li><strong>basis</strong>: başlangıçta ne kadar yer kaplasın</li></ul><p>Örnek olarak <code>flex: 1;</code> çoğu zaman “alanı eşit paylaş” gibi kullanılır.<br>Bu da çok iş görür.</p><h3 id="bolum-12">Flexbox ile sık yapılan&#160;hatalar</h3><p>Flexbox kullanırken en çok yapılan hatalar şunlardır:</p><h4>1. Yanlış elemana flex&#160;vermek</h4><p>Flex özellikleri container üzerinde çalışır.<br>Item üzerinde çalıştırmaya kalkarsan beklediğin sonucu alamazsın.</p><h4>2. Ana ekseni&#160;unutmak</h4><p><code>justify-content</code> ile <code>align-items</code> arasındaki farkı bilmeden ilerlemek kafa karıştırır.</p><h4>3. Dikey ortalama için yüksekliği unutmak</h4><p>Konteynerin yüksekliği yoksa dikey ortalama beklemek çoğu zaman sonuç vermez.</p><h4>4. Her sorunu Flexbox ile çözmeye&#160;çalışmak</h4><p>Flexbox çok güçlüdür ama her layout problemi için tek araç değildir.<br>Bazı durumlarda Grid daha doğru olabilir.</p><p>Buradaki Grid, CSS Grid anlamına gelir.<br>Yani iki boyutlu satır-sütun yerleşim sistemi.</p><p>Bu ayrımı bilmek önemli.<br>Flexbox tek boyutlu düzen için çok iyidir.<br>Grid ise iki boyutlu düzenlerde daha güçlüdür.</p><h3 id="bolum-13">Flexbox ile Grid arasındaki fark</h3><p>Kısa ve net söyleyelim:</p><ul><li><strong>Flexbox</strong>: tek eksende düzen kurar</li><li><strong>Grid</strong>: hem satır hem sütun düzenler</li></ul><p>Yani kartları yan yana dizmek, menü oluşturmak, elemanları ortalamak için Flexbox çok uygundur.<br>Ama sayfa iskeleti kurmak, karmaşık alanlar oluşturmak için Grid daha güçlü olabilir.</p><p>Bu farkı bilirsen hangi aracı ne zaman kullanacağını daha doğru seçersin.</p><h3 id="bolum-14">Flexbox neden bu kadar&#160;önemli?</h3><p>Çünkü modern arayüzlerin çoğu esnek davranmak zorundadır.</p><p>Ekran genişliği değişir.<br>Mobil gelir.<br>Tablet gelir.<br>Büyük monitör gelir.<br>Dil değişir.<br>İçerik uzar.<br>Buton sayısı artar.</p><p>Sabit yerleşimler bu durumda kırılır.<br>Flexbox ise bu değişikliklere daha iyi uyum sağlar.</p><p>İşte bu yüzden frontend’de gerçekten oturması gereken temel konulardan biridir.</p><h3 id="bolum-15">Sonuç</h3><p>Flexbox, CSS’te yerleşim işini kolaylaştıran, ama mantığı anlaşılmadan kullanıldığında kafa karıştıran bir sistemdir.</p><p>Özetle:</p><ul><li>Container ve item mantığını öğren</li><li>Ana eksen ve çapraz ekseni karıştırma</li><li><code>justify-content</code> ve <code>align-items</code> farkını iyi oturt</li><li><code>flex-direction</code> değişince yönün de değiştiğini unutma</li><li><code>flex-wrap</code> ve <code>gap</code> gibi özelliklerle düzeni rahatlat</li></ul><p>En büyük problem şu değil: “Flexbox zor.”</p><p>Asıl problem şu: “Flexbox’ı eksen mantığını anlamadan kullanmak.”</p><p>Bu nokta oturduğunda, yıllardır “neden ortalanmıyor?” diye sinir bozucu gelen şeyler bir anda anlam kazanır.</p><h3 id="bolum-16">Bonus: Flexbox ile Modern Kart Arayüzü&#160;Örneği</h3><pre><code class="hljs language-xml"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span> <span class="hljs-comment">&lt;!-- HTML5 belgesi olduğunu belirtir --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"tr"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Sayfa dilini Türkçe olarak ayarlar --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Türkçe karakter desteği sağlar --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Responsive görünüm için gerekli --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Flexbox UI Örneği<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span> <span class="hljs-comment">&lt;!-- Tarayıcı sekmesinde görünen başlık --&gt;</span>
+    
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css">
+        <span class="hljs-selector-tag">body</span> { <span class="hljs-comment">/* Tüm sayfa için stil */</span>
+            <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>; <span class="hljs-comment">/* Varsayılan boşlukları kaldırır */</span>
+            <span class="hljs-attribute">font-family</span>: Arial, sans-serif; <span class="hljs-comment">/* Yazı tipini ayarlar */</span>
+            <span class="hljs-attribute">background</span>: <span class="hljs-number">#f5f7fa</span>; <span class="hljs-comment">/* Arka plan rengi verir */</span>
+        }
+
+        <span class="hljs-selector-class">.container</span> { <span class="hljs-comment">/* Ana kapsayıcı */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Flexbox aktif edilir */</span>
+            <span class="hljs-attribute">min-height</span>: <span class="hljs-number">100vh</span>; <span class="hljs-comment">/* Ekran yüksekliği kadar uzar */</span>
+        }
+
+        <span class="hljs-selector-class">.sidebar</span> { <span class="hljs-comment">/* Sol menü */</span>
+            <span class="hljs-attribute">width</span>: <span class="hljs-number">250px</span>; <span class="hljs-comment">/* Sabit genişlik */</span>
+            <span class="hljs-attribute">background</span>: <span class="hljs-number">#1e293b</span>; <span class="hljs-comment">/* Koyu arka plan */</span>
+            <span class="hljs-attribute">color</span>: white; <span class="hljs-comment">/* Yazı rengi */</span>
+            <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* İç boşluk */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Flex kullanılır */</span>
+            <span class="hljs-attribute">flex-direction</span>: column; <span class="hljs-comment">/* Dikey hizalama */</span>
+            <span class="hljs-attribute">gap</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* Menü elemanları arası boşluk */</span>
+        }
+
+        <span class="hljs-selector-class">.sidebar</span> <span class="hljs-selector-tag">h2</span> { <span class="hljs-comment">/* Başlık stili */</span>
+            <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>; <span class="hljs-comment">/* Varsayılan margin kaldırılır */</span>
+        }
+
+        <span class="hljs-selector-class">.menu-item</span> { <span class="hljs-comment">/* Menü elemanı */</span>
+            <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span>; <span class="hljs-comment">/* İç boşluk */</span>
+            <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">8px</span>; <span class="hljs-comment">/* Köşeleri yuvarlatır */</span>
+            <span class="hljs-attribute">cursor</span>: pointer; <span class="hljs-comment">/* Üzerine gelince el işareti */</span>
+        }
+
+        <span class="hljs-selector-class">.menu-item</span><span class="hljs-selector-pseudo">:hover</span> { <span class="hljs-comment">/* Hover efekti */</span>
+            <span class="hljs-attribute">background</span>: <span class="hljs-number">#334155</span>; <span class="hljs-comment">/* Arka plan değişir */</span>
+        }
+
+        <span class="hljs-selector-class">.content</span> { <span class="hljs-comment">/* Sağ içerik alanı */</span>
+            <span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>; <span class="hljs-comment">/* Kalan alanı kaplar */</span>
+            <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* İç boşluk */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Flex kullanılır */</span>
+            <span class="hljs-attribute">flex-direction</span>: column; <span class="hljs-comment">/* Dikey dizilim */</span>
+            <span class="hljs-attribute">gap</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* Elemanlar arası boşluk */</span>
+        }
+
+        <span class="hljs-selector-class">.header</span> { <span class="hljs-comment">/* Üst alan */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Flex aktif */</span>
+            <span class="hljs-attribute">justify-content</span>: space-between; <span class="hljs-comment">/* Sağ-sol dağılım */</span>
+            <span class="hljs-attribute">align-items</span>: center; <span class="hljs-comment">/* Dikey ortalama */</span>
+        }
+
+        <span class="hljs-selector-class">.cards</span> { <span class="hljs-comment">/* Kartların bulunduğu alan */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Flex aktif */</span>
+            <span class="hljs-attribute">flex-wrap</span>: wrap; <span class="hljs-comment">/* Sığmazsa alt satıra geç */</span>
+            <span class="hljs-attribute">gap</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* Kartlar arası boşluk */</span>
+        }
+
+        <span class="hljs-selector-class">.card</span> { <span class="hljs-comment">/* Kart tasarımı */</span>
+            <span class="hljs-attribute">background</span>: white; <span class="hljs-comment">/* Beyaz arka plan */</span>
+            <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">12px</span>; <span class="hljs-comment">/* Yuvarlak köşe */</span>
+            <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* İç boşluk */</span>
+            <span class="hljs-attribute">width</span>: <span class="hljs-number">250px</span>; <span class="hljs-comment">/* Sabit genişlik */</span>
+            <span class="hljs-attribute">box-shadow</span>: <span class="hljs-number">0</span> <span class="hljs-number">4px</span> <span class="hljs-number">10px</span> <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0.08</span>); <span class="hljs-comment">/* Gölge efekti */</span>
+            <span class="hljs-attribute">display</span>: flex; <span class="hljs-comment">/* Flex aktif */</span>
+            <span class="hljs-attribute">flex-direction</span>: column; <span class="hljs-comment">/* Dikey dizilim */</span>
+            <span class="hljs-attribute">gap</span>: <span class="hljs-number">10px</span>; <span class="hljs-comment">/* İç eleman boşlukları */</span>
+        }
+
+        <span class="hljs-selector-class">.card-title</span> { <span class="hljs-comment">/* Kart başlığı */</span>
+            <span class="hljs-attribute">font-weight</span>: bold; <span class="hljs-comment">/* Kalın yazı */</span>
+        }
+
+        <span class="hljs-selector-class">.card-value</span> { <span class="hljs-comment">/* Büyük sayı alanı */</span>
+            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">24px</span>; <span class="hljs-comment">/* Büyük font */</span>
+            <span class="hljs-attribute">color</span>: <span class="hljs-number">#2563eb</span>; <span class="hljs-comment">/* Mavi renk */</span>
+        }
+
+        <span class="hljs-selector-class">.card-footer</span> { <span class="hljs-comment">/* Alt bilgi */</span>
+            <span class="hljs-attribute">font-size</span>: <span class="hljs-number">12px</span>; <span class="hljs-comment">/* Küçük yazı */</span>
+            <span class="hljs-attribute">color</span>: gray; <span class="hljs-comment">/* Gri renk */</span>
+        }
+
+        <span class="hljs-selector-class">.button</span> { <span class="hljs-comment">/* Buton tasarımı */</span>
+            <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span> <span class="hljs-number">15px</span>; <span class="hljs-comment">/* İç boşluk */</span>
+            <span class="hljs-attribute">border</span>: none; <span class="hljs-comment">/* Kenarlık kaldırılır */</span>
+            <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">8px</span>; <span class="hljs-comment">/* Yuvarlak köşe */</span>
+            <span class="hljs-attribute">background</span>: <span class="hljs-number">#2563eb</span>; <span class="hljs-comment">/* Mavi arka plan */</span>
+            <span class="hljs-attribute">color</span>: white; <span class="hljs-comment">/* Yazı rengi */</span>
+            <span class="hljs-attribute">cursor</span>: pointer; <span class="hljs-comment">/* Tıklanabilir */</span>
+        }
+
+        <span class="hljs-selector-class">.button</span><span class="hljs-selector-pseudo">:hover</span> { <span class="hljs-comment">/* Hover efekti */</span>
+            <span class="hljs-attribute">background</span>: <span class="hljs-number">#1d4ed8</span>; <span class="hljs-comment">/* Daha koyu mavi */</span>
+        }
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"container"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Tüm sayfa kapsayıcısı --&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"sidebar"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Sol menü --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Dashboard<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span> <span class="hljs-comment">&lt;!-- Başlık --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"menu-item"</span>&gt;</span>Ana Sayfa<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Menü --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"menu-item"</span>&gt;</span>Raporlar<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Menü --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"menu-item"</span>&gt;</span>Ayarlar<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Menü --&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"content"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Sağ içerik --&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"header"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Üst alan --&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Genel Bakış<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span> <span class="hljs-comment">&lt;!-- Başlık --&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"button"</span>&gt;</span>Yeni İşlem<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> <span class="hljs-comment">&lt;!-- Buton --&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"cards"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Kart alanı --&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Kart --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-title"</span>&gt;</span>Toplam Kullanıcı<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Başlık --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-value"</span>&gt;</span>12,450<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Değer --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-footer"</span>&gt;</span>Son 24 saat<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Alt bilgi --&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+                <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Kart --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-title"</span>&gt;</span>Satışlar<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Başlık --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-value"</span>&gt;</span>8,320<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Değer --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-footer"</span>&gt;</span>Bugün<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Alt bilgi --&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+                <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Kart --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-title"</span>&gt;</span>Yeni Sipariş<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Başlık --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-value"</span>&gt;</span>320<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Değer --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-footer"</span>&gt;</span>Bekleyen<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Alt bilgi --&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+                <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card"</span>&gt;</span> <span class="hljs-comment">&lt;!-- Kart --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-title"</span>&gt;</span>Hata Logları<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Başlık --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-value"</span>&gt;</span>12<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Değer --&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"card-footer"</span>&gt;</span>Son 1 saat<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> <span class="hljs-comment">&lt;!-- Alt bilgi --&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre><p>Bu arayüzde kullanılan Flexbox yapıları:</p><ul><li>sidebar → <code>flex-direction: column</code></li><li>header → <code>justify-content: space-between</code></li><li>cards → <code>flex-wrap</code></li><li>card içi → dikey düzen</li></ul>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/flexbox-nedir-ortalamaya-%C3%A7al%C4%B1%C5%9F%C4%B1rken-neden-deliriyorsun-6054ec5a572f" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:17:14.115Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #02 React ile Uygulama Mantığı</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

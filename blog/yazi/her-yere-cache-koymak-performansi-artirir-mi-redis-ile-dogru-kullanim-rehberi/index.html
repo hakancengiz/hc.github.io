@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Her Yere Cache Koymak Performansı Artırır mı? Redis ile Doğru Kullanım Rehberi — Hakan Cengiz</title>
+  <meta name="description" content="Cache, yazılım dünyasında en çok konuşulan performans araçlarından biridir. Doğru kullanıldığında sistemi ciddi biçimde hızlandırır. Yanlış kullanıldığında ise kodu gerek"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="Her Yere Cache Koymak Performansı Artırır mı? Redis ile Doğru Kullanım Rehberi"><meta property="og:description" content="Cache, yazılım dünyasında en çok konuşulan performans araçlarından biridir. Doğru kullanıldığında sistemi ciddi biçimde hızlandırır. Yanlış kullanıldığında ise kodu gerek">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*l62CL5tQ3KmLyAN4U8DjYw.png"><meta property="article:published_time" content="2026-03-22T18:57:09.551Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/her-yere-cache-koymak-performans%C4%B1-art%C4%B1r%C4%B1r-m%C4%B1-redis-ile-do%C4%9Fru-kullan%C4%B1m-rehberi-bd30be46a0e8"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">12<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Cache nedir?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Cache nedir?</span></a><a href="#bolum-2" aria-label="Cache ne zaman fayda sağlar?"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Cache ne zaman fayda sağlar?</span></a><a href="#bolum-3" aria-label="Cache ne zaman zarar verir?"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Cache ne zaman zarar verir?</span></a><a href="#bolum-4" aria-label="Basit bir cache örneği"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Basit bir cache örneği</span></a><a href="#bolum-5" aria-label="Cache kullanırken en kritik konu: invalidation"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Cache kullanırken en kritik konu: invalidation</span></a><a href="#bolum-6" aria-label="Her veriyi cache’lemek neden yanlış bir yaklaşımdır?"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Her veriyi cache’lemek neden yanlış bir yaklaşımdır?</span></a><a href="#bolum-7" aria-label="Cache kullanırken yapılan yaygın hatalar"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Cache kullanırken yapılan yaygın hatalar</span></a><a href="#bolum-8" aria-label="Sonuç"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Sonuç</span></a><a href="#bolum-9" aria-label="Redis ve dağıtık cache neden önemlidir?"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Redis ve dağıtık cache neden önemlidir?</span></a><a href="#bolum-10" aria-label="Redis Kullanımı"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Redis Kullanımı</span></a><a href="#bolum-11" aria-label="Redis kullanırken dikkat edilmesi gerekenler"><span class="toc-number" aria-hidden="true">11</span><span class="toc-title">Redis kullanırken dikkat edilmesi gerekenler</span></a><a href="#bolum-12" aria-label="Sonuç"><span class="toc-number" aria-hidden="true">12</span><span class="toc-title">Sonuç</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*l62CL5tQ3KmLyAN4U8DjYw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>Her Yere Cache Koymak Performansı Artırır mı? Redis ile Doğru Kullanım Rehberi</h1>
+          <div class="reader-meta"><span>cache</span><i aria-hidden="true">·</i><time datetime="2026-03-22T18:57:09.551Z">22 Mart 2026</time><i aria-hidden="true">·</i><span>~8 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*l62CL5tQ3KmLyAN4U8DjYw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Cache, yazılım dünyasında en çok konuşulan performans araçlarından biridir. Doğru kullanıldığında sistemi ciddi biçimde hızlandırır. Yanlış kullanıldığında ise kodu gereksiz yere karmaşıklaştırır, bellek tüketimini artırır ve bazı durumlarda uygulamayı daha da yavaşlatır.</p><p>Her yere cache koymak, otomatik olarak performans artışı sağlamaz. Hatta çoğu zaman, problemi çözmek yerine yeni problemler üretir. Bu yazıda cache’in ne işe yaradığını, ne zaman fayda sağladığını, ne zaman zarar verdiğini ve doğru kullanım için nelere dikkat edilmesi gerektiğini örneklerle inceleyelim.</p><h3 id="bolum-1">Cache nedir?</h3><p><code>Cache</code>, sık kullanılan veriyi daha hızlı erişilebilen bir yerde geçici olarak saklama yöntemidir. Amaç, aynı veriyi her seferinde yeniden üretmek ya da yeniden sorgulamak yerine, hazır bir sonuç döndürmektir.</p><p>Örneğin bir veri tabanından her istekte aynı ürün listesini çekmek yerine, bu listeyi kısa süreliğine bellekte tutmak çoğu durumda daha hızlıdır. Çünkü bellek erişimi, veri tabanı erişiminden çok daha ucuzdur.</p><p>Buradaki temel fikir şudur:</p><ul><li>Pahalı işlemi bir kez yap</li><li>Sonucu bir süre sakla</li><li>Aynı sonuç tekrar istendiğinde hızlıca geri dön</li></ul><p>Bu mantık doğru yerde kullanılırsa çok etkilidir. Ancak her veri cache için uygun değildir.</p><h3 id="bolum-2">Cache ne zaman fayda&#160;sağlar?</h3><ul><li>Aynı veri sık sık isteniyorsa</li><li>Veri çok sık değişmiyorsa</li><li>Veriyi üretmek pahalıysa</li><li>Dış servis çağrısı veya veri tabanı sorgusu maliyetliyse</li></ul><p>Örneğin:</p><ul><li>Ülke listesi</li><li>Sistem ayarları</li><li>Sık okunan ama nadiren değişen ürün kategorileri</li><li>Karmaşık rapor sonuçları</li></ul><p>Bu tür verilerde cache ciddi kazanım sağlar. Çünkü aynı işi tekrar tekrar yapmak yerine, sonucu hazır tutmuş olursunuz.</p><h3 id="bolum-3">Cache ne zaman zarar&#160;verir?</h3><p>Cache’in zarar verdiği durumlar da oldukça yaygındır.</p><h4>1. Veri çok sık değişiyorsa</h4><p>Eğer veri sürekli güncelleniyorsa, cache eski bilgi döndürebilir. Bu da kullanıcıya yanlış veri gösterilmesine yol açar.</p><p>Örneğin bir kullanıcının profil adı değiştiğinde, eski adın bir süre daha görünmesi istenmeyen bir durumdur.</p><h4>2. Cache yönetimi iyi yapılmıyorsa</h4><p>Cache kullanmak sadece veriyi saklamak değildir. Aynı zamanda şunları da düşünmek gerekir:</p><ul><li>Ne kadar süre saklanacak?</li><li>Ne zaman silinecek?</li><li>Hangi veri değişince cache temizlenecek?</li><li>Bellek dolarsa ne olacak?</li></ul><p>Bu soruların cevabı net değilse, cache fayda yerine risk oluşturur.</p><h4>3. Zaten hızlı olan işlemler cache’e uygun&#160;değildir</h4><p>Bazen geliştiriciler her şeyi cache’lemeye çalışır. Oysa bazı sorgular zaten çok hızlıdır. Böyle bir durumda cache kontrolü yapmak, veriyi direkt almaktan bile daha maliyetli olabilir.</p><p>Yani cache her zaman hız kazandırmaz. Bazı durumlarda sadece ek katman oluşturur.</p><h4>4. Bellek tüketimi&#160;artar</h4><p>Büyük nesneleri veya çok fazla veriyi cache’e almak, bellek kullanımını ciddi biçimde artırabilir. Bu da uygulamanın genel performansını olumsuz etkileyebilir.</p><p>Özellikle bellek yönetiminin önemli olduğu sistemlerde bu konu dikkatle ele alınmalıdır.</p><h3 id="bolum-4">Basit bir cache&#160;örneği</h3><p>Aşağıdaki örnekte, ürün listesini bellekte saklayan basit bir yapı göreceksiniz.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> Microsoft.Extensions.Caching.Memory;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ProductService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IMemoryCache _cache;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProductService</span>(<span class="hljs-params">IMemoryCache cache</span>)</span>
+    {
+        <span class="hljs-comment">// Cache servisini dışarıdan alıyoruz</span>
+        _cache = cache;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Product&gt; <span class="hljs-title">GetProducts</span>()</span>
+    {
+        <span class="hljs-comment">// Cache içinde bu veri için kullanacağımız anahtar</span>
+        <span class="hljs-keyword">var</span> cacheKey = <span class="hljs-string">"product_list"</span>;
+
+        <span class="hljs-comment">// Eğer veri cache içinde varsa direkt geri döndür</span>
+        <span class="hljs-keyword">if</span> (_cache.TryGetValue(cacheKey, <span class="hljs-keyword">out</span> List&lt;Product&gt; products))
+        {
+            <span class="hljs-keyword">return</span> products;
+        }
+
+        <span class="hljs-comment">// Cache'te yoksa veriyi veri tabanından çek</span>
+        products = GetProductsFromDatabase();
+
+        <span class="hljs-comment">// Veriyi 5 dakika boyunca cache'te tut</span>
+        _cache.Set(cacheKey, products, TimeSpan.FromMinutes(<span class="hljs-number">5</span>));
+
+        <span class="hljs-keyword">return</span> products;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> List&lt;Product&gt; <span class="hljs-title">GetProductsFromDatabase</span>()</span>
+    {
+        <span class="hljs-comment">// Burada normalde veri tabanı sorgusu yapılır</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> List&lt;Product&gt;
+        {
+            <span class="hljs-keyword">new</span> Product { Id = <span class="hljs-number">1</span>, Name = <span class="hljs-string">"Kalem"</span> },
+            <span class="hljs-keyword">new</span> Product { Id = <span class="hljs-number">2</span>, Name = <span class="hljs-string">"Defter"</span> }
+        };
+    }
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Product</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Id { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+}</code></pre><h4>Bu kod ne&#160;yapıyor?</h4><ul><li>Önce cache’e bakıyor</li><li>Veri varsa direkt onu döndürüyor</li><li>Veri yoksa veri tabanından alıyor</li><li>Sonucu 5 dakika boyunca cache’te saklıyor</li></ul><p>Bu yapı basit görünür ama temel mantığı çok önemlidir. Çünkü cache kullanımı, çoğu zaman tam olarak bu karar mekanizmasına dayanır.</p><h3 id="bolum-5">Cache kullanırken en kritik konu: invalidation</h3><p>Cache tarafındaki en zor problem, verinin ne zaman silineceğidir. Buna cache invalidation denir.</p><p>Örneğin ürün adı güncellendiğinde, cache içindeki eski ürün listesinin de temizlenmesi gerekir. Aksi halde kullanıcı eski veriyi görmeye devam eder.</p><p>Aşağıdaki örnek, ilgili cache kaydını temizlemeyi gösterir.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> Microsoft.Extensions.Caching.Memory;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ProductService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IMemoryCache _cache;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProductService</span>(<span class="hljs-params">IMemoryCache cache</span>)</span>
+    {
+        <span class="hljs-comment">// Cache servisini alıyoruz</span>
+        _cache = cache;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">UpdateProduct</span>(<span class="hljs-params">Product updatedProduct</span>)</span>
+    {
+        <span class="hljs-comment">// Burada normalde ürün verisi veri tabanında güncellenir</span>
+        UpdateProductInDatabase(updatedProduct);
+
+        <span class="hljs-comment">// Ürün listesi cache'ini temizliyoruz</span>
+        _cache.Remove(<span class="hljs-string">"product_list"</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">UpdateProductInDatabase</span>(<span class="hljs-params">Product product</span>)</span>
+    {
+        <span class="hljs-comment">// Gerçek projede veri tabanı güncellemesi yapılır</span>
+    }
+}</code></pre><p>Bu örnekte önemli nokta şudur: Veriyi güncelledikten sonra cache’i de temizlemek gerekir. Cache güncellenmezse, sistem eski veriyi göstermeye devam eder.</p><h3 id="bolum-6">Her veriyi cache’lemek neden yanlış bir yaklaşımdır?</h3><p>Cache’in amacı her şeyi saklamak değildir. Amacı, tekrar kullanım ihtimali yüksek olan ve üretimi maliyetli olan veriyi hızlandırmaktır.</p><p>Bir veriyi cache’e almadan önce şu sorular sorulmalıdır:</p><ul><li>Bu veri ne kadar sık okunuyor?</li><li>Ne kadar sık değişiyor?</li><li>Üretimi pahalı mı?</li><li>Yanlış veya eski veri gösterilirse sorun olur mu?</li><li>Bellekte tutulması mantıklı mı?</li></ul><p>Bu sorulara net cevap veremiyorsanız, cache çoğu zaman sezgisel değil, ölçüme dayalı olarak karar verilmesi gereken bir konudur.</p><h3 id="bolum-7">Cache kullanırken yapılan yaygın&#160;hatalar</h3><p>Cache tarafında en sık yapılan hatalardan bazıları şunlardır:</p><p>1) <em>Süre belirlememek</em>: Cache’e alınan verinin sonsuza kadar kalması, genelde yanlış bir yaklaşımdır.</p><p>2) <em>Her istekte cache kontrolü yapıp hiçbir kazanç elde etmemek</em>: Eğer veri zaten çok hızlı geliyorsa, cache sadece ek kod yükü getirir.</p><p>3) <em>Büyük veri setlerini kontrolsüz saklamak</em>: Bu durum bellek tüketimini gereksiz yere artırır.</p><p>4) <em>Cache invalidation stratejisini düşünmemek</em>: Eski verinin ne zaman silineceği planlanmazsa, sistem tutarsız davranır.</p><p>5) <em>Her şeyi cache ile çözmeye çalışmak</em>: Cache, iyi bir yardımcıdır. Ama mimarinin yerine geçmez.</p><h3 id="bolum-8">Sonuç</h3><p>Her yere cache koymak performansı artırmaz. Cache, doğru yerde kullanıldığında çok güçlü bir optimizasyon aracıdır. Yanlış yerde kullanıldığında ise uygulamayı daha karmaşık, daha hatalı ve bazı durumlarda daha yavaş hale getirir.</p><p>En doğru yaklaşım şudur: Cache’i alışkanlıkla değil, ihtiyaçla kullanmak.</p><p>Bir veriyi cache’lemeye karar vermeden önce şu dengeyi düşünmek gerekir:</p><ul><li>Hız kazanımı</li><li>Bellek maliyeti</li><li>Veri doğruluğu</li><li>Yönetim karmaşıklığı</li></ul><p>Eğer bu dengenin kazananı cache ise, kullanmak mantıklıdır. Değilse, cache sadece teknik bir süs olmaktan öteye geçmez.</p><h3 id="bolum-9">Redis ve dağıtık cache neden önemlidir?</h3><p>Tek sunuculu sistemlerde bellek cache yeterli olabilir. Ancak birden fazla sunucu kullanan sistemlerde aynı verinin her sunucuda ayrı ayrı tutulması sorun yaratır.</p><p>Bu noktada Redis gibi dağıtık cache çözümleri devreye girer. Böylece cache tek bir merkezi yerde tutulur ve tüm uygulama örnekleri aynı veriyi kullanır.</p><h3 id="bolum-10">Redis Kullanımı</h3><p>Önceki bölümde cache kullanımının her zaman performans kazancı sağlamadığını ve yanlış kullanıldığında ciddi problemlere yol açabileceğini gördük. Peki, cache’i doğru ve ölçeklenebilir şekilde kullanmak istediğimizde hangi araçlara yönelmeliyiz?</p><p>Bu noktada en yaygın çözümlerden biri Redis’tir.</p><h4>Redis nedir?</h4><p><code>Redis</code>, bellek üzerinde çalışan, çok hızlı bir key-value veri saklama sistemidir. Genellikle cache katmanı olarak kullanılır.</p><p>Temel farkı şudur:</p><ul><li>MemoryCache → sadece uygulamanın çalıştığı sunucuda yaşar</li><li>Redis → tüm uygulama instance’larının ortak kullandığı merkezi bir cache’tir</li></ul><p>Bu sayede, birden fazla sunucudan oluşan sistemlerde veri tutarlılığı sağlanabilir.</p><h4>Neden MemoryCache yerine&#160;Redis?</h4><p>Tek sunuculu bir uygulamada MemoryCache yeterli olabilir. Ancak sistem büyüdüğünde bazı problemler ortaya çıkar:</p><ul><li>Her sunucu kendi cache’ini tutar</li><li>Veriler senkron olmaz</li><li>Aynı veri birden fazla yerde tutulur</li><li>Cache temizleme işlemleri karmaşık hale gelir</li></ul><p>Redis bu problemleri ortadan kaldırır çünkü cache tek bir merkezi noktada tutulur.</p><h4>Redis ne zaman kullanılmalı?</h4><p>Redis kullanmak her zaman doğru tercih değildir. Aşağıdaki senaryolarda anlamlıdır:</p><ul><li>Uygulama birden fazla instance ile çalışıyorsa</li><li>Aynı cache verisinin tüm instance’lar tarafından paylaşılması gerekiyorsa</li><li>Yüksek trafikli sistemlerde performans kritikse</li><li>External API veya ağır sorgular sık kullanılıyorsa</li></ul><p>Buna karşılık küçük ve tek sunuculu projelerde Redis gereksiz karmaşıklık oluşturabilir.</p><h4>Redis ile basit cache kullanımı</h4><p>Aşağıdaki örnek, Redis kullanarak kategori listesini cache’leyen basit bir yapıyı gösterir.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> Microsoft.Extensions.Caching.Distributed;
+<span class="hljs-keyword">using</span> System.Text.Json;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">CategoryService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IDistributedCache _cache;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CategoryService</span>(<span class="hljs-params">IDistributedCache cache</span>)</span>
+    {
+        <span class="hljs-comment">// Redis gibi dağıtık cache servislerini kullanmak için bu interface kullanılır</span>
+        _cache = cache;
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;List&lt;Category&gt;&gt; GetCategoriesAsync()
+    {
+        <span class="hljs-keyword">var</span> cacheKey = <span class="hljs-string">"category_list"</span>;
+
+        <span class="hljs-comment">// Cache'ten string olarak veriyi almaya çalış</span>
+        <span class="hljs-keyword">var</span> cachedData = <span class="hljs-keyword">await</span> _cache.GetStringAsync(cacheKey);
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">string</span>.IsNullOrEmpty(cachedData))
+        {
+            <span class="hljs-comment">// Cache'te varsa JSON veriyi nesneye çevirip döndür</span>
+            <span class="hljs-keyword">return</span> JsonSerializer.Deserialize&lt;List&lt;Category&gt;&gt;(cachedData);
+        }
+
+        <span class="hljs-comment">// Cache'te yoksa veri tabanından çek</span>
+        <span class="hljs-keyword">var</span> categories = <span class="hljs-keyword">await</span> GetCategoriesFromDatabaseAsync();
+
+        <span class="hljs-comment">// Nesneyi JSON formatına çevir</span>
+        <span class="hljs-keyword">var</span> serializedData = JsonSerializer.Serialize(categories);
+
+        <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">new</span> DistributedCacheEntryOptions
+        {
+            <span class="hljs-comment">// Veriyi 10 dakika boyunca sakla</span>
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(<span class="hljs-number">10</span>)
+        };
+
+        <span class="hljs-comment">// Veriyi Redis'e yaz</span>
+        <span class="hljs-keyword">await</span> _cache.SetStringAsync(cacheKey, serializedData, options);
+
+        <span class="hljs-keyword">return</span> categories;
+    }
+
+    <span class="hljs-keyword">private</span> Task&lt;List&lt;Category&gt;&gt; GetCategoriesFromDatabaseAsync()
+    {
+        <span class="hljs-comment">// Gerçek projede burada veri tabanı sorgusu olur</span>
+        <span class="hljs-keyword">return</span> Task.FromResult(<span class="hljs-keyword">new</span> List&lt;Category&gt;
+        {
+            <span class="hljs-keyword">new</span> Category { Id = <span class="hljs-number">1</span>, Name = <span class="hljs-string">"Elektronik"</span> },
+            <span class="hljs-keyword">new</span> Category { Id = <span class="hljs-number">2</span>, Name = <span class="hljs-string">"Kırtasiye"</span> }
+        });
+    }
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Category</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Id { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+}</code></pre><p>Bu örnekte yapılan işlemler:</p><ul><li>Önce Redis’te veri var mı kontrol edilir</li><li>Varsa direkt cache’ten döndürülür</li><li>Yoksa veri tabanından çekilir</li><li>Sonuç Redis’e yazılır</li><li>Belirli bir süre boyunca tekrar kullanılmak üzere saklanır</li></ul><h3 id="bolum-11">Redis kullanırken dikkat edilmesi gerekenler</h3><p>Redis güçlü bir araçtır ama yanlış kullanımı ciddi problemlere yol açabilir.</p><h4>1. Cache süresi (TTL) doğru belirlenmelidir</h4><p>Çok uzun süre: Eski veri riski artar.</p><p>Çok kısa süre: Cache’in faydası azalır.</p><p>Bu yüzden veri tipine göre süre belirlemek gerekir.</p><h4>2. Cache invalidation stratejisi şarttır</h4><p>Veri güncellendiğinde Redis’teki karşılığının da temizlenmesi gerekir. Aksi halde sistem eski veri döndürür.</p><h4>3. Büyük verileri cache’lemek risklidir</h4><p>Redis bellek tabanlı çalışır. Büyük veri setleri:</p><ul><li>Maliyet artırır</li><li>Performansı düşürebilir</li></ul><h4>4. Cache her problemi&#160;çözmez</h4><p>Redis kullanmak, kötü yazılmış bir sorguyu sihirli şekilde düzeltmez. Önce veri tabanı ve algoritma doğru olmalıdır.</p><h3 id="bolum-12">Sonuç</h3><p>Redis, cache kullanımını ölçeklenebilir hale getiren güçlü bir araçtır. Ancak tek başına bir çözüm değildir.</p><p>Doğru yaklaşım şudur:</p><ul><li>Önce problemi doğru analiz et</li><li>Cache gerçekten gerekli mi karar ver</li><li>Gerekliyse doğru strateji ile uygula</li><li>Küçük sistemlerde basit kal, büyük sistemlerde Redis kullan</li></ul><p>Cache ve Redis birlikte kullanıldığında ciddi performans kazanımı sağlar. Ancak yanlış kullanıldığında, sadece sistemi karmaşıklaştırır.</p>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/her-yere-cache-koymak-performans%C4%B1-art%C4%B1r%C4%B1r-m%C4%B1-redis-ile-do%C4%9Fru-kullan%C4%B1m-rehberi-bd30be46a0e8" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/dependency-injection-her-sorunu-cozmez-net-te-dogru-kullanim-rehberi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nVXv9LLsyk94fe4-CH-g2g.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nVXv9LLsyk94fe4-CH-g2g.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-04-01T21:48:49.211Z">2 Nis 2026</time><h3 class="article-title">Dependency Injection Her Sorunu Çözmez: .NET’te Doğru Kullanım Rehberi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/eventually-consistent-nedir-verinin-bir-sure-yanlis-olmasi-nasil-dogru-olabilir/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*1HExMfwYDL-NP8rBABxctA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*1HExMfwYDL-NP8rBABxctA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-04-27T19:28:54.102Z">27 Nis 2026</time><h3 class="article-title">Eventually Consistent Nedir? Verinin Bir Süre Yanlış Olması Nasıl Doğru Olabilir?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*5KswOq1EyOW3d7Lrekw1Gg.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*5KswOq1EyOW3d7Lrekw1Gg.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T21:00:05.442Z">20 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #06 İleri Konular ve Performans</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

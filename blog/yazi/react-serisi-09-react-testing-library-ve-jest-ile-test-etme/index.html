@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>React Serisi — #09 React Testing Library ve Jest ile Test Etme — Hakan Cengiz</title>
+  <meta name="description" content="Test yazmak, React projelerinde kod kalitesini ve sürdürülebilirliği artırır. React Testing Library (RTL) ve Jest bu işi kolaylaştırır. 1. Kurulum npm install --save-dev "><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="React Serisi — #09 React Testing Library ve Jest ile Test Etme"><meta property="og:description" content="Test yazmak, React projelerinde kod kalitesini ve sürdürülebilirliği artırır. React Testing Library (RTL) ve Jest bu işi kolaylaştırır. 1. Kurulum npm install --save-dev ">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*3UeumyiSzk9VLcPqPZTKrw.png"><meta property="article:published_time" content="2025-10-27T09:23:55.007Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/react-serisi-09-react-testing-library-ve-jest-ile-test-etme-ee996b0a26c2"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">6<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. Kurulum"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Kurulum</span></a><a href="#bolum-2" aria-label="2. Basit Component Testi"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Basit Component Testi</span></a><a href="#bolum-3" aria-label="3. Event Testi (Buton Click)"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Event Testi (Buton Click)</span></a><a href="#bolum-4" aria-label="4. Mock API Çağrısı Testi"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Mock API Çağrısı Testi</span></a><a href="#bolum-5" aria-label="5. Snapshot Testleri"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Snapshot Testleri</span></a><a href="#bolum-6" aria-label="Özet"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Özet</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*3UeumyiSzk9VLcPqPZTKrw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>React Serisi — #09 React Testing Library ve Jest ile Test Etme</h1>
+          <div class="reader-meta"><span>react</span><i aria-hidden="true">·</i><time datetime="2025-10-27T09:23:55.007Z">27 Ekim 2025</time><i aria-hidden="true">·</i><span>~3 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:82%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>React Serisi</span><span aria-hidden="true">·</span><span class="series-position">9/11</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label="React Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><span class="series-chapter-number" aria-hidden="true">01</span><span>React Nedir? Neden Kullanılır?</span></a></li><li><a data-article-link href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>React ile Uygulama Mantığı</span></a></li><li><a data-article-link href="../../yazi/react-serisi-03-react-hook-larina-derin-dalis/"><span class="series-chapter-number" aria-hidden="true">03</span><span>React Hook’larına Derin Dalış</span></a></li><li><a data-article-link href="../../yazi/react-serisi-04-api-ve-veri-yonetimi/"><span class="series-chapter-number" aria-hidden="true">04</span><span>API ve Veri Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-05-redux-ile-uygulama-durum-yonetimi/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Redux ile Uygulama Durum Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-06-react-router-ve-sayfa-yonetimi/"><span class="series-chapter-number" aria-hidden="true">06</span><span>React Router ve Sayfa Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-07-performans-optimizasyonu/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Performans Optimizasyonu</span></a></li><li><a data-article-link href="../../yazi/react-serisi-08-formik-ve-yup-ile-gelismis-form-yonetimi/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Formik ve Yup ile Gelişmiş Form Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-09-react-testing-library-ve-jest-ile-test-etme/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">09</span><span>React Testing Library ve Jest ile Test Etme</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/react-serisi-10-proje-yapilandirmasi-ve-en-iyi-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Proje Yapılandırması ve En İyi Pratikler</span></a></li><li><a data-article-link href="../../yazi/react-serisi-11-typescript-ile-react/"><span class="series-chapter-number" aria-hidden="true">11</span><span>TypeScript ile React</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*3UeumyiSzk9VLcPqPZTKrw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Test yazmak, React projelerinde <strong>kod kalitesini ve sürdürülebilirliği</strong> artırır.<br>React Testing Library (RTL) ve Jest bu işi kolaylaştırır.</p><h3 id="bolum-1">1. Kurulum</h3><pre><code class="hljs language-typescript">npm install --save-dev <span class="hljs-meta">@testing</span>-library/react <span class="hljs-meta">@testing</span>-library/jest-dom jest</code></pre><p><svg aria-label="Paket" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m12 3 9 5v8l-9 5-9-5V8l9-5Zm-9 5 9 5 9-5M12 13v8M7.5 5.5l9 5" /></svg> Jest → test runner ve assertion kütüphanesi<br><svg aria-label="Paket" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m12 3 9 5v8l-9 5-9-5V8l9-5Zm-9 5 9 5 9-5M12 13v8M7.5 5.5l9 5" /></svg> React Testing Library → React component’lerini gerçek DOM benzeri ortamda test eder<br><svg aria-label="Paket" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m12 3 9 5v8l-9 5-9-5V8l9-5Zm-9 5 9 5 9-5M12 13v8M7.5 5.5l9 5" /></svg> jest-dom → ekstra matcher’lar sağlar (ör: <code>toBeInTheDocument()</code>)</p><h3 id="bolum-2">2. Basit Component Testi</h3><p>Önce basit bir component oluşturalım:</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// Hello.jsx</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">Hello</span>(<span class="hljs-params">{ name }</span>) {
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Merhaba, {name}!<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>;
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Hello</span>;</code></pre><p><code>render</code> → component’i DOM’a render eder<br><code>screen</code> → test ortamında DOM elemanlarını bulmamızı sağlar<br><code>expect(...).toBeInTheDocument()</code> → jest-dom matcher ile doğrulama</p><h3 id="bolum-3">3. Event Testi (Buton&#160;Click)</h3><pre><code class="hljs language-javascript"><span class="hljs-comment">// Counter.jsx</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">Counter</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [count, setCount] = <span class="hljs-title function_">useState</span>(<span class="hljs-number">0</span>);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Sayaç: {count}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> setCount(count + 1)}&gt;Artır<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Counter</span>;</code></pre><pre><code class="hljs language-javascript"><span class="hljs-comment">// Counter.test.jsx</span>
+<span class="hljs-keyword">import</span> { render, screen, fireEvent } <span class="hljs-keyword">from</span> <span class="hljs-string">"@testing-library/react"</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Counter</span> <span class="hljs-keyword">from</span> <span class="hljs-string">"./Counter"</span>;
+
+<span class="hljs-title function_">test</span>(<span class="hljs-string">"Sayaç butona basıldığında artıyor"</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-title function_">render</span>(<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span></span>);
+  
+  <span class="hljs-keyword">const</span> button = screen.<span class="hljs-title function_">getByText</span>(<span class="hljs-string">"Artır"</span>);
+  fireEvent.<span class="hljs-title function_">click</span>(button); <span class="hljs-comment">// Butona tıklama simülasyonu</span>
+
+  <span class="hljs-title function_">expect</span>(screen.<span class="hljs-title function_">getByText</span>(<span class="hljs-string">"Sayaç: 1"</span>)).<span class="hljs-title function_">toBeInTheDocument</span>(); <span class="hljs-comment">// Doğrulama</span>
+});</code></pre><p><code>fireEvent.click(button)</code> → kullanıcı etkileşimi simülasyonu</p><h3 id="bolum-4">4. Mock API Çağrısı&#160;Testi</h3><p>Bazen component API çağrısı yapar. Bunu mock ile test edebiliriz.</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// UserList.jsx</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">UserList</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [users, setUsers] = <span class="hljs-title function_">useState</span>([]);
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-title function_">fetch</span>(<span class="hljs-string">"/api/users"</span>)
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> res.<span class="hljs-title function_">json</span>())
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> <span class="hljs-title function_">setUsers</span>(data));
+  }, []);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+      {users.map((user) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{user.id}</span>&gt;</span>{user.name}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">UserList</span>;</code></pre><p>Test dosyası:</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// UserList.test.jsx</span>
+<span class="hljs-keyword">import</span> { render, screen, waitFor } <span class="hljs-keyword">from</span> <span class="hljs-string">"@testing-library/react"</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">UserList</span> <span class="hljs-keyword">from</span> <span class="hljs-string">"./UserList"</span>;
+
+<span class="hljs-comment">// Fetch’i mock’layalım</span>
+<span class="hljs-variable language_">global</span>.<span class="hljs-property">fetch</span> = jest.<span class="hljs-title function_">fn</span>(<span class="hljs-function">() =&gt;</span>
+  <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>({
+    <span class="hljs-attr">json</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>([{ <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">"Hakan"</span> }]),
+  })
+);
+
+<span class="hljs-title function_">test</span>(<span class="hljs-string">"UserList API verisini render ediyor"</span>, <span class="hljs-title function_">async</span> () =&gt; {
+  <span class="hljs-title function_">render</span>(<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">UserList</span> /&gt;</span></span>);
+
+  <span class="hljs-comment">// async işlem tamamlanana kadar bekle</span>
+  <span class="hljs-keyword">await</span> <span class="hljs-title function_">waitFor</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-title function_">expect</span>(screen.<span class="hljs-title function_">getByText</span>(<span class="hljs-string">"Hakan"</span>)).<span class="hljs-title function_">toBeInTheDocument</span>();
+  });
+});</code></pre><p><code>global.fetch = jest.fn(...)</code> → fetch çağrısını taklit eder<br><code>waitFor</code> → async işlemin bitmesini bekler</p><h3 id="bolum-5">5. Snapshot&#160;Testleri</h3><p>Component’in <strong>render çıktısını kayıt edip değişiklikleri takip etmek</strong> için kullanılır.</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">"@testing-library/react"</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Hello</span> <span class="hljs-keyword">from</span> <span class="hljs-string">"./Hello"</span>;
+
+<span class="hljs-title function_">test</span>(<span class="hljs-string">"Hello snapshot testi"</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">const</span> { asFragment } = <span class="hljs-title function_">render</span>(<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Hello</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Hakan"</span> /&gt;</span></span>);
+  <span class="hljs-title function_">expect</span>(<span class="hljs-title function_">asFragment</span>()).<span class="hljs-title function_">toMatchSnapshot</span>(); <span class="hljs-comment">// DOM snapshot’ını kaydeder</span>
+});</code></pre><p>Kod değişirse snapshot testleri uyarı verir ve farkı gösterir.</p><h3 id="bolum-6">Özet</h3><pre><code class="hljs language-sql"><span class="hljs-operator">|</span> Konu              <span class="hljs-operator">|</span> Açıklama                                                            <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-comment">----------------- | ------------------------------------------------------------------- |</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>render<span class="hljs-operator">*</span><span class="hljs-operator">*</span>        <span class="hljs-operator">|</span> Component’i test ortamına render eder                               <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>screen<span class="hljs-operator">*</span><span class="hljs-operator">*</span>        <span class="hljs-operator">|</span> DOM üzerinde element bulmayı sağlar                                 <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>fireEvent<span class="hljs-operator">*</span><span class="hljs-operator">*</span>     <span class="hljs-operator">|</span> Kullanıcı etkileşimi simülasyonu yapar                              <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>waitFor<span class="hljs-operator">*</span><span class="hljs-operator">*</span>       <span class="hljs-operator">|</span> Async işlemler iç<span class="hljs-keyword">in</span> bekleme sağlar                                  <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>jest.fn()<span class="hljs-operator">*</span><span class="hljs-operator">*</span>     <span class="hljs-operator">|</span> Fonksiyon veya API çağrılarını mock’lar                             <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Snapshot Test<span class="hljs-operator">*</span><span class="hljs-operator">*</span> <span class="hljs-operator">|</span> Component’<span class="hljs-keyword">in</span> render çıktısını kaydeder ve değişiklikleri takip eder <span class="hljs-operator">|</span></code></pre>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/react-serisi-08-formik-ve-yup-ile-gelismis-form-yonetimi/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>Formik ve Yup ile Gelişmiş Form Yönetimi</strong></a><a class="series-next" data-article-link href="../../yazi/react-serisi-10-proje-yapilandirmasi-ve-en-iyi-pratikler/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Proje Yapılandırması ve En İyi Pratikler</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/react-serisi-09-react-testing-library-ve-jest-ile-test-etme-ee996b0a26c2" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:16:28.490Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #01 React Nedir? Neden Kullanılır?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:17:14.115Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #02 React ile Uygulama Mantığı</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-04-api-ve-veri-yonetimi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-25T08:36:35.869Z">25 Eki 2025</time><h3 class="article-title">React Serisi — #04 API ve Veri Yönetimi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

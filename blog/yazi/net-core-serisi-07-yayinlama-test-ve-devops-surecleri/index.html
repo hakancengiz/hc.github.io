@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.Net Core Serisi — #07 Yayınlama, Test ve DevOps Süreçleri — Hakan Cengiz</title>
+  <meta name="description" content="Kod yazmak kadar onu yayınlamak, test etmek ve sürekli güncel tutmak da önemlidir. Modern yazılım geliştirme süreci, yalnızca “build” değil, aynı zamanda: Test (Doğrulama"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content=".Net Core Serisi — #07 Yayınlama, Test ve DevOps Süreçleri"><meta property="og:description" content="Kod yazmak kadar onu yayınlamak, test etmek ve sürekli güncel tutmak da önemlidir. Modern yazılım geliştirme süreci, yalnızca “build” değil, aynı zamanda: Test (Doğrulama">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*yh1THtF_WefcMNH9Z6m94w.png"><meta property="article:published_time" content="2025-10-20T21:43:50.946Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/net-core-serisi-07-yay%C4%B1nlama-test-ve-devops-s%C3%BCre%C3%A7leri-4e486ca791e9"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">10<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. Publish (Yayınlama) Süreci"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Publish (Yayınlama) Süreci</span></a><a href="#bolum-2" aria-label="2. appsettings ve Ortam (Environment) Yönetimi"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">appsettings ve Ortam (Environment) Yönetimi</span></a><a href="#bolum-3" aria-label="3. Unit Test (Birim Testi)"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Unit Test (Birim Testi)</span></a><a href="#bolum-4" aria-label="4. Integration Test (Entegrasyon Testi)"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Integration Test (Entegrasyon Testi)</span></a><a href="#bolum-5" aria-label="5. Postman / Swagger ile Manuel Test"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Postman / Swagger ile Manuel Test</span></a><a href="#bolum-6" aria-label="6. CI/CD (Continuous Integration &amp; Deployment)"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">CI/CD (Continuous Integration &amp; Deployment)</span></a><a href="#bolum-7" aria-label="7. Azure DevOps Pipeline Örneği"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Azure DevOps Pipeline Örneği</span></a><a href="#bolum-8" aria-label="8. Deployment (Yayına Alma)"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Deployment (Yayına Alma)</span></a><a href="#bolum-9" aria-label="9. Docker ile Yayınlama"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Docker ile Yayınlama</span></a><a href="#bolum-10" aria-label="10. Ortam Değişkenleri (Environment Variables)"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Ortam Değişkenleri (Environment Variables)</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*yh1THtF_WefcMNH9Z6m94w.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>.Net Core Serisi — #07 Yayınlama, Test ve DevOps Süreçleri</h1>
+          <div class="reader-meta"><span>aspnetcore</span><i aria-hidden="true">·</i><time datetime="2025-10-20T21:43:50.946Z">21 Ekim 2025</time><i aria-hidden="true">·</i><span>~5 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:70%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>.Net Core Serisi</span><span aria-hidden="true">·</span><span class="series-position">7/10</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label=".Net Core Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><span class="series-chapter-number" aria-hidden="true">01</span><span>Giriş ve Temeller</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>Katmanlı Yapı ve Uygulama Mimarisi</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-chapter-number" aria-hidden="true">03</span><span>Veri Katmanı ve ORM (Entity Framework Core)</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><span class="series-chapter-number" aria-hidden="true">04</span><span>Web API Geliştirme</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Güvenlik ve Kimlik Doğrulama</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><span class="series-chapter-number" aria-hidden="true">06</span><span>İleri Konular ve Performans</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">07</span><span>Yayınlama, Test ve DevOps Süreçleri</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-chapter-number" aria-hidden="true">09</span><span>Bonus: İleri Seviye .NET Core Konuları</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*yh1THtF_WefcMNH9Z6m94w.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Kod yazmak kadar onu <strong>yayınlamak, test etmek ve sürekli güncel tutmak</strong> da önemlidir.<br>Modern yazılım geliştirme süreci, yalnızca “build” değil, aynı zamanda:</p><ul><li><strong>Test (Doğrulama)</strong></li><li><strong>Publish (Dağıtım)</strong></li><li><strong>DevOps (Sürekli Entegrasyon &amp; Dağıtım)</strong><br>&#160;adımlarını içerir.</li></ul><h3 id="bolum-1">1. Publish (Yayınlama) Süreci</h3><p>.NET Core, platformdan bağımsız çalışabildiği için iki farklı yayın türü sunar:</p><pre><code class="hljs language-sql"><span class="hljs-operator">|</span> Tür                     <span class="hljs-operator">|</span> Açıklama                       <span class="hljs-operator">|</span> Boyut <span class="hljs-operator">|</span> Gereksinim           <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-comment">----------------------- | ------------------------------ | ----- | -------------------- |</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Framework<span class="hljs-operator">-</span>Dependent<span class="hljs-operator">*</span><span class="hljs-operator">*</span> <span class="hljs-operator">|</span> .NET yüklü makinelerde çalışır <span class="hljs-operator">|</span> Küçük <span class="hljs-operator">|</span> .NET Runtime gerekir <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Self<span class="hljs-operator">-</span>Contained<span class="hljs-operator">*</span><span class="hljs-operator">*</span>      <span class="hljs-operator">|</span> Her şeyi içinde barındırır     <span class="hljs-operator">|</span> Büyük <span class="hljs-operator">|</span> .NET gerekmez        <span class="hljs-operator">|</span></code></pre><h4>Publish Örneği</h4><pre><code class="hljs language-bash"><span class="hljs-comment"># Framework dependent publish</span>
+dotnet publish -c Release -o ./publish
+
+<span class="hljs-comment"># Self-contained publish (örnek: Windows 64-bit)</span>
+dotnet publish -c Release -r win-x64 --self-contained <span class="hljs-literal">true</span></code></pre><p>Açıklama:</p><ul><li><code>-c Release</code> → derleme modu</li><li><code>-r win-x64</code> → hedef işletim sistemi</li><li><code>--self-contained</code> → tüm bağımlılıkları içerir</li></ul><p>Çıktı klasörü:</p><pre><code class="hljs language-plaintext">publish/
+ ┣ MyApp.dll
+ ┣ appsettings.json
+ ┗ MyApp.deps.json</code></pre><h3 id="bolum-2">2. appsettings ve Ortam (Environment) Yönetimi</h3><p>Yayın ortamlarında (örneğin test, staging, production) farklı ayarlar gerekebilir.<br>.NET Core, bu işi <strong>Environment</strong> sistemiyle otomatikleştirir.</p><h4>appsettings.json dosyaları:</h4><blockquote>appsettings.json → Ortak ayarlar&#160;<br>appsettings.Development.json → Geliştirme ortamı&#160;<br>appsettings.Production.json → Yayın ortamı</blockquote><p>Örnek:</p><pre><code class="hljs language-json"><span class="hljs-comment">// appsettings.Production.json</span>
+<span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"Logging"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"LogLevel"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"Default"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Warning"</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"ConnectionStrings"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"DefaultConnection"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Server=prod-db;Database=MyApp;User Id=sa;Password=SecurePass;"</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre><p>Uygulama çalışırken ortam belirlenir:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">set</span> ASPNETCORE_ENVIRONMENT=Production</code></pre><p><strong>Not:</strong></p><ul><li>Yerel ortamda <em>Development</em> varsayılan olarak gelir.</li><li>Yayın ortamında <em>Production</em> olmalıdır.</li></ul><h3 id="bolum-3">3. Unit Test (Birim&#160;Testi)</h3><p>Test yazmak, kodun doğruluğunu ve sürdürülebilirliğini sağlar.<br>.NET Core’da test projeleri için <code>xUnit</code>, <code>NUnit</code> veya <code>MSTest</code> sıkça kullanılır.</p><p>Örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Tests/UserServiceTests.cs</span>
+<span class="hljs-comment">// UserService'in davranışını test eden birim testi</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserServiceTests</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> Mock&lt;IUserRepository&gt; _mockRepo;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> UserService _service;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserServiceTests</span>()</span>
+    {
+        <span class="hljs-comment">// 1️⃣ Mock repository oluşturulur</span>
+        _mockRepo = <span class="hljs-keyword">new</span> Mock&lt;IUserRepository&gt;();
+
+        <span class="hljs-comment">// 2️⃣ Test verisi hazırlanır</span>
+        <span class="hljs-keyword">var</span> users = <span class="hljs-keyword">new</span> List&lt;User&gt;
+        {
+            <span class="hljs-keyword">new</span> User { Id = <span class="hljs-number">1</span>, Name = <span class="hljs-string">"Hakan"</span>, Email = <span class="hljs-string">"hakan@mail.com"</span> },
+            <span class="hljs-keyword">new</span> User { Id = <span class="hljs-number">2</span>, Name = <span class="hljs-string">"Ahmet"</span>, Email = <span class="hljs-string">""</span> }
+        };
+
+        <span class="hljs-comment">// 3️⃣ Repository davranışı tanımlanır</span>
+        _mockRepo.Setup(r =&gt; r.GetAllAsync()).ReturnsAsync(users);
+
+        <span class="hljs-comment">// 4️⃣ Servis mock repository ile oluşturulur</span>
+        _service = <span class="hljs-keyword">new</span> UserService(_mockRepo.Object);
+    }
+
+    [<span class="hljs-meta">Fact</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task <span class="hljs-title">GetActiveUsersAsync_ShouldReturn_OnlyUsersWithEmail</span>()</span>
+    {
+        <span class="hljs-comment">// 5️⃣ Servis çağrılır</span>
+        <span class="hljs-keyword">var</span> result = <span class="hljs-keyword">await</span> _service.GetActiveUsersAsync();
+
+        <span class="hljs-comment">// 6️⃣ Doğrulama yapılır</span>
+        Assert.Single(result); <span class="hljs-comment">// sadece 1 kullanıcı e-postalı</span>
+        Assert.Equal(<span class="hljs-string">"Hakan"</span>, result.First().Name);
+    }
+}</code></pre><p>Açıklama:</p><ul><li><code>Mock</code> nesneleri, bağımlılıkları taklit eder (veritabanına bağlanmaz).</li><li>Testler “iş mantığının doğru çalıştığını” garantiler.</li></ul><h3 id="bolum-4">4. Integration Test (Entegrasyon Testi)</h3><p>Birim testin aksine, sistemin <strong>tüm parçalarını birlikte</strong> test eder.</p><pre><code class="hljs language-typescript"><span class="hljs-comment">// Tests/UserControllerTests.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserControllerTests</span> : <span class="hljs-title class_">IClassFixture</span>&lt;<span class="hljs-title class_">WebApplicationFactory</span>&lt;<span class="hljs-title class_">Program</span>&gt;&gt;
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-title class_">HttpClient</span> _client;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-title class_">UserControllerTests</span>(<span class="hljs-title class_">WebApplicationFactory</span>&lt;<span class="hljs-title class_">Program</span>&gt; factory)
+    {
+        <span class="hljs-comment">// 1️⃣ Gerçek API host'u ayağa kaldırılır</span>
+        _client = factory.<span class="hljs-title class_">CreateClient</span>();
+    }
+
+    [<span class="hljs-title class_">Fact</span>]
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> <span class="hljs-title class_">Task</span> <span class="hljs-title class_">GetUsers</span>_ShouldReturn_OK()
+    {
+        <span class="hljs-comment">// 2️⃣ /api/user isteği gönderilir</span>
+        <span class="hljs-keyword">var</span> response = <span class="hljs-keyword">await</span> _client.<span class="hljs-title class_">GetAsync</span>(<span class="hljs-string">"/api/user"</span>);
+
+        <span class="hljs-comment">// 3️⃣ Yanıt doğrulanır</span>
+        response.<span class="hljs-title class_">EnsureSuccessStatusCode</span>();
+        <span class="hljs-title class_">Assert</span>.<span class="hljs-title class_">Equal</span>(<span class="hljs-title class_">HttpStatusCode</span>.<span class="hljs-property">OK</span>, response.<span class="hljs-property">StatusCode</span>);
+    }
+}</code></pre><h3 id="bolum-5">5. Postman / Swagger ile Manuel&#160;Test</h3><h4><svg aria-label="Madde" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m12 6 6 6-6 6-6-6 6-6Z" /></svg> Postman</h4><ul><li>API endpoint’lerini manuel test etmeni sağlar.</li><li>Header, body, token, JSON payload gibi parametreleri kolayca ayarlayabilirsin.</li></ul><h4><svg aria-label="Madde" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m12 6 6 6-6 6-6-6 6-6Z" /></svg> Swagger</h4><p>.NET Core API projelerinde varsayılan olarak gelir.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+app.UseSwagger();
+app.UseSwaggerUI();</code></pre><p>Artık tarayıcıda şu adrese giderek API’yi test edebilirsin:</p><pre><code class="hljs language-bash">https://localhost:5001/swagger</code></pre><h3 id="bolum-6">6. CI/CD (Continuous Integration &amp; Deployment)</h3><p><strong>Amaç:</strong> Her kod değişikliğinde otomatik test, derleme ve dağıtım yapmak.</p><h4>Örnek: GitHub Actions Pipeline&#160;(YAML)</h4><pre><code class="hljs language-yaml"><span class="hljs-comment"># .github/workflows/dotnet.yml</span>
+<span class="hljs-attr">name:</span> <span class="hljs-string">Build</span> <span class="hljs-string">&amp;</span> <span class="hljs-string">Deploy</span> <span class="hljs-string">.NET</span> <span class="hljs-string">Core</span> <span class="hljs-string">API</span>
+
+<span class="hljs-attr">on:</span>
+  <span class="hljs-attr">push:</span>
+    <span class="hljs-attr">branches:</span> [ <span class="hljs-string">"main"</span> ]
+
+<span class="hljs-attr">jobs:</span>
+  <span class="hljs-attr">build:</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-comment"># 1️⃣ Kodu çek</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Checkout</span>
+        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v3</span>
+
+      <span class="hljs-comment"># 2️⃣ .NET kurulumu</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Setup</span> <span class="hljs-string">.NET</span>
+        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-dotnet@v3</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">dotnet-version:</span> <span class="hljs-string">'8.0.x'</span>
+
+      <span class="hljs-comment"># 3️⃣ Bağımlılıkları indir</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Restore</span> <span class="hljs-string">dependencies</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">dotnet</span> <span class="hljs-string">restore</span>
+
+      <span class="hljs-comment"># 4️⃣ Build işlemi</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Build</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">dotnet</span> <span class="hljs-string">build</span> <span class="hljs-string">--no-restore</span> <span class="hljs-string">-c</span> <span class="hljs-string">Release</span>
+
+      <span class="hljs-comment"># 5️⃣ Test çalıştır</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Run</span> <span class="hljs-string">Tests</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">dotnet</span> <span class="hljs-string">test</span> <span class="hljs-string">--no-build</span> <span class="hljs-string">--verbosity</span> <span class="hljs-string">normal</span>
+
+      <span class="hljs-comment"># 6️⃣ Yayınlama</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Publish</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">dotnet</span> <span class="hljs-string">publish</span> <span class="hljs-string">-c</span> <span class="hljs-string">Release</span> <span class="hljs-string">-o</span> <span class="hljs-string">./publish</span></code></pre><p>Açıklama:<br>Bu işlem “main” branch’e yapılan her push sonrası çalışır.<br>Kod test edilir, build edilir, ardından “publish” klasörüne alınır.</p><h3 id="bolum-7">7. Azure DevOps Pipeline&#160;Örneği</h3><p>Azure DevOps’ta YAML yapısı benzerdir:</p><pre><code class="hljs language-yaml"><span class="hljs-attr">trigger:</span>
+<span class="hljs-bullet">-</span> <span class="hljs-string">main</span>
+
+<span class="hljs-attr">pool:</span>
+  <span class="hljs-attr">vmImage:</span> <span class="hljs-string">'windows-latest'</span>
+
+<span class="hljs-attr">steps:</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">task:</span> <span class="hljs-string">DotNetCoreCLI@2</span>
+  <span class="hljs-attr">inputs:</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">'restore'</span>
+    <span class="hljs-attr">projects:</span> <span class="hljs-string">'**/*.csproj'</span>
+
+<span class="hljs-bullet">-</span> <span class="hljs-attr">task:</span> <span class="hljs-string">DotNetCoreCLI@2</span>
+  <span class="hljs-attr">inputs:</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">'build'</span>
+    <span class="hljs-attr">projects:</span> <span class="hljs-string">'**/*.csproj'</span>
+    <span class="hljs-attr">arguments:</span> <span class="hljs-string">'--configuration Release'</span>
+
+<span class="hljs-bullet">-</span> <span class="hljs-attr">task:</span> <span class="hljs-string">DotNetCoreCLI@2</span>
+  <span class="hljs-attr">inputs:</span>
+    <span class="hljs-attr">command:</span> <span class="hljs-string">'publish'</span>
+    <span class="hljs-attr">projects:</span> <span class="hljs-string">'**/*.csproj'</span>
+    <span class="hljs-attr">arguments:</span> <span class="hljs-string">'--configuration Release --output $(Build.ArtifactStagingDirectory)'</span></code></pre><h3 id="bolum-8">8. Deployment (Yayına&#160;Alma)</h3><p>Yayınlanan klasör (<code>publish/</code>) bir sunucuya veya buluta yüklenir.<br>&#160;Örneğin IIS, Docker veya Azure App Service kullanılabilir.</p><h4><svg aria-label="Madde" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m12 6 6 6-6 6-6-6 6-6Z" /></svg> IIS Dağıtımı:</h4><ol><li>Publish klasörünü sunucuya kopyala</li><li>IIS’te yeni bir <em>Application Pool</em> oluştur</li><li>.NET Core Hosting Bundle kurulu olduğundan emin ol</li><li>Uygulamanın <code>web.config</code> dosyası otomatik olarak ayarlanır</li></ol><h3 id="bolum-9">9. Docker ile Yayınlama</h3><pre><code class="hljs language-sql"># Dockerfile
+<span class="hljs-keyword">FROM</span> mcr.microsoft.com<span class="hljs-operator">/</span>dotnet<span class="hljs-operator">/</span>aspnet:<span class="hljs-number">8.0</span> <span class="hljs-keyword">AS</span> base
+WORKDIR <span class="hljs-operator">/</span>app
+EXPOSE <span class="hljs-number">8080</span>
+
+<span class="hljs-keyword">FROM</span> mcr.microsoft.com<span class="hljs-operator">/</span>dotnet<span class="hljs-operator">/</span>sdk:<span class="hljs-number">8.0</span> <span class="hljs-keyword">AS</span> build
+WORKDIR <span class="hljs-operator">/</span>src
+<span class="hljs-keyword">COPY</span> . .
+RUN dotnet restore
+RUN dotnet publish <span class="hljs-operator">-</span>c <span class="hljs-keyword">Release</span> <span class="hljs-operator">-</span>o <span class="hljs-operator">/</span>app<span class="hljs-operator">/</span>publish
+
+<span class="hljs-keyword">FROM</span> base <span class="hljs-keyword">AS</span> <span class="hljs-keyword">final</span>
+WORKDIR <span class="hljs-operator">/</span>app
+<span class="hljs-keyword">COPY</span> <span class="hljs-comment">--from=build /app/publish .</span>
+ENTRYPOINT ["dotnet", "MyApp.dll"]</code></pre><p>Oluştur ve çalıştır:</p><pre><code class="hljs language-css">docker build -t myapp .
+docker run -<span class="hljs-selector-tag">p</span> <span class="hljs-number">8080</span>:<span class="hljs-number">8080</span> myapp</code></pre><p>Avantaj:</p><ul><li>Taşınabilirlik (her ortamda aynı çalışır)</li><li>Kolay otomasyon (CI/CD pipeline’larına dahil edilebilir)</li></ul><h3 id="bolum-10">10. Ortam Değişkenleri (Environment Variables)</h3><p>Yayın ortamında gizli bilgileri (şifre, bağlantı dizeleri, API key vb.)<br><code>appsettings.json</code> yerine environment değişkenlerinde tutmak güvenlidir.</p><p>Örnek:</p><pre><code class="hljs language-bash"><span class="hljs-comment"># Linux ortamında</span>
+<span class="hljs-built_in">export</span> ConnectionStrings__DefaultConnection=<span class="hljs-string">"Server=db;Database=myapp;User=sa;Password=12345;"</span></code></pre><p>Program.cs’de erişim:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">var</span> connection = builder.Configuration.GetConnectionString(<span class="hljs-string">"DefaultConnection"</span>);</code></pre><h4>Özet:</h4><pre><code class="hljs language-bash">| Aşama                      | Açıklama                                   |
+| -------------------------- | ------------------------------------------ |
+| **Publish**                | Uygulamanın dağıtıma hazırlanması          |
+| **Test**                   | Birim ve entegrasyon testleriyle <span class="hljs-keyword">do</span>ğrulama |
+| **Swagger / Postman**      | Manuel <span class="hljs-built_in">test</span> araçları                       |
+| **CI/CD**                  | Otomatik build ve <span class="hljs-built_in">test</span> sistemleri          |
+| **Deployment**             | IIS / Docker / Azure App Service           |
+| **Environment Management** | Ortama göre yapılandırma ayarları          |</code></pre>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>İleri Konular ve Performans</strong></a><a class="series-next" data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/net-core-serisi-07-yay%C4%B1nlama-test-ve-devops-s%C3%BCre%C3%A7leri-4e486ca791e9" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:30:13.116Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #01 Giriş ve Temeller</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-20T21:45:42.211Z">21 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #09 Bonus: İleri Seviye .NET Core Konuları</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:59:09.527Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #05 Güvenlik ve Kimlik Doğrulama</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

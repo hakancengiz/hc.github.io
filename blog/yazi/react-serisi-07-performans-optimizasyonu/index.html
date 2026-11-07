@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>React Serisi — #07 Performans Optimizasyonu — Hakan Cengiz</title>
+  <meta name="description" content="React performansını artırmak için temel olarak şu üç konuyu bilmek gerekiyor: Gereksiz render’ları önlemek Hook’ların doğru kullanımı (memo, useMemo, useCallback) Büyük l"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="React Serisi — #07 Performans Optimizasyonu"><meta property="og:description" content="React performansını artırmak için temel olarak şu üç konuyu bilmek gerekiyor: Gereksiz render’ları önlemek Hook’ların doğru kullanımı (memo, useMemo, useCallback) Büyük l">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*mbnmgC1AbfoPNWnhGkgMUw.png"><meta property="article:published_time" content="2025-10-27T09:22:56.005Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/react-serisi-07-performans-optimizasyonu-c96c12ed6051"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">7<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. Gereksiz Render’ların Tespiti"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Gereksiz Render’ların Tespiti</span></a><a href="#bolum-2" aria-label="2. React.memo ile Component Optimizasyonu"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">React.memo ile Component Optimizasyonu</span></a><a href="#bolum-3" aria-label="3. useMemo ile Hesaplama Optimizasyonu"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">useMemo ile Hesaplama Optimizasyonu</span></a><a href="#bolum-4" aria-label="4. useCallback ile Fonksiyon Optimizasyonu"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">useCallback ile Fonksiyon Optimizasyonu</span></a><a href="#bolum-5" aria-label="5. Büyük Listelerde Optimizasyon"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Büyük Listelerde Optimizasyon</span></a><a href="#bolum-6" aria-label="6. React Profiler ile Performans Analizi"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">React Profiler ile Performans Analizi</span></a><a href="#bolum-7" aria-label="Özet"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Özet</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*mbnmgC1AbfoPNWnhGkgMUw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>React Serisi — #07 Performans Optimizasyonu</h1>
+          <div class="reader-meta"><span>react</span><i aria-hidden="true">·</i><time datetime="2025-10-27T09:22:56.005Z">27 Ekim 2025</time><i aria-hidden="true">·</i><span>~3 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:64%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>React Serisi</span><span aria-hidden="true">·</span><span class="series-position">7/11</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label="React Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><span class="series-chapter-number" aria-hidden="true">01</span><span>React Nedir? Neden Kullanılır?</span></a></li><li><a data-article-link href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>React ile Uygulama Mantığı</span></a></li><li><a data-article-link href="../../yazi/react-serisi-03-react-hook-larina-derin-dalis/"><span class="series-chapter-number" aria-hidden="true">03</span><span>React Hook’larına Derin Dalış</span></a></li><li><a data-article-link href="../../yazi/react-serisi-04-api-ve-veri-yonetimi/"><span class="series-chapter-number" aria-hidden="true">04</span><span>API ve Veri Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-05-redux-ile-uygulama-durum-yonetimi/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Redux ile Uygulama Durum Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-06-react-router-ve-sayfa-yonetimi/"><span class="series-chapter-number" aria-hidden="true">06</span><span>React Router ve Sayfa Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-07-performans-optimizasyonu/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">07</span><span>Performans Optimizasyonu</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/react-serisi-08-formik-ve-yup-ile-gelismis-form-yonetimi/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Formik ve Yup ile Gelişmiş Form Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-09-react-testing-library-ve-jest-ile-test-etme/"><span class="series-chapter-number" aria-hidden="true">09</span><span>React Testing Library ve Jest ile Test Etme</span></a></li><li><a data-article-link href="../../yazi/react-serisi-10-proje-yapilandirmasi-ve-en-iyi-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Proje Yapılandırması ve En İyi Pratikler</span></a></li><li><a data-article-link href="../../yazi/react-serisi-11-typescript-ile-react/"><span class="series-chapter-number" aria-hidden="true">11</span><span>TypeScript ile React</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*mbnmgC1AbfoPNWnhGkgMUw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>React performansını artırmak için temel olarak şu üç konuyu bilmek gerekiyor:</p><ol><li>Gereksiz render’ları önlemek</li><li>Hook’ların doğru kullanımı (<code>memo</code>, <code>useMemo</code>, <code>useCallback</code>)</li><li>Büyük listeleri ve componentleri optimize etmek</li></ol><h3 id="bolum-1">1. Gereksiz Render’ların Tespiti</h3><p>React her state değişiminde ilgili component’i yeniden render eder.<br>Ama bazı durumlarda <strong>gereksiz render</strong> performansı düşürür.</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">Counter</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [count, setCount] = <span class="hljs-title function_">useState</span>(<span class="hljs-number">0</span>);
+
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Counter render oldu"</span>); <span class="hljs-comment">// Her render’da konsola yazılır</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Sayaç: {count}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> setCount(count + 1)}&gt;Artır<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><blockquote>Bu örnekte bir Counter güncellendiğinde diğer Counter da render olur. Gereksiz render’ı engellemek için <code>React.memo</code> kullanacağız.</blockquote><h3 id="bolum-2">2. React.memo ile Component Optimizasyonu</h3><p><code>React.memo</code>, <strong>props değişmediyse component’in yeniden render edilmemesini sağlar.</strong></p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState, memo } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">Counter</span> = <span class="hljs-title function_">memo</span>(<span class="hljs-function">(<span class="hljs-params">{ value }</span>) =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Counter render oldu:"</span>, value);
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{value}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span>;
+});
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [count1, setCount1] = <span class="hljs-title function_">useState</span>(<span class="hljs-number">0</span>);
+  <span class="hljs-keyword">const</span> [count2, setCount2] = <span class="hljs-title function_">useState</span>(<span class="hljs-number">0</span>);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> setCount1(count1 + 1)}&gt;Sayaç 1 Artır<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> setCount2(count2 + 1)}&gt;Sayaç 2 Artır<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{count1}</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Counter</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{count2}</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><p>Artık bir sayaç değiştiğinde, diğer sayaç <strong>yeniden render olmaz</strong>.</p><h3 id="bolum-3">3. useMemo ile Hesaplama Optimizasyonu</h3><p>Bazen bir component içinde <strong>ağır hesaplamalar</strong> olabilir.<br>&#160;<code>useMemo</code>, bu hesaplamayı <strong>state veya props değişmediğinde tekrar çalıştırmaz.</strong></p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState, useMemo } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [count, setCount] = <span class="hljs-title function_">useState</span>(<span class="hljs-number">0</span>);
+  <span class="hljs-keyword">const</span> [text, setText] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">""</span>);
+
+  <span class="hljs-comment">// Ağır hesaplama simülasyonu</span>
+  <span class="hljs-keyword">const</span> factorial = <span class="hljs-title function_">useMemo</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Hesaplama yapıldı"</span>);
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">calc</span> = (<span class="hljs-params">n</span>) =&gt; (n &lt;= <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : n * <span class="hljs-title function_">calc</span>(n - <span class="hljs-number">1</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">calc</span>(count);
+  }, [count]); <span class="hljs-comment">// Sadece count değişirse yeniden hesaplanır</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Faktöriyel: {factorial}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> setCount(count + 1)}&gt;Artır<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{text}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setText(e.target.value)}
+        placeholder="Bir şey yaz..."
+      /&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><p>Input değişse bile ağır hesaplama <strong>tekrar çalışmaz</strong>, performans artar.</p><h3 id="bolum-4">4. useCallback ile Fonksiyon Optimizasyonu</h3><p>Child component’e props olarak fonksiyon gönderirken, fonksiyon her render’da <strong>yeni referans</strong> oluşturur.<br>Bunu <code>useCallback</code> ile engelleyebiliriz.</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState, useCallback, memo } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">Button</span> = <span class="hljs-title function_">memo</span>(<span class="hljs-function">(<span class="hljs-params">{ onClick, label }</span>) =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Button render:"</span>, label);
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{onClick}</span>&gt;</span>{label}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>;
+});
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> [count, setCount] = <span class="hljs-title function_">useState</span>(<span class="hljs-number">0</span>);
+
+  <span class="hljs-comment">// useCallback: fonksiyon referansı değişmez</span>
+  <span class="hljs-keyword">const</span> increment = <span class="hljs-title function_">useCallback</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setCount</span>(<span class="hljs-function">(<span class="hljs-params">c</span>) =&gt;</span> c + <span class="hljs-number">1</span>), []);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Sayaç: {count}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{increment}</span> <span class="hljs-attr">label</span>=<span class="hljs-string">"Artır"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><p>Böylece <code>Button</code> component’i <strong>gereksiz yere render olmaz</strong>.</p><h3 id="bolum-5">5. Büyük Listelerde Optimizasyon</h3><p>Büyük listeler render edilirken yavaşlama olabilir.<br>&#160;<code>react-window</code> veya <code>react-virtualized</code> kütüphaneleri ile <strong>sadece görünürdeki öğeler render edilir</strong>.</p><pre><code class="hljs language-javascript">npm install react-<span class="hljs-variable language_">window</span></code></pre><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">FixedSizeList</span> <span class="hljs-keyword">as</span> <span class="hljs-title class_">List</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-window"</span>;
+
+<span class="hljs-keyword">const</span> data = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>({ <span class="hljs-attr">length</span>: <span class="hljs-number">1000</span> }, <span class="hljs-function">(<span class="hljs-params">_, i</span>) =&gt;</span> <span class="hljs-string">`Öğe <span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">App</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">List</span>
+      <span class="hljs-attr">height</span>=<span class="hljs-string">{300}</span> // <span class="hljs-attr">Görüntü</span> <span class="hljs-attr">yüksekliği</span>
+      <span class="hljs-attr">itemCount</span>=<span class="hljs-string">{data.length}</span> // <span class="hljs-attr">Liste</span> <span class="hljs-attr">uzunluğu</span>
+      <span class="hljs-attr">itemSize</span>=<span class="hljs-string">{35}</span> // <span class="hljs-attr">Her</span> <span class="hljs-attr">öğe</span> <span class="hljs-attr">yüksekliği</span>
+      <span class="hljs-attr">width</span>=<span class="hljs-string">{300}</span>
+    &gt;</span>
+      {({ index, style }) =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{style}</span>&gt;</span>{data[index]}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">List</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">App</span>;</code></pre><p>1000 öğelik listeyi <strong>performanslı şekilde</strong> render ettik.</p><h3 id="bolum-6">6. React Profiler ile Performans Analizi</h3><p>React Developer Tools içinde bulunan <strong>Profiler</strong>, component’lerin render sürelerini ölçer.</p><ul><li>Her render ne kadar sürdü?</li><li>Hangi component gereksiz yere render oldu?</li><li>Memo veya useMemo ile optimizasyon gerekiyor mu?</li></ul><h3 id="bolum-7">Özet</h3><pre><code class="hljs language-sql"><span class="hljs-operator">|</span> Konu               <span class="hljs-operator">|</span> Açıklama                                                              <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-comment">------------------ | --------------------------------------------------------------------- |</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>React.memo<span class="hljs-operator">*</span><span class="hljs-operator">*</span>     <span class="hljs-operator">|</span> Props değişmediğinde component’<span class="hljs-keyword">in</span> render olmamasını sağlar            <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>useMemo<span class="hljs-operator">*</span><span class="hljs-operator">*</span>        <span class="hljs-operator">|</span> Ağır hesaplamaları cache’ler, gereksiz tekrarları önler               <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>useCallback<span class="hljs-operator">*</span><span class="hljs-operator">*</span>    <span class="hljs-operator">|</span> Fonksiyon referansını sabit tutar, child component’leri optimize eder <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Virtualization<span class="hljs-operator">*</span><span class="hljs-operator">*</span> <span class="hljs-operator">|</span> Büyük listelerde sadece görünür öğeleri render eder                   <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Profiler<span class="hljs-operator">*</span><span class="hljs-operator">*</span>       <span class="hljs-operator">|</span> Render sürelerini analiz eder ve optimizasyon noktalarını gösterir    <span class="hljs-operator">|</span></code></pre>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/react-serisi-06-react-router-ve-sayfa-yonetimi/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>React Router ve Sayfa Yönetimi</strong></a><a class="series-next" data-article-link href="../../yazi/react-serisi-08-formik-ve-yup-ile-gelismis-form-yonetimi/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Formik ve Yup ile Gelişmiş Form Yönetimi</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/react-serisi-07-performans-optimizasyonu-c96c12ed6051" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:16:28.490Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #01 React Nedir? Neden Kullanılır?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:17:14.115Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #02 React ile Uygulama Mantığı</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-04-api-ve-veri-yonetimi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-25T08:36:35.869Z">25 Eki 2025</time><h3 class="article-title">React Serisi — #04 API ve Veri Yönetimi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

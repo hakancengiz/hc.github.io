@@ -1,734 +1,271 @@
 <!doctype html>
-<html lang="tr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hakan Cengiz — Blog</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-  <link type="image/x-icon" rel="shortcut icon" href="img/rss-img/blog-favicon.png" />
-  <style>
-    :root {
-      --ink: #0d0d0d;
-      --paper: #f5f0e8;
-      --paper-2: #ede7d8;
-      --accent: #c8442a;
-      --muted: #7a7260;
-      --card-bg: #faf7f2;
-      --border: rgba(13,13,13,0.1);
-      --shadow: rgba(13,13,13,0.08);
-    }
-    [data-theme="dark"] {
-      --ink: #f0ebe0;
-      --paper: #100f0e;
-      --paper-2: #1c1a17;
-      --card-bg: #161410;
-      --border: rgba(240,235,224,0.08);
-      --shadow: rgba(0,0,0,0.35);
-      --muted: #7a7260;
-    }
+<html lang="tr" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Hakan Cengiz'in yazılım, teknoloji ve geliştirici deneyimleri üzerine blog yazıları."
+    />
+    <meta name="theme-color" content="#111822" />
+    <title>Hakan Cengiz — Blog</title>
+    <link rel="icon" href="blog-files/img/rss-img/blog-favicon.png" type="image/png" />
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--paper);
-      color: var(--ink);
-      font-family: 'DM Sans', sans-serif;
-      overflow-x: hidden;
-      min-height: 100vh;
-      transition: background 0.35s, color 0.35s;
-    }
-
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      z-index: 1000; pointer-events: none;
-      opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 200px 200px;
-    }
-
-    /* ── HEADER ── */
-    .site-header {
-      border-bottom: 1px solid var(--border);
-      background: var(--paper);
-      transition: background 0.35s;
-    }
-    .header-inner {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 28px 48px;
-      display: flex; align-items: center;
-      justify-content: space-between;
-      gap: 24px; flex-wrap: wrap;
-    }
-    .profile-section { display: flex; align-items: center; gap: 20px; }
-    .author-avatar {
-      width: 88px; height: 88px; border-radius: 50%;
-      overflow: hidden; flex-shrink: 0;
-      border: 3px solid var(--paper-2);
-      box-shadow: 0 4px 20px var(--shadow);
-    }
-    .author-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .author-name {
-      font-family: 'Fraunces', serif;
-      font-size: 30px; font-weight: 700;
-      letter-spacing: -0.02em; line-height: 1.1;
-    }
-    .author-title { font-size: 15px; color: var(--muted); margin-top: 5px; font-family: 'Manrope', sans-serif; }
-    .linkedin-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      margin-top: 8px; text-decoration: none;
-      font-size: 13px; font-weight: 500; color: #0a66c2;
-      font-family: 'Manrope', sans-serif;
-      transition: opacity 0.2s;
-    }
-    .linkedin-link:hover { opacity: 0.7; }
-
-    .header-controls { display: flex; align-items: center; gap: 10px; align-self: center; }
-    .search-wrap { position: relative; }
-    .search-wrap .ico-search {
-      position: absolute; left: 13px; top: 50%;
-      transform: translateY(-50%); color: var(--muted); pointer-events: none;
-    }
-    .search-wrap input {
-      background: var(--paper-2); border: 1px solid var(--border);
-      border-radius: 40px; padding: 9px 16px 9px 38px;
-      font-family: 'Manrope', sans-serif; font-size: 13px;
-      color: var(--ink); width: 196px; outline: none;
-      transition: width 0.3s, border-color 0.2s, box-shadow 0.2s;
-    }
-    .search-wrap input::placeholder { color: var(--muted); }
-    .search-wrap input:focus {
-      width: 230px; border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(200,68,42,0.1);
-    }
-
-    .theme-btn {
-      width: 38px; height: 38px; border-radius: 50%;
-      border: 1px solid var(--border); background: var(--paper-2);
-      cursor: pointer; display: grid; place-items: center;
-      transition: background 0.2s, border-color 0.2s;
-      color: var(--ink); flex-shrink: 0;
-    }
-    .theme-btn:hover { border-color: var(--ink); }
-    .theme-btn .ico-moon { display: block; }
-    .theme-btn .ico-sun  { display: none; }
-    [data-theme="dark"] .theme-btn .ico-moon { display: none; }
-    [data-theme="dark"] .theme-btn .ico-sun  { display: block; }
-
-    /* ── MAIN ── */
-    main { max-width: 1320px; margin: 0 auto; padding: 52px 48px 100px; }
-
-    .section-label {
-      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
-    }
-    .section-label span {
-      font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
-    }
-    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-    /* ── HERO ROW ── */
-    .hero-row {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 22px;
-      margin-bottom: 52px;
-      align-items: stretch;
-    }
-
-    /* Featured card */
-    .featured-card {
-      text-decoration: none; color: inherit;
-      display: flex; flex-direction: column;
-      border-radius: 14px; overflow: hidden;
-      border: 1px solid var(--border); background: var(--card-bg);
-      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s, border-color 0.25s;
-    }
-    .featured-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 24px 56px var(--shadow);
-      border-color: rgba(200,68,42,0.22);
-    }
-    .feat-img-wrap {
-      position: relative; overflow: hidden;
-      height: 220px; flex-shrink: 0;
-    }
-    /* Blurred bg layer to hide pixel issues */
-    .feat-img-bg {
-      position: absolute; inset: -12px;
-      background-size: cover; background-position: center;
-      filter: blur(22px) brightness(0.55) saturate(1.2);
-      z-index: 0;
-    }
-    .feat-img-wrap img {
-      position: relative; z-index: 1;
-      width: 100%; height: 100%;
-      object-fit: contain; display: block;
-      transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
-    }
-    .featured-card:hover .feat-img-wrap img { transform: scale(1.04); }
-    .feat-img-wrap::after {
-      content: ''; position: absolute; inset: 0; z-index: 2;
-      background: linear-gradient(to bottom, transparent 50%, rgba(13,13,13,0.18));
-      pointer-events: none;
-    }
-    .feat-badge {
-      position: absolute; top: 14px; left: 14px; z-index: 3;
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 9px; font-weight: 700; letter-spacing: 0.14em;
-      text-transform: uppercase; color: #fff;
-      background: var(--accent); border-radius: 40px; padding: 4px 10px;
-    }
-    .feat-body {
-      padding: 22px 24px 20px;
-      display: flex; flex-direction: column; flex: 1;
-    }
-    .feat-title {
-      font-family: 'Manrope', sans-serif;
-      font-size: 25px; font-weight: 700;
-      line-height: 1.3; letter-spacing: -0.02em; margin-bottom: 10px;
-      transition: color 0.2s;
-    }
-    .featured-card:hover .feat-title { color: var(--accent); }
-    .feat-desc {
-      font-family: 'Inter', sans-serif;
-      font-size: 13px; color: var(--muted);
-      line-height: 1.65; flex: 1; margin-bottom: 16px;
-    }
-    .feat-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      border-top: 1px solid var(--border); padding-top: 14px;
-    }
-    .feat-date { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
-    .read-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
-      text-transform: uppercase; color: var(--ink);
-      border: 1.5px solid var(--ink); border-radius: 40px;
-      padding: 6px 16px; text-decoration: none;
-      transition: background 0.22s, color 0.22s;
-    }
-    .read-btn:hover { background: var(--ink); color: var(--paper); }
-    .read-btn svg { transition: transform 0.22s; }
-    .read-btn:hover svg { transform: translateX(3px); }
-
-    /* Side card */
-    .side-card {
-      text-decoration: none; color: inherit;
-      display: flex; flex-direction: column;
-      border-radius: 14px; overflow: hidden;
-      border: 1px solid var(--border); background: var(--card-bg);
-      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s, border-color 0.25s;
-    }
-    .side-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 24px 56px var(--shadow);
-      border-color: rgba(200,68,42,0.22);
-    }
-    .side-img-wrap {
-      position: relative; overflow: hidden; height: 174px; flex-shrink: 0;
-    }
-    .side-img-wrap img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      transition: transform 0.55s cubic-bezier(0.23,1,0.32,1);
-    }
-    .side-card:hover .side-img-wrap img { transform: scale(1.06); }
-    .side-img-wrap::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(13,13,13,0.12));
-    }
-    .side-body { padding: 18px 20px 16px; display: flex; flex-direction: column; flex: 1; }
-    .side-label {
-      font-size: 9px; font-weight: 700; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
-    }
-    .side-title {
-      font-family: 'Manrope', sans-serif;
-      font-size: 20px; font-weight: 700;
-      line-height: 1.38; letter-spacing: -0.01em; margin-bottom: 8px;
-      transition: color 0.2s;
-    }
-    .side-card:hover .side-title { color: var(--accent); }
-    .side-desc { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--muted); line-height: 1.6; flex: 1; margin-bottom: 14px; }
-    .side-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      border-top: 1px solid var(--border); padding-top: 12px;
-    }
-    .side-date { font-size: 11px; color: var(--muted); }
-    .side-arrow {
-      width: 26px; height: 26px; border-radius: 50%;
-      border: 1px solid var(--border); display: grid; place-items: center;
-      color: var(--muted);
-      transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.22s;
-    }
-    .side-card:hover .side-arrow {
-      background: var(--accent); color: #fff;
-      border-color: var(--accent); transform: rotate(-45deg);
-    }
-
-    /* ── GRID ── */
-    .grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
-
-    .card {
-      text-decoration: none; color: inherit;
-      display: flex; flex-direction: column;
-      border-radius: 12px; overflow: hidden;
-      border: 1px solid var(--border); background: var(--card-bg);
-      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s, border-color 0.25s;
-    }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 44px var(--shadow);
-      border-color: rgba(200,68,42,0.2);
-    }
-    .card-img-wrap { overflow: hidden; aspect-ratio: 3/2; position: relative; }
-    .card-img-wrap img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      transition: transform 0.55s cubic-bezier(0.23,1,0.32,1);
-    }
-    .card:hover .card-img-wrap img { transform: scale(1.06); }
-    .card-img-wrap::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 55%, rgba(13,13,13,0.1));
-      pointer-events: none;
-    }
-    .card-num {
-      position: absolute; top: 12px; right: 12px; z-index: 1;
-      font-family: 'Fraunces', serif; font-size: 10px; font-weight: 700;
-      color: rgba(255,255,255,0.9); background: rgba(13,13,13,0.42);
-      border-radius: 40px; padding: 3px 9px; letter-spacing: 0.07em;
-      backdrop-filter: blur(8px);
-    }
-    .hero-num {
-      position: absolute; top: 12px; right: 12px; z-index: 4;
-      font-family: 'Fraunces', serif; font-size: 10px; font-weight: 700;
-      color: rgba(255,255,255,0.9); background: rgba(13,13,13,0.42);
-      border-radius: 40px; padding: 3px 9px; letter-spacing: 0.07em;
-      backdrop-filter: blur(8px);
-    }
-    .card-body { padding: 18px 18px 14px; display: flex; flex-direction: column; flex: 1; }
-    .card-cat {
-      font-size: 9px; font-weight: 700; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 7px;
-    }
-    .card-title {
-      font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 700;
-      line-height: 1.4; letter-spacing: -0.01em; margin-bottom: 7px;
-      transition: color 0.2s;
-    }
-    .card:hover .card-title { color: var(--accent); }
-    .card-desc { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 12px; }
-    .card-foot { display: flex; align-items: center; justify-content: space-between; }
-    .card-date { font-size: 11px; color: var(--muted); }
-    .card-arrow {
-      width: 26px; height: 26px; border-radius: 50%;
-      border: 1px solid var(--border); display: grid; place-items: center;
-      color: var(--muted);
-      transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.22s;
-    }
-    .card:hover .card-arrow {
-      background: var(--accent); color: #fff;
-      border-color: var(--accent); transform: rotate(-45deg);
-    }
-
-    /* ── VIEW ALL BUTTON ── */
-    .view-all-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
-      text-transform: uppercase; text-decoration: none;
-      color: var(--ink);
-      border: 1.5px solid var(--ink);
-      border-radius: 40px;
-      padding: 13px 32px;
-      transition: background 0.25s, color 0.25s;
-    }
-    .view-all-btn:hover {
-      background: var(--ink); color: var(--paper);
-    }
-    .view-all-btn svg { transition: transform 0.22s; }
-    .view-all-btn:hover svg { transform: translate(2px, -2px); }
-
-    /* ── INFINITE SCROLL ── */
-    #load-sentinel { height: 64px; display: flex; align-items: center; justify-content: center; margin-top: 8px; }
-    .spinner {
-      width: 22px; height: 22px;
-      border: 2.5px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-    .spinner.on { display: block; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── LOADER ── */
-    #loader {
-      text-align: center; padding: 80px 0;
-      font-family: 'Fraunces', serif; font-size: 18px;
-      color: var(--muted); font-style: italic;
-    }
-    .loader-dots { display: inline-flex; gap: 6px; margin-left: 8px; }
-    .loader-dots span {
-      width: 5px; height: 5px; background: var(--muted);
-      border-radius: 50%; display: inline-block;
-      animation: bounce 1s ease infinite;
-    }
-    .loader-dots span:nth-child(2) { animation-delay: 0.15s; }
-    .loader-dots span:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes bounce {
-      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-6px); opacity: 1; }
-    }
-
-    /* ── REVEAL ── */
-    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.23,1,0.32,1); }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      font-size: 12px; color: var(--muted);
-    }
-    .footer-inner {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 24px 48px;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1100px) {
-      .hero-row { grid-template-columns: 1fr 1fr; }
-      .grid { grid-template-columns: repeat(2,1fr); }
-    }
-    @media (max-width: 760px) {
-      .hero-row { grid-template-columns: 1fr; }
-      .side-card { display: flex; }
-      .grid { grid-template-columns: repeat(2,1fr); }
-    }
-    @media (max-width: 860px) {
-      .header-inner, main, .footer-inner { padding-left: 24px; padding-right: 24px; }
-    }
-    @media (max-width: 640px) {
-      .header-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
-      .header-controls { width: 100%; }
-      .search-wrap { flex: 1; }
-      .search-wrap input, .search-wrap input:focus { width: 100%; }
-      .grid { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
-
-  <header class="site-header">
-    <div class="header-inner">
-      <!-- Profile left -->
-      <div class="profile-section">
-        <div class="author-avatar">
-          <img src="img/rss-img/blog-logo.png" alt="Hakan Cengiz">
-        </div>
-        <div>
-          <div class="author-name">Hakan Cengiz</div>
-          <div class="author-title">Senior Software Developer</div>
-          <a href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener" class="linkedin-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            hakancengiz
-          </a>
-        </div>
-      </div>
-      <!-- Controls right -->
-      <div class="header-controls">
-        <div class="search-wrap">
-          <svg class="ico-search" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input id="search" type="search" placeholder="Yazılarda ara...">
-        </div>
-        <button id="themeBtn" class="theme-btn" title="Tema değiştir">
-          <svg class="ico-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="ico-sun"  width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <div id="loader">
-      Yazılar derleniyor
-      <span class="loader-dots"><span></span><span></span><span></span></span>
-    </div>
-
-    <div id="content" style="display:none;">
-      <!-- HERO ROW -->
-      <div class="section-label"><span>Öne Çıkan</span></div>
-      <div class="hero-row">
-        <!-- Featured (1st article) -->
-        <a id="featured-card" href="#" target="_blank" rel="noopener" class="featured-card reveal">
-          <div class="feat-img-wrap">
-            <div class="feat-img-bg" id="feat-img-bg"></div>
-            <img id="feat-img" src="" alt="">
-            <div class="feat-badge">
-              <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              Öne Çıkan
-            </div>
-            <div class="hero-num">01</div>
-          </div>
-          <div class="feat-body">
-            <h2 class="feat-title" id="feat-title"></h2>
-            <p class="feat-desc"  id="feat-desc"></p>
-            <div class="feat-footer">
-              <span class="feat-date" id="feat-date"></span>
-              <span class="read-btn">
-                Devamını Oku
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </span>
-            </div>
-          </div>
-        </a>
-        <!-- Side card (2nd article) -->
-        <a id="side-card" href="#" target="_blank" rel="noopener" class="side-card reveal">
-          <div class="side-img-wrap">
-            <img id="side-img" src="" alt="">
-            <div class="hero-num">02</div>
-          </div>
-          <div class="side-body">
-            <div class="side-label">Makale</div>
-            <h3 class="side-title" id="side-title"></h3>
-            <p class="side-desc"   id="side-desc"></p>
-            <div class="side-footer">
-              <span class="side-date" id="side-date"></span>
-              <span class="side-arrow">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-              </span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- GRID -->
-      <div class="section-label"><span>Tüm Yazılar</span></div>
-      <div id="feed" class="grid"></div>
-      <div id="load-sentinel"><div class="spinner" id="spinner"></div></div>
-      <div id="view-all-wrap" style="display:none; text-align:center; margin-top:40px;">
-        <a href="https://medium.com/@hakancengiz" target="_blank" rel="noopener" id="view-all-btn" class="view-all-btn">
-          Tüm Yazıları Görüntüle
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-        </a>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-      <span id="footer-copy"></span>
-    </div>
-  </footer>
-
-  <script>
-    // ── Dynamic footer year ──
-    document.getElementById('footer-copy').textContent = `© ${new Date().getFullYear()} Hakan Cengiz`;
-
-    const MEDIUM_USER = 'hakancengiz';
-    const API_URL     = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(`https://medium.com/feed/@${MEDIUM_USER}`)}`;
-    const PAGE_SIZE   = 9;
-
-    let allItems  = [];
-    let page      = 0;
-    let loading   = false;
-    let done      = false;
-
-    // ── Theme — persist across page loads ──
-    (function() {
-      const saved = localStorage.getItem('theme');
-      if (saved) document.documentElement.setAttribute('data-theme', saved);
-    })();
-
-    document.getElementById('themeBtn').addEventListener('click', () => {
-      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const next = dark ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-    });
-
-    // ── Image fallbacks ──
-    const FALLBACKS = [
-      'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80',
-      'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80',
-      'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&q=80',
-      'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&q=80',
-      'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80',
-      'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80',
-      'https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=800&q=80',
-      'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80',
-      'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&q=80',
-    ];
-
-    function getThumb(item, idx) {
-      if (item.thumbnail && item.thumbnail.startsWith('http')) return item.thumbnail;
-      if (item.enclosure && item.enclosure.link) return item.enclosure.link;
-      const d = document.createElement('div');
-      d.innerHTML = item.description || '';
-      const img = d.querySelector('img');
-      if (img && img.src) return img.src;
-      return FALLBACKS[idx % FALLBACKS.length];
-    }
-
-    function fmtDate(str, opts) {
-      return new Date(str).toLocaleDateString('tr-TR', opts);
-    }
-
-    // ── Reveal observer ──
-    const revealObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.06 });
-
-    // ── Render one page of grid cards ──
-    function renderPage() {
-      if (loading || done) return;
-      const start = page * PAGE_SIZE + 2; // hero uses items[0] and [1]
-      const slice = allItems.slice(start, start + PAGE_SIZE);
-      if (!slice.length) {
-        done = true;
-        document.getElementById('load-sentinel').style.display = 'none';
-        document.getElementById('view-all-wrap').style.display = 'block';
-        return;
-      }
-
-      loading = true;
-      document.getElementById('spinner').classList.add('on');
-
-      const feed = document.getElementById('feed');
-
-      slice.forEach((item, i) => {
-        const globalIdx = start + i;
-        const thumb = getThumb(item, globalIdx);
-        const desc  = item.description.replace(/<[^>]+>/g, '').slice(0, 105);
-        const date  = fmtDate(item.pubDate, { day: 'numeric', month: 'short' });
-        // Numbering: featured=01, side=02, grid starts at 03
-        const num   = String(globalIdx + 1).padStart(2, '0');
-
-        const a = document.createElement('a');
-        a.href      = item.link;
-        a.target    = '_blank';
-        a.rel       = 'noopener';
-        a.className = 'card reveal';
-        a.setAttribute('data-title', item.title.toLowerCase());
-        a.innerHTML = `
-          <div class="card-img-wrap">
-            <img src="${thumb}" alt="${item.title.replace(/"/g,'&quot;')}" loading="lazy">
-            <div class="card-num">${num}</div>
-          </div>
-          <div class="card-body">
-            <div class="card-cat">Makale</div>
-            <h3 class="card-title">${item.title}</h3>
-            <p class="card-desc">${desc}…</p>
-            <div class="card-foot">
-              <span class="card-date">${date}</span>
-              <span class="card-arrow">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-              </span>
-            </div>
-          </div>`;
-        feed.appendChild(a);
-        setTimeout(() => revealObs.observe(a), i * 55);
-      });
-
-      page++;
-      // Done only when we've consumed all items
-      if (start + slice.length >= allItems.length) {
-        done = true;
-        setTimeout(() => {
-          document.getElementById('load-sentinel').style.display = 'none';
-          document.getElementById('view-all-wrap').style.display = 'block';
-        }, 300);
-      }
-
-      // Release loading lock, then re-check in case sentinel still visible
-      setTimeout(() => {
-        loading = false;
-        document.getElementById('spinner').classList.remove('on');
-        checkSentinel();
-      }, 200);
-    }
-
-    // ── Scroll-based fallback for infinite scroll ──
-    function checkSentinel() {
-      if (done || loading) return;
-      const sentinel = document.getElementById('load-sentinel');
-      if (!sentinel) return;
-      const rect = sentinel.getBoundingClientRect();
-      if (rect.top < window.innerHeight + 300) renderPage();
-    }
-
-    window.addEventListener('scroll', checkSentinel, { passive: true });
-
-    // ── Initial fetch ──
-    async function init() {
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&amp;family=Manrope:wght@400;500;600;650;700;750;800&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
       try {
-        const res  = await fetch(API_URL);
-        const data = await res.json();
-        allItems   = data.items || [];
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light" || savedTheme === "dark")
+          document.documentElement.dataset.theme = savedTheme;
+      } catch (_) {}
+      document.querySelector('meta[name="theme-color"]').content =
+        document.documentElement.dataset.theme === "dark" ? "#111822" : "#ffffff";
+    </script>
+    <link rel="stylesheet" href="blog-files/styles.css" />
+    <script src="blog-files/app.js" defer=""></script>
+    <script id="posts-data" type="application/json">{"version":1,"updatedAt":"2026-11-07T21:39:06.002Z","items":[{"id":"76c652ea7585","title":"Mülakatlarda En Çok Sorulan 20 Yazılım Farkı (C#/.NET)","link":"https://medium.com/@hakancengiz/m%C3%BClakatlarda-en-%C3%A7ok-sorulan-20-yaz%C4%B1l%C4%B1m-fark%C4%B1-c-net-76c652ea7585","localUrl":"yazi/mulakatlarda-en-cok-sorulan-20-yazilim-farki-csharp-net/","pubDate":"2026-07-19T19:54:59.769Z","categories":["yazılım","türkçe","csharp","dotnet","interview"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*VWEZ7P4eH0Oxo4VNRucpog.png","description":"1. String vs StringBuilder Bu konu neredeyse her C# mülakatında sorulur. String nedir? string, metin saklamak için kullanılan bir referans tipidir. Ancak en önemli özelliği immutable (değiştirilemez) olmasıdır. Immutable, oluşturulan bir nesnenin içeriğinin sonradan değiştirilememesi anlamına gelir. Bir string değiştiriliyormuş gibi görünse de aslında bellekte yeni bir string nesnesi oluşturulur. string text = \"Merhaba\"; text += \" Dünya\"; Yukarıdaki kodda mevcut string değişmez. \"Merhaba Dünya\" ","wordCount":1097},{"id":"3a952a49b79c","title":"GUID Kullanmak Gerçekten Performansı Düşürüyor mu?","link":"https://medium.com/@hakancengiz/guid-kullanmak-ger%C3%A7ekten-performans%C4%B1-d%C3%BC%C5%9F%C3%BCr%C3%BCyor-mu-3a952a49b79c","localUrl":"yazi/guid-kullanmak-gercekten-performansi-dusuruyor-mu/","pubDate":"2026-07-10T20:15:47.989Z","categories":["guid","software-development","software-engineering","yazılım","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*ApvrruP7xuoXIyKpHwIhyQ.png","description":"Yazılım geliştirmeye yeni başlayanların en sık duyduğu tavsiyelerden biri şudur: “GUID kullanma, performansı düşürür.” Bu cümle o kadar sık tekrarlanır ki, zamanla sorgulanmadan kabul edilen bir kurala dönüşür. Hatta bazı ekiplerde proje başlamadan önce bile “Primary Key kesinlikle INT olacak.” kararı alınır. Peki bu yaklaşım gerçekten doğru mu? Kısa cevap: Hayır. Uzun cevap ise biraz daha ilginç. Çünkü GUID’in performansı düşürdüğü doğru olabilir; ancak bu her zaman, her platformda ve her senar","wordCount":877},{"id":"6ed7e09daa85","title":"Repository Pattern Nedir? Gerçekte Ne İşe Yarar?","link":"https://medium.com/@hakancengiz/repository-pattern-nedir-ger%C3%A7ekte-ne-i%CC%87%C5%9Fe-yarar-6ed7e09daa85","localUrl":"yazi/repository-pattern-nedir-gercekte-ne-ise-yarar/","pubDate":"2026-05-12T19:38:42.093Z","categories":["repository-pattern","design-patterns","software-development","csharp","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*0240ppJUIJZw---KFVd0EA.png","description":"Repository Pattern, en basit tanımıyla: Veri erişim (data access) kodunu, iş mantığından (business logic) ayıran bir tasarım yaklaşımıdır. Buradaki bazı terimleri netleştirelim: Data Access (Veri Erişimi): Veritabanına gidip veri okuma/yazma işlemleri Business Logic (İş Mantığı): Uygulamanın karar verme kısmı (örneğin “kullanıcı aktif mi?” gibi kurallar) Neden Repository Pattern Kullanılır? Bir projede doğrudan şöyle kod yazarsan: var user = db.Users.First(x => x.Id == 1); Bu kod: Veritabanına b","wordCount":557},{"id":"5166f3ed70e3","title":"DNS Nedir? Bir Siteye Erişmek İstendiğinde Arka Planda Ne Olur?","link":"https://medium.com/@hakancengiz/dns-nedir-bir-siteye-eri%C5%9Fmek-i%CC%87stendi%C4%9Finde-arka-planda-ne-olur-5166f3ed70e3","localUrl":"yazi/dns-nedir-bir-siteye-erismek-istendiginde-arka-planda-ne-olur/","pubDate":"2026-05-09T20:09:31.471Z","categories":["dns","web","https","internet","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*cghSgv2lCeSvTRaMh4YvHA.png","description":"Tarayıcıya bir site yazarsın: www.google.com Enter’a basarsın ve sayfa açılır. Basit gibi görünür ama aslında o küçük hareketin arkasında birden fazla sistem katmanı çalışır. İşte bu sürecin adı: DNS çözümleme süreci + HTTP isteği yolculuğu DNS Nedir? DNS, İngilizce açılımıyla Domain Name System demektir. Türkçesiyle: Alan adı sistemi DNS’in görevi şudur: İnsanların yazdığı site adını (örneğin google.com), bilgisayarların anlayacağı IP adresine çevirmek. Çünkü bilgisayarlar “google.com” anlamaz.","wordCount":552},{"id":"f7d80c5b394e","title":"JWT Authentication Nedir? Token Üretme ve Doğrulama","link":"https://medium.com/@hakancengiz/jwt-authentication-nedir-token-%C3%BCretme-ve-do%C4%9Frulama-f7d80c5b394e","localUrl":"yazi/jwt-authentication-nedir-token-uretme-ve-dogrulama/","pubDate":"2026-05-04T18:01:46.115Z","categories":["jwt","authentication","security","token","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*c4xQ6wPtgt8lU715WrYAGw.png","description":"Modern web uygulamalarında en sık kullanılan kimlik doğrulama yöntemlerinden biri JWT (JSON Web Token) yapısıdır. JWT’yi sadece “login olunca verilen bir token” gibi düşünmek eksik olur. Asıl mesele şu: Sunucu, kullanıcıyı her istekte tekrar tekrar kontrol etmek zorunda kalmadan güveni nasıl sürdürüyor? JWT burada devreye girer. JWT Nedir? JWT, açılımıyla JSON Web Token, iki taraf arasında güvenli bilgi taşıyan bir token formatıdır. Basitçe: Kullanıcı giriş yapar Sunucu bir token üretir Kullanıc","wordCount":881},{"id":"6054ec5a572f","title":"Flexbox Nedir? Ortalamaya Çalışırken Neden Deliriyorsun?","link":"https://medium.com/@hakancengiz/flexbox-nedir-ortalamaya-%C3%A7al%C4%B1%C5%9F%C4%B1rken-neden-deliriyorsun-6054ec5a572f","localUrl":"yazi/flexbox-nedir-ortalamaya-calisirken-neden-deliriyorsun/","pubDate":"2026-05-01T18:04:57.135Z","categories":["flexbox","css","html","software-development","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*yyUEmYP6mnXBt9apOdpJcg.png","description":"CSS öğrenen çoğu kişi şu noktada takılır: “Bir şeyi ortaya almak neden bu kadar zor?” Aslında sorun senin yanlış yapman değil. Sorun, sayfanın yerleşim mantığını tam oturtmadan ilerlemen olabilir. İşte Flexbox tam burada devreye girer. Flexbox, Türkçesiyle kabaca esnek kutu düzeni demektir. Bu sistem, bir kapsayıcının içindeki öğeleri hizalamayı, dağıtmayı ve sıralamayı kolaylaştırır. En önemli fark şu: Flexbox, her şeyi bir anda sihirli şekilde çözmez. Ama doğru mantıkla kullanıldığında, özelli","wordCount":2295},{"id":"2f8cdd72b84c","title":"Load Balancer Nedir? Trafik Nasıl Dağıtılır?","link":"https://medium.com/@hakancengiz/load-balancer-nedir-trafik-nas%C4%B1l-da%C4%9F%C4%B1t%C4%B1l%C4%B1r-2f8cdd72b84c","localUrl":"yazi/load-balancer-nedir-trafik-nasil-dagitilir/","pubDate":"2026-04-29T16:58:04.794Z","categories":["load-balancing","servers","api","software-development","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*jsFCJDFSiDjpPVabCa5Cvg.png","description":"Bir uygulama ilk başta tek sunucuda çalışır. Her şey basittir. Tüm istekler tek bir yere gelir, işlenir ve cevap döner. Ama kullanıcı sayısı arttığında işler değişir. Sunucu yavaşlar CPU dolar RAM yetmez İstekler gecikir Kullanıcı bekler İşte tam bu noktada kritik bir soru ortaya çıkar: “Tüm kullanıcılar neden tek bir sunucuya gelsin?” Cevap: Gelmemeli. Burada devreye load balancer, yani yük dengeleyici girer. Load Balancer Nedir? Load balancer, gelen istekleri birden fazla sunucuya dağıtan sist","wordCount":918},{"id":"ccfdcef9383e","title":"Eventually Consistent Nedir? Verinin Bir Süre Yanlış Olması Nasıl Doğru Olabilir?","link":"https://medium.com/@hakancengiz/eventually-consistent-nedir-verinin-bir-s%C3%BCre-yanl%C4%B1%C5%9F-olmas%C4%B1-nas%C4%B1l-do%C4%9Fru-olabilir-ccfdcef9383e","localUrl":"yazi/eventually-consistent-nedir-verinin-bir-sure-yanlis-olmasi-nasil-dogru-olabilir/","pubDate":"2026-04-27T19:28:54.102Z","categories":["data","software-development","api","yazılım","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*1HExMfwYDL-NP8rBABxctA.png","description":"Dağıtık sistemlerde en sarsıcı ama en gerçekçi fikirlerden biri şudur: Bir verinin bir süre boyunca farklı yerlerde farklı görünmesi normal olabilir. İlk duyduğunda bu kulağa hata gibi gelir. Hatta “veri yanlışsa sistem nasıl doğru olabilir?” diye düşünürsün. Ama büyük ölçekli sistemlerde bazen tam da bu yaklaşım, sistemi ayakta tutan şeydir. Bu yaklaşımın adı eventual consistency’dir. Türkçesiyle nihai tutarlılık diyebiliriz. Buradaki “nihai” kelimesi çok önemli. Çünkü sistem hemen tutarlı olma","wordCount":1984},{"id":"494a478e439b","title":"Timeout Nedir? Bir İstek Ne Zaman Vazgeçmeli?","link":"https://medium.com/@hakancengiz/timeout-nedir-bir-i%CC%87stek-ne-zaman-vazge%C3%A7meli-494a478e439b","localUrl":"yazi/timeout-nedir-bir-istek-ne-zaman-vazgecmeli/","pubDate":"2026-04-24T21:24:24.916Z","categories":["time-out","software-development","api","yazılım","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*FFmEHZvYX8T19OTcaSawMg.png","description":"Yazılımda en kritik sorulardan biri şudur: Bir istek ne kadar beklemeli, ne zaman bırakmalı? Bu sorunun cevabı timeout kavramında gizlidir. Türkçede zaman aşımı diyebiliriz. Timeout, bir işlemin belirlenen süre içinde tamamlanmaması durumunda sistemin o işlemi artık beklememesi demektir. Bu kavram basit görünür ama gerçekte çok önemlidir. Çünkü sonsuza kadar bekleyen sistemler yavaşlar, kilitlenir, kaynak tüketir ve sonunda kullanıcı deneyimini bozar. Asıl mesele şudur: Her istek tamamlanmak zor","wordCount":1485},{"id":"19cd9e1e9feb","title":"Idempotency Nedir? Aynı İsteği 10 Kere Gönderirsen Ne Olur?","link":"https://medium.com/@hakancengiz/idempotency-nedir-ayn%C4%B1-i%CC%87ste%C4%9Fi-10-kere-g%C3%B6nderirsen-ne-olur-19cd9e1e9feb","localUrl":"yazi/idempotency-nedir-ayni-istegi-10-kere-gonderirsen-ne-olur/","pubDate":"2026-04-23T18:50:26.747Z","categories":["idempotency","idempotency-keys","software-development","api","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*htdMuwU4viKqmecJ4cwkdQ.png","description":"Bir API’ye aynı isteği bir kere göndermenle on kere göndermen aynı sonucu veriyorsa, orada idempotency vardır. Türkçede bunu en sade haliyle şöyle düşünebilirsin: Aynı işlemi tekrar tekrar yapınca sistemin son durumu değişmiyorsa, o işlem idempotenttir. Bu kavram ilk bakışta teorik gibi durur. Ama pratikte inanılmaz önemlidir. Özellikle ödeme sistemlerinde, sipariş oluşturma akışlarında, kullanıcı kayıtlarında, para transferlerinde ve genel olarak “bir şey oluştur” türü işlemlerde hayat kurtarır","wordCount":1406},{"id":"7745b9c8d676","title":"Hashing ve Encryption Nedir? Aralarındaki Kritik Farklar","link":"https://medium.com/@hakancengiz/hashing-ve-encryption-nedir-aralar%C4%B1ndaki-kritik-farklar-7745b9c8d676","localUrl":"yazi/hashing-ve-encryption-nedir-aralarindaki-kritik-farklar/","pubDate":"2026-04-20T20:04:54.092Z","categories":["hashing","encryption","software-development","security","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*YRZwY98FfxvODHOhMySwJw.png","description":"Yazılım dünyasında en çok karıştırılan konulardan biri şudur: “Bir veriyi korumak için hashing mi kullanmalıyım, encryption mı?” İkisi de veriyi güvenli hale getirmek için kullanılır, ama amaçları tamamen farklıdır. Kısaca söyleyelim: Hashing (özetleme), veriyi tek yönlü bir işlemler zincirinden geçirip sabit uzunlukta bir çıktı üretir. Encryption (şifreleme), veriyi bir anahtar kullanarak okunamaz hale getirir; doğru anahtar varsa tekrar geri açılabilir. Bu fark küçük görünür ama pratikte çok k","wordCount":1440},{"id":"6659c81ca687","title":"“Bende Çalışıyor” Problemini Bitiren Teknoloji: Docker Nedir?","link":"https://medium.com/@hakancengiz/docker-nedir-bende-%C3%A7al%C4%B1%C5%9F%C4%B1yor-problemini-bitiren-teknoloji-6659c81ca687","localUrl":"yazi/bende-calisiyor-problemini-bitiren-teknoloji-docker-nedir/","pubDate":"2026-04-14T14:05:33.641Z","categories":["docker","containers","software-development","deployment","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*Z0PA18lUu224grXLkbyY9g.png","description":"Modern yazılım geliştirme süreçlerinde “çalışıyor ama benim bilgisayarımda” problemi en sık karşılaşılan sorunlardan biridir. Docker bu problemi çözmek için geliştirilmiş bir teknolojidir. Docker, uygulamaları “container (konteyner / izole çalışma ortamı)” içinde çalıştırmanı sağlar. Bu sayede uygulama, hangi ortamda çalışırsa çalışsın aynı şekilde davranır. Docker Ne İşe Yarar? Docker’ın temel amacı şudur: Uygulamayı bağımlılıklarıyla birlikte paketlemek Her ortamda aynı şekilde çalışmasını sağ","wordCount":542},{"id":"2549867ee563","title":"Mülakatta Sorulan Ama Seni İyi Bir Yazılımcı Yapmayan 20 Bilgi","link":"https://medium.com/@hakancengiz/m%C3%BClakatta-sorulan-ama-seni-i%CC%87yi-bir-yaz%C4%B1l%C4%B1mc%C4%B1-yapmayan-20-bilgi-2549867ee563","localUrl":"yazi/mulakatta-sorulan-ama-seni-iyi-bir-yazilimci-yapmayan-20-bilgi/","pubDate":"2026-04-09T19:40:48.210Z","categories":["dotnet","c-sharp-programming","mülakat","yazılım","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*5yjtTYFK_3Ko5mgvROTTtA.png","description":"Yazılım mülakatlarında bazı konular çok sık sorulur. Bu konuların bir kısmı gerçekten temeldir ve bilinmesi gerekir. Ama bir kısmı da vardır ki, mülakatta güzel görünür; gerçek projede ise tek başına çok az şey ifade eder. Sorun şu değildir: Bu bilgiler gereksizdir. Sorun şudur: Bu bilgiler, olduklarından daha önemli sanılabilir. Birçok aday, bu tip sorulara ezber cevap verdiğinde konuyu bildiğini düşünür. Oysa yazılımda asıl önemli olan, kavramın adını söylemek değil, onu doğru yerde ve doğru ş","wordCount":3247},{"id":"cd0607ce3b9a","title":"Production’da Yaşanan Bir Bug Nasıl Günlerce Bulunamaz?","link":"https://medium.com/@hakancengiz/productionda-ya%C5%9Fanan-bir-bug-nas%C4%B1l-g%C3%BCnlerce-bulunamaz-cd0607ce3b9a","localUrl":"yazi/production-da-yasanan-bir-bug-nasil-gunlerce-bulunamaz/","pubDate":"2026-04-07T20:21:51.381Z","categories":["testing","bugs","software-development","türkçe","yazılım"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*ogujGy88v4UutGBSXDCkVg.png","description":"Bir bug’ın production ortamında ortaya çıkması, geliştirme sürecindeki sıradan bir hatadan çok daha yorucudur. Çünkü artık olay yalnızca “kod çalışıyor mu?” meselesi değildir. Gerçek kullanıcılar etkilenir, loglar yetersiz kalabilir, hata yeniden üretilemeyebilir ve herkes aynı soruyu sorar: “Bu sorun neden testte görünmedi?” İşin zor kısmı şudur: Production’daki bug’lar çoğu zaman büyük ve açık hatalar değildir. Tam tersine, küçük bir koşul birleşimi, nadir bir veri seti, yanlış zamanlama ya da","wordCount":1410},{"id":"481b6e7a78bd","title":"Dependency Injection Her Sorunu Çözmez: .NET’te Doğru Kullanım Rehberi","link":"https://medium.com/@hakancengiz/dependency-injection-her-sorunu-%C3%A7%C3%B6zmez-nette-do%C4%9Fru-kullan%C4%B1m-rehberi-481b6e7a78bd","localUrl":"yazi/dependency-injection-her-sorunu-cozmez-net-te-dogru-kullanim-rehberi/","pubDate":"2026-04-01T21:48:49.211Z","categories":["dependency-injection","software-development","programming","csharp","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*nVXv9LLsyk94fe4-CH-g2g.png","description":"Dependency Injection (DI) modern .NET uygulamalarının temel taşlarından biri. Doğru kullanıldığında kodu esnek, test edilebilir ve yönetilebilir hale getirir. Ama burada kritik bir gerçek var: DI her sorunu çözmez. Hatta yanlış kullanıldığında işleri daha karmaşık hale getirir. Bu yazıda DI’ın ne olduğunu kısaca netleştirip, en sık yapılan hataları ve doğru kullanım yaklaşımını gerçek senaryolar üzerinden anlatacağız. Dependency Injection nedir? Dependency Injection, bir sınıfın ihtiyaç duyduğu ","wordCount":644},{"id":"1d8b8d148b92","title":"React’te Performans Sorunlarının %80’i Bu 5 Hatanın Sonucu","link":"https://medium.com/@hakancengiz/reactte-performans-sorunlar%C4%B1n%C4%B1n-80-i-bu-5-hatan%C4%B1n-sonucu-1d8b8d148b92","localUrl":"yazi/react-te-performans-sorunlarinin-80-i-bu-5-hatanin-sonucu/","pubDate":"2026-04-01T20:29:17.461Z","categories":["react","javascript","software-development","performance","türkçe"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*mxCP0ba1yOwGK1jUynICDg.png","description":"React güçlü bir yapı. Doğru kullanıldığında hızlı, düzenli ve bakım açısından rahat bir uygulama kurmanı sağlar. Ama işin zor tarafı şu: React’te performans problemi çoğu zaman framework’ün kendisinden değil, geliştiricinin yaptığı küçük ama etkili hatalardan çıkar. İlk bakışta uygulama düzgün çalışıyor gibi görünür. Sayfalar açılır, butonlar tepki verir, veriler ekrana gelir. Fakat veri büyüdükçe, component sayısı arttıkça ve kullanıcı etkileşimi yoğunlaştıkça sistem ağırlaşmaya başlar. İşte o ","wordCount":1520},{"id":"0a548715d8a2","title":".NET Core’da Middleware Akışı: İstek Sisteme Nasıl Girer, Nasıl Çıkar?","link":"https://medium.com/@hakancengiz/net-coreda-middleware-ak%C4%B1%C5%9F%C4%B1-i%CC%87stek-sisteme-nas%C4%B1l-girer-nas%C4%B1l-%C3%A7%C4%B1kar-0a548715d8a2","localUrl":"yazi/net-core-da-middleware-akisi-istek-sisteme-nasil-girer-nasil-cikar/","pubDate":"2026-03-28T19:31:14.879Z","categories":["türkçe","yazılım","middleware","software-development","net-core"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*FPYoxoJcdhm5Jv88tPSdbw.png","description":"Web uygulamalarında en çok kafa karıştıran konulardan biri, isteğin uygulamaya girdikten sonra hangi sırayla işlendiğidir. Özellikle .NET Core tarafında middleware kavramını tam anlamadan ilerlemek, hem hata ayıklamayı zorlaştırır hem de performans ve güvenlik açısından yanlış kararlar vermeye neden olur. Bu yazıda middleware’in ne olduğunu, isteğin uygulamaya nasıl girdiğini, neden bazı middleware’lerin üstte bazıların altta yer aldığını ve akışın nasıl çalıştığını adım adım anlatacağız. Middle","wordCount":991},{"id":"6ea629570f6f","title":"Reflection Nedir? Ne Zaman Kullanmalı, Ne Zaman Kaçınmalı?","link":"https://medium.com/@hakancengiz/reflection-nedir-ne-zaman-kullanmal%C4%B1-ne-zaman-ka%C3%A7%C4%B1nmal%C4%B1-6ea629570f6f","localUrl":"yazi/reflection-nedir-ne-zaman-kullanmali-ne-zaman-kacinmali/","pubDate":"2026-03-26T20:03:09.105Z","categories":["reflections","csharp","yazılım","türkçe","software-development"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*eW0Hv9qx3E6CcLd74mzYDw.png","description":"C# ekosisteminde Reflection, çoğu geliştiricinin ilk başta “gizli bir güç” gibi gördüğü ama yanlış kullanıldığında performans, bakım ve güvenlik tarafında ciddi sorunlar çıkarabilen bir mekanizmadır. Özellikle enterprise uygulamalarda, plugin mimarilerinde, generic olmayan dinamik senaryolarda ve framework geliştirme süreçlerinde çok iş görür. Ama şunu net söylemek gerekir: Reflection, günlük kod yazımında ilk başvurulacak araç değildir. Çoğu zaman “olur da lazım olursa” kullanılmalı, mümkünse d","wordCount":1535},{"id":"bd30be46a0e8","title":"Her Yere Cache Koymak Performansı Artırır mı? Redis ile Doğru Kullanım Rehberi","link":"https://medium.com/@hakancengiz/her-yere-cache-koymak-performans%C4%B1-art%C4%B1r%C4%B1r-m%C4%B1-redis-ile-do%C4%9Fru-kullan%C4%B1m-rehberi-bd30be46a0e8","localUrl":"yazi/her-yere-cache-koymak-performansi-artirir-mi-redis-ile-dogru-kullanim-rehberi/","pubDate":"2026-03-22T18:57:09.551Z","categories":["cache","redis","software-development","türkçe","data"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*l62CL5tQ3KmLyAN4U8DjYw.png","description":"Cache, yazılım dünyasında en çok konuşulan performans araçlarından biridir. Doğru kullanıldığında sistemi ciddi biçimde hızlandırır. Yanlış kullanıldığında ise kodu gereksiz yere karmaşıklaştırır, bellek tüketimini artırır ve bazı durumlarda uygulamayı daha da yavaşlatır. Her yere cache koymak, otomatik olarak performans artışı sağlamaz. Hatta çoğu zaman, problemi çözmek yerine yeni problemler üretir. Bu yazıda cache’in ne işe yaradığını, ne zaman fayda sağladığını, ne zaman zarar verdiğini ve d","wordCount":1567},{"id":"691f637d97f1","title":"Supabase vs Firebase — Backend Kurmadan Backend Kurmak","link":"https://medium.com/@hakancengiz/supabase-vs-firebase-backend-kurmadan-backend-kurmak-691f637d97f1","localUrl":"yazi/supabase-vs-firebase-backend-kurmadan-backend-kurmak/","pubDate":"2026-03-16T16:47:26.810Z","categories":["software-development","vibe-coding","supabase","firebase","react"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*NMmoZ57yj2DAvrGQyJXiSw.jpeg","description":"Kısa versiyon: eğer Postgres, SQL ve tam kontrol istiyorsan Supabase; eğer tam entegre Google ekosistemi, güçlü SDK’lar ve otomatik ölçeklenebilir NoSQL istiyorsan Firebase daha hızlı yol aldırır. Aşağıda karar vermeyi kolaylaştıracak teknik farklar, kullanım örnekleri ve pratik tavsiyeler var. 1) Temel mimari fark — ne alırsın? Supabase: Her proje için tam bir Postgres veritabanı (SQL), Row-Level Security (RLS), instant REST/Realtime API, Storage ve Edge Functions sunar. Yani verinin modelleme/","wordCount":869},{"id":"bf0e3a650212","title":"IEnumerable vs IQueryable — Performansı Sessizce Bozan Kritik Fark","link":"https://medium.com/@hakancengiz/ienumerable-vs-iqueryable-performans%C4%B1-sessizce-bozan-kritik-fark-bf0e3a650212","localUrl":"yazi/ienumerable-vs-iqueryable-performansi-sessizce-bozan-kritik-fark/","pubDate":"2026-03-15T01:21:00.518Z","categories":["csharp","software-development","performance","coding","net-core"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*sUaDcCK1fAsg-16JmF-x5A.png","description":"Neden önemli? Çoğu geliştirici IEnumerable ile IQueryable arasındaki farkı görmezden gelir; fakat fark, sorgunun nerede çalıştığını (memory mi yoksa database mi) belirler. Yanlış yerde filtre uygulamak, büyük veritabanı tablolarını istemeden client tarafına çekmene ve performans felaketine yol açar. Temel kavramlar IEnumerable\u003cT>: Veriyi bellekte (in-memory) işler. LINQ to Objects burada çalışır. Sorguların çoğu C# kodu tarafından işletilir. IQueryable\u003cT>: Sorguyu temsil eden bir ifade ağacıdır ","wordCount":887},{"id":"1665d2e64469","title":"C# Async/Await — Modern .NET (Core) için yanlış bilinen 5 şey","link":"https://medium.com/@hakancengiz/c-async-await-modern-net-core-i%C3%A7in-yanl%C4%B1%C5%9F-bilinen-5-%C5%9Fey-1665d2e64469","localUrl":"yazi/csharp-async-await-modern-net-core-icin-yanlis-bilinen-5-sey/","pubDate":"2026-03-15T00:46:12.521Z","categories":["csharp","dotnet","net-core","programming","software-development"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*o4xPpAxWmOCW0_QV8B_eDQ.jpeg","description":"Modern .NET (ör. .NET 6/7/8 ve sonrası) ile bazı davranışlar daha net ama yanlış kavrayışlar hala performans, hata yönetimi ve ölçeklenebilirlik sorunlarına yol açıyor. Aşağıda en sık karıştırılan 5 nokta’yı modern .NET perspektifiyle, anlamayanlar için gereken kısa tanımlarla birlikte açıklıyorum. 1) async = paralel çalışma değildir Ne demek? async anahtar kelimesi bir metodun içinde await kullanılacağını işaretler; bu, metodun çağrıldığı thread’i otomatik olarak paralel veya yeni bir thread'e ","wordCount":787},{"id":"3c8f5af82ba8","title":"Entity Framework Performans Tuzakları","link":"https://medium.com/@hakancengiz/entity-framework-performans-tuzaklar%C4%B1-3c8f5af82ba8","localUrl":"yazi/entity-framework-performans-tuzaklari/","pubDate":"2026-03-03T19:48:01.553Z","categories":["csharp","entity-framework-core","software-development","performance","sql"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*U53weqf9VvgIiui4aTWM8Q.jpeg","description":"Kısa bir not: Aşağıda ele alınan başlıklar, gerçek proje deneyimlerinde sıklıkla karşılaşılan performans ve tasarım kaynaklı durumlara dayanmaktadır. Her bir bölümde önce ilgili problem çerçevelenmiş, ardından uygulanabilir çözüm yaklaşımı ve oluşabilecek örnek SQL çıktısı üzerinden teknik değerlendirme sunulmuştur. 1) N+1 problemi — döngü içinde veritabanına tekrar tekrar bakmak Durum: Bir liste çekip, her öğe için ilişkili veriye ayrı ayrı erişildiğinde veritabanına çok sayıda sorgu gider. Bu,","wordCount":1168},{"id":"338984c831ed","title":"React Serisi — #11 TypeScript ile React","link":"https://medium.com/@hakancengiz/react-serisi-11-typescript-ile-react-338984c831ed","localUrl":"yazi/react-serisi-11-typescript-ile-react/","pubDate":"2025-10-28T17:34:50.503Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":11,"chapterTitle":"TypeScript ile React"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*a0jITATwu5ryfNNgCTVfOw.png","description":"TypeScript, JavaScript üzerine inşa edilmiş bir statik tip sistemidir. React ile birlikte kullanıldığında: Hataları daha derleyici aşamasında yakalayabiliriz Component’ler ve hook’lar daha öngörülebilir hale gelir Büyük projelerde refactoring ve bakım kolaylaşır 1. TypeScript Kurulumu Vite ile React + TS Projesi: npm create vite@latest my-app -- --template react-ts cd my-app npm install npm run dev Artık proje .tsx uzantılı dosyalar ile çalışır ve TypeScript tip denetimi aktif olur. 2. Component","wordCount":502},{"id":"6aa4ae3b303d","title":"React Serisi — #10 Proje Yapılandırması ve En İyi Pratikler","link":"https://medium.com/@hakancengiz/react-serisi-10-proje-yap%C4%B1land%C4%B1rmas%C4%B1-ve-en-i%CC%87yi-pratikler-6aa4ae3b303d","localUrl":"yazi/react-serisi-10-proje-yapilandirmasi-ve-en-iyi-pratikler/","pubDate":"2025-10-28T17:34:42.741Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":10,"chapterTitle":"Proje Yapılandırması ve En İyi Pratikler"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*k3vvQYmkZKBzMiLTWp1XrQ.png","description":"Büyük ve profesyonel React projelerinde, düzensiz dosya yapısı ve karmaşık importlar zamanla sorun yaratır. Bu bölümde, temiz mimari, alias kullanımı, environment değişkenleri ve deployment konularını inceleyeceğiz. 1. Temiz Proje Yapısı (Folder Structure) Tipik bir React projesi yapısı şöyle olabilir: src/ │ ├─ components/ # Tekrar kullanılabilir UI bileşenleri │ ├─ Button.jsx │ └─ Card.jsx │ ├─ pages/ # Sayfa component’leri │ ├─ Home.jsx │ └─ About.jsx │ ├─ hooks/ # Custom hook’lar │ └─ useFet","wordCount":442},{"id":"ee996b0a26c2","title":"React Serisi — #09 React Testing Library ve Jest ile Test Etme","link":"https://medium.com/@hakancengiz/react-serisi-09-react-testing-library-ve-jest-ile-test-etme-ee996b0a26c2","localUrl":"yazi/react-serisi-09-react-testing-library-ve-jest-ile-test-etme/","pubDate":"2025-10-27T09:23:55.007Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":9,"chapterTitle":"React Testing Library ve Jest ile Test Etme"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*3UeumyiSzk9VLcPqPZTKrw.png","description":"Test yazmak, React projelerinde kod kalitesini ve sürdürülebilirliği artırır. React Testing Library (RTL) ve Jest bu işi kolaylaştırır. 1. Kurulum npm install --save-dev @testing-library/react @testing-library/jest-dom jest  Jest → test runner ve assertion kütüphanesi  React Testing Library → React component’lerini gerçek DOM benzeri ortamda test eder  jest-dom → ekstra matcher’lar sağlar (ör: toBeInTheDocument()) 2. Basit Component Testi Önce basit bir component oluşturalım: // Hello.jsx import","wordCount":436},{"id":"7461dbef9d9a","title":"React Serisi — #08 Formik ve Yup ile Gelişmiş Form Yönetimi","link":"https://medium.com/@hakancengiz/react-serisi-08-formik-ve-yup-ile-geli%C5%9Fmi%C5%9F-form-y%C3%B6netimi-7461dbef9d9a","localUrl":"yazi/react-serisi-08-formik-ve-yup-ile-gelismis-form-yonetimi/","pubDate":"2025-10-27T09:23:22.711Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":8,"chapterTitle":"Formik ve Yup ile Gelişmiş Form Yönetimi"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*0-74tcEEXfEC34KLN-uHCQ.png","description":"React’te form yönetimi başlangıçta basittir, ancak formlar büyüdükçe: State yönetimi karmaşıklaşır Validasyon kodları çoğalır Performans sorunları ortaya çıkar Formik ve Yup, bu sorunları çözmek için geliştirilmiştir. 1. Formik ve Yup Kurulumu npm install formik yup  Formik → form state, submit ve validation yönetir  Yup → validation şemalarını tanımlar, Formik ile entegre çalışır 2. Basit Formik Formu import React from \"react\"; import { Formik, Form, Field } from \"formik\"; function SimpleForm()","wordCount":503},{"id":"c96c12ed6051","title":"React Serisi — #07 Performans Optimizasyonu","link":"https://medium.com/@hakancengiz/react-serisi-07-performans-optimizasyonu-c96c12ed6051","localUrl":"yazi/react-serisi-07-performans-optimizasyonu/","pubDate":"2025-10-27T09:22:56.005Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":7,"chapterTitle":"Performans Optimizasyonu"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*mbnmgC1AbfoPNWnhGkgMUw.png","description":"React performansını artırmak için temel olarak şu üç konuyu bilmek gerekiyor: Gereksiz render’ları önlemek Hook’ların doğru kullanımı (memo, useMemo, useCallback) Büyük listeleri ve componentleri optimize etmek 1. Gereksiz Render’ların Tespiti React her state değişiminde ilgili component’i yeniden render eder. Ama bazı durumlarda gereksiz render performansı düşürür. import React, { useState } from \"react\"; function Counter() { const [count, setCount] = useState(0); console.log(\"Counter render ol","wordCount":598},{"id":"99e8c3d15d0e","title":"React Serisi — #06 React Router ve Sayfa Yönetimi","link":"https://medium.com/@hakancengiz/react-serisi-06-react-router-ve-sayfa-y%C3%B6netimi-99e8c3d15d0e","localUrl":"yazi/react-serisi-06-react-router-ve-sayfa-yonetimi/","pubDate":"2025-10-25T08:37:47.172Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":6,"chapterTitle":"React Router ve Sayfa Yönetimi"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*BUJiajVHq9wG_UGmlS1Fxg.png","description":"Modern web uygulamaları artık genellikle tek sayfa (Single Page Application — SPA) mimarisiyle çalışır. Bu yapıda sayfa yenilenmeden farklı görünümler arasında geçiş yaparız. İşte React Router bu işi üstlenir — yani sayfa yönetimini (routing) sağlar. 1. React Router Kurulumu Öncelikle React Router’ı projeye dahil edelim: npm install react-router-dom react-router-dom, React projelerinde tarayıcı tabanlı yönlendirme yapmamızı sağlar. 2. Temel Router Yapısı main.jsx dosyamızda BrowserRouter bileşen","wordCount":595},{"id":"c8cecea58d23","title":"React Serisi — #05 Redux ile Uygulama Durum Yönetimi","link":"https://medium.com/@hakancengiz/react-serisi-05-redux-ile-uygulama-durum-y%C3%B6netimi-c8cecea58d23","localUrl":"yazi/react-serisi-05-redux-ile-uygulama-durum-yonetimi/","pubDate":"2025-10-25T08:37:06.700Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":5,"chapterTitle":"Redux ile Uygulama Durum Yönetimi"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*4AbKABbCtm5QDXLduGGpTQ.png","description":"1. Redux Nedir ve Neden Kullanılır? React’te küçük projelerde state ve props yeterlidir. Ancak uygulama büyüdükçe, component’lar arası veri akışı karışmaya başlar. Redux bu sorunu çözer: Tüm uygulama state’ini merkezi bir “store” içinde toplar. Yani: Veriler component’lar arasında props zinciriyle dolaşmaz. Uygulamanın durumu (state) tek bir yerden kontrol edilir. Değişiklikler predictable (öngörülebilir) hale gelir. Redux veri akışı şu şekildedir: Component → Action → Reducer → Store → Componen","wordCount":908},{"id":"5e5e700c6f2f","title":"React Serisi — #04 API ve Veri Yönetimi","link":"https://medium.com/@hakancengiz/react-serisi-04-api-ve-veri-y%C3%B6netimi-5e5e700c6f2f","localUrl":"yazi/react-serisi-04-api-ve-veri-yonetimi/","pubDate":"2025-10-25T08:36:35.869Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":4,"chapterTitle":"API ve Veri Yönetimi"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png","description":"1. Fetch API / Axios ile Veri Çekme React’te dış bir API’den veri almak için genellikle iki popüler yöntem vardır: Fetch API (tarayıcıda gömülü gelir) Axios (daha gelişmiş bir kütüphane) Fetch API ile Veri Çekme import { useEffect, useState } from \"react\"; function FetchExample() { const [users, setUsers] = useState([]); useEffect(() => { // API'den veri çekme işlemi fetch(\"https://jsonplaceholder.typicode.com/users\") .then((response) => response.json()) // gelen veriyi JSON'a çeviriyoruz .then(","wordCount":944},{"id":"d0fab3944ea0","title":"React Serisi — #03 React Hook’larına Derin Dalış","link":"https://medium.com/@hakancengiz/react-serisi-03-react-hooklar%C4%B1na-derin-dal%C4%B1%C5%9F-d0fab3944ea0","localUrl":"yazi/react-serisi-03-react-hook-larina-derin-dalis/","pubDate":"2025-10-24T06:17:40.833Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":3,"chapterTitle":"React Hook’larına Derin Dalış"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*fT7zhmGVp_Z7XyiQwz8sUA.png","description":"useEffect ile Lifecycle Mantığı React’te useEffect, component’in yaşam döngüsünü (lifecycle) yönetmek için kullanılır. Yani component oluştuğunda, güncellendiğinde veya yok olduğunda çalışacak kodları tanımlayabiliriz. Temel Kullanım import { useEffect, useState } from \"react\"; function Timer() { const [count, setCount] = useState(0); // useEffect: component her render olduğunda çalışır useEffect(() => { console.log(\"Component render edildi.\"); }); return ( \u003cdiv> \u003cp>Sayım: {count}\u003c/p> \u003cbutton on","wordCount":807},{"id":"842617cc7f50","title":"React Serisi — #02 React ile Uygulama Mantığı","link":"https://medium.com/@hakancengiz/react-serisi-02-react-ile-uygulama-mant%C4%B1%C4%9F%C4%B1-842617cc7f50","localUrl":"yazi/react-serisi-02-react-ile-uygulama-mantigi/","pubDate":"2025-10-24T06:17:14.115Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":2,"chapterTitle":"React ile Uygulama Mantığı"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png","description":"Props ve State Arasındaki Fark React’te iki temel veri taşıma mekanizması vardır: props ve state. İkisi de component içinde veri tutar ama amaçları farklıdır. | Özellik | Props | State | | -------------------- | ----------------------- | ------------------- | | Değiştirilebilir mi? |  Hayır (readonly) |  Evet | | Nerede tanımlanır? | Parent component’ta | Component içinde | | Ne için kullanılır? | Dışarıdan veri almak | İç veri tutmak | | Örnek Kullanım | `UserCard name=\"Hakan\"` | `useState(\"Hak","wordCount":598},{"id":"4d0303830486","title":"React Serisi — #01 React Nedir? Neden Kullanılır?","link":"https://medium.com/@hakancengiz/react-serisi-01-react-nedir-neden-kullan%C4%B1l%C4%B1r-4d0303830486","localUrl":"yazi/react-serisi-01-react-nedir-neden-kullanilir/","pubDate":"2025-10-24T06:16:28.490Z","categories":["react","front-end-development","ui"],"series":{"key":"react-serisi","name":"React Serisi","part":1,"chapterTitle":"React Nedir? Neden Kullanılır?"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png","description":"React, kullanıcı arayüzleri (UI) oluşturmak için geliştirilmiş, bileşen tabanlı (component-based) bir JavaScript kütüphanesidir. Facebook tarafından geliştirilmiş ve bugün Meta, Netflix, Airbnb, Spotify gibi birçok büyük platform tarafından kullanılmaktadır. React’in temel amacı, veri değiştikçe arayüzü otomatik olarak güncellemek ve karmaşık uygulamaları küçük parçalara (component’lara) ayırarak yönetilebilir hale getirmektir. Neden React? Hızlıdır: Virtual DOM sayesinde sadece değişen bölümler","wordCount":691},{"id":"3e5b1595924a","title":".Net Core Serisi — #10 Final: MVC, API, Identity ve Middleware ile Genel Pratikler","link":"https://medium.com/@hakancengiz/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler-3e5b1595924a","localUrl":"yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/","pubDate":"2025-10-22T06:36:21.979Z","categories":["aspnetcore","csharp","software-development","mvc","api"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":10,"chapterTitle":"Final: MVC, API, Identity ve Middleware ile Genel Pratikler"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*km7I_EhEc2IvB-68edBNSw.png","description":"1. Proje Oluşturma ve Başlangıç Ayarları .NET projesinin temeli, doğru yapılandırma ile atılır. Program.cs dosyası, uygulamanın servislerinin (DI) ve HTTP istek hattının (middleware) yapılandırıldığı merkezi noktadır. Authentication Tipi (Individual): Bu seçenek, projenize ASP.NET Core Identity altyapısını otomatik olarak ekler. Kullanıcı kaydı, girişi, parola yönetimi gibi özellikler için hazır bir temel sunar. Container Support (Docker): Bu özellik, uygulamanızın bir Docker konteyneri içinde ç","wordCount":3011},{"id":"d4893c786e62","title":".Net Core Serisi — #09 Bonus: İleri Seviye .NET Core Konuları","link":"https://medium.com/@hakancengiz/net-core-serisi-09-bonus-i%CC%87leri-seviye-net-core-konular%C4%B1-d4893c786e62","localUrl":"yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/","pubDate":"2025-10-20T21:45:42.211Z","categories":["aspnetcore","csharp","software-development","api","entity-framework-core"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":9,"chapterTitle":"Bonus: İleri Seviye .NET Core Konuları"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png","description":"Artık temel .NET Core yapısını, mimariyi, güvenliği ve DevOps konularından noktadan sonra hedef artık daha derin, daha akıllı, daha verimli kod yazmak. Bu bonus serisinde, deneyimli geliştiricilerin gerçek projelerde fark yarattığı konulara odaklanacağız: Custom Middleware’ler Global Filters Background Jobs (Hangfire) CQRS ve Mediator Pattern SignalR ile Gerçek Zamanlı Haberleşme API versiyonlama ve performans ölçümü 1. Custom Middleware — Akışı Kontrol Etmenin Gücü Middleware, bir isteğin API’y","wordCount":772},{"id":"c7725215d633","title":".Net Core Serisi — #08 Gerçek Hayat Senaryoları ve En İyi Uygulamalar","link":"https://medium.com/@hakancengiz/net-core-serisi-08-ger%C3%A7ek-hayat-senaryolar%C4%B1-ve-en-i%CC%87yi-uygulamalar-c7725215d633","localUrl":"yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/","pubDate":"2025-10-20T21:44:37.812Z","categories":["aspnetcore","csharp","software-development","api","best-practices"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":8,"chapterTitle":"Gerçek Hayat Senaryoları ve En İyi Uygulamalar"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*Aum9bhLdzJr2WQOS8_LymA.png","description":"Artık .NET Core mimarisini, katmanlı yapıyı, güvenliği, testleri ve dağıtımı öğrendik. Bu noktada mesele “nasıl çalışıyor”dan çok “gerçekte nasıl yönetilir” haline gelir. Bu yazıda: Gerçek dünyada kullanılan mimari desenleri, Performans ve bakım odaklı ipuçlarını, Ve ekip içi standartlaşmayı ele alacağız. 1. Gerçek Hayat Proje Yapısı Profesyonel bir .NET Core projesi genellikle şu şekilde yapılandırılır;  MyCompany.MyProject ┣  MyProject.API → Controller’lar, DTO, Middleware ┣  MyProject.Applica","wordCount":814},{"id":"4e486ca791e9","title":".Net Core Serisi — #07 Yayınlama, Test ve DevOps Süreçleri","link":"https://medium.com/@hakancengiz/net-core-serisi-07-yay%C4%B1nlama-test-ve-devops-s%C3%BCre%C3%A7leri-4e486ca791e9","localUrl":"yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/","pubDate":"2025-10-20T21:43:50.946Z","categories":["aspnetcore","csharp","software-development","api","software-testing"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":7,"chapterTitle":"Yayınlama, Test ve DevOps Süreçleri"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*yh1THtF_WefcMNH9Z6m94w.png","description":"Kod yazmak kadar onu yayınlamak, test etmek ve sürekli güncel tutmak da önemlidir. Modern yazılım geliştirme süreci, yalnızca “build” değil, aynı zamanda: Test (Doğrulama) Publish (Dağıtım) DevOps (Sürekli Entegrasyon & Dağıtım) adımlarını içerir. 1. Publish (Yayınlama) Süreci .NET Core, platformdan bağımsız çalışabildiği için iki farklı yayın türü sunar: | Tür | Açıklama | Boyut | Gereksinim | | ----------------------- | ------------------------------ | ----- | -------------------- | | **Framew","wordCount":887},{"id":"4aa46a38e89a","title":".Net Core Serisi — #06 İleri Konular ve Performans","link":"https://medium.com/@hakancengiz/net-core-serisi-06-i%CC%87leri-konular-ve-performans-4aa46a38e89a","localUrl":"yazi/net-core-serisi-06-ileri-konular-ve-performans/","pubDate":"2025-10-19T21:00:05.442Z","categories":["aspnetcore","csharp","software-development","api","web-development"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":6,"chapterTitle":"İleri Konular ve Performans"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*5KswOq1EyOW3d7Lrekw1Gg.png","description":"Uygulama büyüdükçe sorunlar da büyür: Sorgular yavaşlar Gereksiz bellek kullanımı oluşur Servis bağımlılıkları artar Bu yazıda, .NET Core’da performansı artırmak için kullanabileceğin en etkili teknikleri adım adım işleyeceğiz. 1. Asenkron (Async/Await) Operasyonlar Problem: Uzun süren işlemler (örneğin veritabanı veya API çağrıları), thread’i bloke eder. Çözüm: async ve await ile bu işlemleri non-blocking hale getirmek. // Business/Services/UserService.cs // Asenkron çalışan kullanıcı servis ör","wordCount":834},{"id":"5aa157fd0557","title":".Net Core Serisi — #05 Güvenlik ve Kimlik Doğrulama","link":"https://medium.com/@hakancengiz/net-core-serisi-05-g%C3%BCvenlik-ve-kimlik-do%C4%9Frulama-5aa157fd0557","localUrl":"yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/","pubDate":"2025-10-19T20:59:09.527Z","categories":["aspnetcore","csharp","api","software-development","entity-framework-core"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":5,"chapterTitle":"Güvenlik ve Kimlik Doğrulama"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png","description":"ASP.NET Core’da JWT (JSON Web Token) ile Güvenli API Geliştirme Kimlik Doğrulama (Authentication) Nedir? Authentication, bir kullanıcının kim olduğunu doğrulama işlemidir. Örneğin, “bu isteği gönderen gerçekten admin mi?” sorusuna cevap verir. Authorization (Yetkilendirme) ise, Kullanıcının ne yapabileceğini belirler. Örneğin, bir moderatör kullanıcıları görebilir ama silemez. Bu ikisi genellikle birlikte çalışır:  Authentication = Kimsin?  Authorization = Ne yapabilirsin? JWT (JSON Web Token) N","wordCount":910},{"id":"942843e175fc","title":".Net Core Serisi — #04 Web API Geliştirme","link":"https://medium.com/@hakancengiz/net-core-serisi-04-web-api-geli%C5%9Ftirme-942843e175fc","localUrl":"yazi/net-core-serisi-04-web-api-gelistirme/","pubDate":"2025-10-19T20:58:01.853Z","categories":["net-core","aspnet-mvc","software-development","csharp","api"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":4,"chapterTitle":"Web API Geliştirme"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png","description":".NET Core’da Controller, Routing, DTO ve Validation ile Güçlü API Tasarımı Web API Nedir? Web API (Application Programming Interface), uygulamalar arasında veri alışverişini sağlayan bir arabirimdir. Bir kullanıcı arayüzü yerine, HTTP protokolü üzerinden veri döner. Örnek: Bir mobil uygulama, arka plandaki sunucudan veriyi API çağrısı ile alır. Tarayıcıda görmesek bile, her işlem GET, POST, PUT, DELETE gibi HTTP metotlarıyla yapılır. ASP.NET Core Web API’nin Mimarisi Bir Web API projesinde temel","wordCount":770},{"id":"52a652b18971","title":".Net Core Serisi — #03 Veri Katmanı ve ORM (Entity Framework Core)","link":"https://medium.com/@hakancengiz/net-core-serisi-03-veri-katman%C4%B1-ve-orm-entity-framework-core-52a652b18971","localUrl":"yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/","pubDate":"2025-10-18T20:31:50.631Z","categories":["net-core","aspnet-mvc","software-development","api","csharp"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":3,"chapterTitle":"Veri Katmanı ve ORM (Entity Framework Core)"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png","description":"ORM Nedir? ORM (Object-Relational Mapping), nesne tabanlı programlama ile ilişkisel veritabanları arasındaki farkı ortadan kaldıran bir tekniktir. Yani C# sınıflarını (örneğin User) SQL tablolarına dönüştürür, aradaki dönüşümü senin yerine yönetir. Manuel SQL yazmak yerine şu şekilde kod yazarsın; var users = context.Users.ToList(); ve EF Core bunu otomatik olarak şu sorguya çevirir: SELECT * FROM Users; ORM sayesinde: Kod ile veritabanı senkron kalır, Daha az hata olur, Kod okunabilirliği artar","wordCount":683},{"id":"3a0ccb278b16","title":".Net Core Serisi — #02 Katmanlı Yapı ve Uygulama Mimarisi","link":"https://medium.com/@hakancengiz/net-core-serisi-02-katmanl%C4%B1-yap%C4%B1-ve-uygulama-mimarisi-3a0ccb278b16","localUrl":"yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/","pubDate":"2025-10-18T20:31:04.773Z","categories":["net-core","aspnet-mvc","api","software-development","csharp"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":2,"chapterTitle":"Katmanlı Yapı ve Uygulama Mimarisi"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*REQzWwmQHDKHXbclEx9MYw.png","description":"Katmanlı Mimari Nedir? Katmanlı mimari (Layered Architecture), bir yazılım projesini sorumluluklara göre bölerek yönetilebilir hale getiren yaklaşımdır. Amaç: kodun okunabilirliğini, test edilebilirliğini ve sürdürülebilirliğini artırmak. Bir .NET Core uygulamasında bu yapı genellikle şu şekilde olur:  MyApp ┣  MyApp.API → Sunum (Presentation) katmanı ┣  MyApp.Business → İş kuralları (Service) katmanı ┣  MyApp.DataAccess → Veritabanı erişimi (Repository) katmanı ┗  MyApp.Entities → Modeller (Ent","wordCount":689},{"id":"0e294a2112a2","title":".Net Core Serisi — #01 Giriş ve Temeller","link":"https://medium.com/@hakancengiz/net-core-serisi-01-giri%C5%9F-ve-temeller-0e294a2112a2","localUrl":"yazi/net-core-serisi-01-giris-ve-temeller/","pubDate":"2025-10-18T20:30:13.116Z","categories":["net-core","aspnet-mvc","api","c-sharp-programming","software-development"],"series":{"key":"net-core-serisi","name":".Net Core Serisi","part":1,"chapterTitle":"Giriş ve Temeller"},"thumbnail":"https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png","description":".NET Core Nedir? .NET Core, Microsoft tarafından geliştirilen, açık kaynaklı, platformlar arası bir uygulama geliştirme altyapısıdır. Windows, macOS ve Linux üzerinde çalışabilir. Amaç aynı kod tabanıyla web, masaüstü, mobil ve bulut uygulamaları geliştirebilmektir. .NET Framework’ün “Windows’a özel” yapısını aşmak için ortaya çıkmıştır. Bugün artık tek bir çatı altında .NET 8 gibi birleşik sürümlerle “tek .NET ekosistemi” haline gelmiştir. .NET Framework ile .NET Core Arasındaki Farklar | Özell","wordCount":568},{"id":"e76190ede215","title":"Ters Psikoloji ile İngilizce Öğrenmek","link":"https://medium.com/@hakancengiz/ters-psikoloji-ile-i%CC%87ngilizce-%C3%B6%C4%9Frenmek-e76190ede215","localUrl":"yazi/ters-psikoloji-ile-ingilizce-ogrenmek/","pubDate":"2018-12-12T18:55:54.841Z","categories":["ingilizce","yabancı-dil","kişisel-gelişim","netflix"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*K0Vsm308EIYPp3Ay_HkL1Q.png","description":"Öncelikle belirtmek isterim ki; her ne kadar bir Netflix güzellemesi yapmak istemesem de bu yazı biraz Netflix üzerinden gidecek fakat anlatmak istediğim şey kesinlikle Netflix ile ilgili değil, bu özelliği sağlayan her türlü platformdan uygulanabilecek bir öğrenme yöntemi. Bize yıllarca İngilizce öğrenmemiz için yabancı dilde diziler ve filmler izlememiz önerildi. Belki de bu, insana fayda sağlayan en zevkli önerilerinden biri. Hatta öğretmeniniz ya da yabancı dil öğrenen diğer kişiler bu dizil","wordCount":294},{"id":"35d48e7d5379","title":"Yaz Bunu, İşe Yarar","link":"https://medium.com/@hakancengiz/yaz-bunu-i%CC%87%C5%9Fe-yarar-35d48e7d5379","localUrl":"yazi/yaz-bunu-ise-yarar/","pubDate":"2018-03-20T19:35:44.166Z","categories":["website","günlük","kullanışlı","pratik","internet"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*ldm-RY2ZfTZYP3eYnLa2ug.jpeg","description":"İnternet aleminde takılırken ilginç web sitelerine mutlaka denk gelmişsinizdir. Çünkü ortalık - ben dahil - “Abi şunu yapalım da, parayı kıralım”’cılarla dolu. Fakat bu yazımızın içeriği bununla ilgili değil, biz burada gündelik hayatta işe yarayacak, pratikliğiyle hayat kurtaracak web sitelerini listeleyeceğiz. Illustration: Ian Jepson 1) Mailinator Aslında Mailinator piyasada tekel konumunda değil belki ama en pratik ve hızlı olanlarından biri, o yüzden kendisini listeye eklemek istedim. Ee pe","wordCount":477},{"id":"6059560b96c6","title":"Geliş İngilizcem Geliş","link":"https://medium.com/@hakancengiz/geli%C5%9F-i%CC%87ngilizcem-geli%C5%9F-6059560b96c6","localUrl":"yazi/gelis-ingilizcem-gelis/","pubDate":"2017-04-06T19:13:41.253Z","categories":["ingilizce","kişisel-gelişim","tavsiye"],"series":null,"thumbnail":"https://cdn-images-1.medium.com/max/800/1*Sy9rbVo9xBLoeThkF-_Zrg.png","description":"Illustration: Kubra Aslan Aslında yıllardır hakkında konuşulan bir konu bu. Muhtemelen Youtube’da ya da diğer sosyal platformlarda görmüşsünüzdür “10 dakikada İngilizce Öğren” başlıklarını. Ben bunun aksine size bir ömür sürecek öğrenme metotlarından bahsedeceğim. Öncelikle İngilizcenin bir dil olduğunu ve dillerin sürekli gelişmekte olduğunu unutmayalım. Hadi daha fazla uzatmadan İngilizcemizi kendi kendimize nasıl geliştirebiliriz ona bakalım. 1) Voscreen Öncelikle Voscreen benim favorilerimde","wordCount":678}]}</script>
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#yazilar">Yazılara geç</a>
+    <svg
+      class="icon-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6"></path>
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6"></path>
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14"></path>
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6"></path>
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12"></path>
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1"></path>
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path
+          d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+        ></path>
+      </symbol>
 
-        document.getElementById('loader').style.display  = 'none';
-        document.getElementById('content').style.display = 'block';
-        if (!allItems.length) return;
-
-        // Featured (item 0)
-        const f0    = allItems[0];
-        const f0img = getThumb(f0, 0);
-        const fc    = document.getElementById('featured-card');
-        fc.href     = f0.link;
-        fc.setAttribute('data-title', f0.title.toLowerCase());
-        document.getElementById('feat-img-bg').style.backgroundImage = `url(${f0img})`;
-        document.getElementById('feat-img').src    = f0img;
-        document.getElementById('feat-img').alt    = f0.title;
-        document.getElementById('feat-title').textContent = f0.title;
-        document.getElementById('feat-desc').textContent  = f0.description.replace(/<[^>]+>/g,'').slice(0,190) + '…';
-        document.getElementById('feat-date').textContent  = fmtDate(f0.pubDate, {day:'numeric',month:'long',year:'numeric'});
-
-        // Side card (item 1)
-        if (allItems[1]) {
-          const f1 = allItems[1];
-          const sc = document.getElementById('side-card');
-          sc.href  = f1.link;
-          sc.setAttribute('data-title', f1.title.toLowerCase());
-          document.getElementById('side-img').src   = getThumb(f1, 1);
-          document.getElementById('side-img').alt   = f1.title;
-          document.getElementById('side-title').textContent = f1.title;
-          document.getElementById('side-desc').textContent  = f1.description.replace(/<[^>]+>/g,'').slice(0,115) + '…';
-          document.getElementById('side-date').textContent  = fmtDate(f1.pubDate, {day:'numeric',month:'short'});
-        }
-
-        // Hero reveal
-        [document.getElementById('featured-card'), document.getElementById('side-card')].forEach((el, i) => {
-          setTimeout(() => el && el.classList.add('visible'), i * 120 + 80);
-        });
-
-        // First page of grid then watch sentinel
-        renderPage();
-        // Also observe sentinel with IntersectionObserver as primary trigger
-        const sentinelEl = document.getElementById('load-sentinel');
-        new IntersectionObserver(entries => {
-          if (entries[0].isIntersecting) renderPage();
-        }, { rootMargin: '300px' }).observe(sentinelEl);
-
-      } catch (e) {
-        document.getElementById('loader').textContent = 'Yüklenirken bir sorun oluştu.';
-      }
-    }
-
-    // ── Search ──
-    document.getElementById('search').addEventListener('input', e => {
-      const q = e.target.value.toLowerCase();
-      document.querySelectorAll('[data-title]').forEach(el => {
-        el.style.display = el.getAttribute('data-title').includes(q) ? '' : 'none';
-      });
-    });
-
-    init();
-  </script>
-</body>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5"></circle>
+        <path d="m16 16 4 4"></path>
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z"></path>
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path
+          d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"
+        ></path>
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1"></rect>
+        <rect x="14" y="4" width="6" height="6" rx="1"></rect>
+        <rect x="4" y="14" width="6" height="6" rx="1"></rect>
+        <rect x="14" y="14" width="6" height="6" rx="1"></rect>
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"></path>
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8"></circle>
+        <path d="M12 7v5l3 2"></path>
+      </symbol>
+    </svg>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./" aria-label="Hakan Cengiz, ana sayfa"
+          ><span class="brand-avatar"
+            ><img
+              class="avatar-light"
+              src="blog-files/img/profile-site.webp"
+              alt=""
+              width="80"
+              height="80" /><img
+              class="avatar-dark"
+              src="blog-files/img/profile-site-dark.webp"
+              alt=""
+              width="80"
+              height="80" /></span
+          ><span class="brand-copy"
+            >Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span
+          ></a
+        >
+        <nav aria-label="Ana menü">
+          <a
+            class="nav-linkedin"
+            href="https://www.linkedin.com/in/hakancengiz/"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin"></use>
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a
+          >
+        </nav>
+        <div class="header-actions">
+          <button
+            id="theme-button"
+            class="icon-button"
+            type="button"
+            aria-label="Koyu temaya geç"
+            aria-pressed="false"
+          >
+            <svg class="icon moon"><use href="#i-moon"></use></svg
+            ><svg class="icon sun"><use href="#i-sun"></use></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <section
+        id="spotlight-section"
+        class="spotlight-section"
+        aria-labelledby="spotlight-title"
+        hidden
+      >
+        <div id="spotlight"></div>
+      </section>
+      <section
+        id="yazilar"
+        class="articles-section"
+        aria-labelledby="articles-heading"
+      >
+        <div class="section-heading">
+          <h1 id="articles-heading" class="sr-only">Yazılar</h1>
+          <span id="article-count" class="count" hidden=""></span
+          ><span id="feed-status" class="feed-status" role="status"
+            ><svg class="status-dot" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4"></circle></svg>Yükleniyor</span
+          >
+        </div>
+        <div class="archive-toolbar">
+          <div
+            id="filters"
+            class="filters"
+            role="group"
+            aria-label="Konuya veya seriye göre filtrele"
+          >
+            <button
+              class="filter active"
+              data-category="all"
+              aria-pressed="true"
+            >
+              Tümü
+            </button>
+          </div>
+          <div class="archive-tools">
+            <label class="search-box"
+              ><svg class="icon"><use href="#i-search"></use></svg
+              ><input
+                id="search"
+                type="search"
+                placeholder="Yazılarda ara..."
+                aria-label="Yazılarda ara"
+                autocomplete="off"
+              /><kbd aria-hidden="true">/</kbd></label
+            >
+            <div class="view-switch" role="group" aria-label="Yazı görünümü">
+              <button
+                class="icon-button active"
+                id="grid-view"
+                type="button"
+                aria-label="Kart görünümü"
+                aria-pressed="true"
+              >
+                <svg class="icon"><use href="#i-grid"></use></svg></button
+              ><button
+                class="icon-button"
+                id="list-view"
+                type="button"
+                aria-label="Liste görünümü"
+                aria-pressed="false"
+              >
+                <svg class="icon"><use href="#i-list"></use></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          id="results-summary"
+          class="results-summary sr-only"
+          role="status"
+          aria-live="polite"
+        ></div>
+        <div id="feed" class="article-grid" aria-busy="true">
+          <div class="skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton-card" aria-hidden="true"></div>
+        </div>
+        <div id="feed-sentinel" class="feed-sentinel" aria-hidden="true" hidden></div>
+        <div id="empty-state" class="empty-state" hidden="">
+          <span class="empty-symbol" aria-hidden="true"><svg class="icon"><use href="#i-search"></use></svg></span>
+          <h3>Henüz bir eşleşme yok.</h3>
+          <p>Başka bir kelime dene ya da tüm yazılara göz at.</p>
+          <button id="reset-filters" class="button secondary" type="button">
+            Tüm yazıları göster
+            <svg class="icon"><use href="#i-arrow"></use></svg>
+          </button>
+        </div>
+        <div id="error-state" class="empty-state" hidden="">
+          <span class="empty-symbol" aria-hidden="true"><svg class="icon"><use href="#i-refresh"></use></svg></span>
+          <h3>Yazılara şu an ulaşamıyoruz.</h3>
+          <p>
+            Birazdan tekrar deneyebilir veya Medium'da okumaya devam
+            edebilirsin.
+          </p>
+          <div class="error-actions">
+            <button id="retry-button" class="button secondary" type="button">
+              Tekrar dene</button
+            ><a
+              class="text-link"
+              href="https://medium.com/@hakancengiz"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Medium'a git
+              <svg class="icon"><use href="#i-up-right"></use></svg
+            ></a>
+          </div>
+        </div>
+        <div class="archive-bottom">
+          <span id="showing-count"></span><a
+            href="https://medium.com/@hakancengiz"
+            class="text-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Medium'da tüm yazılar
+            <svg class="icon"><use href="#i-up-right"></use></svg
+          ></a>
+        </div>
+        <noscript
+          ><p class="noscript">
+            Yazıların yüklenmesi için JavaScript'i etkinleştir veya
+            <a href="https://medium.com/@hakancengiz"
+              >Medium'da tüm yazıları oku</a
+            >.
+          </p></noscript
+        >
+      </section>
+    </main>
+    <footer class="container site-footer">
+      <span>© <span id="year"></span> Hakan Cengiz</span
+      ><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a>
+    </footer>
+  </body>
 </html>

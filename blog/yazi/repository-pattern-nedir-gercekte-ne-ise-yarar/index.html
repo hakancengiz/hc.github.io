@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repository Pattern Nedir? Gerçekte Ne İşe Yarar? — Hakan Cengiz</title>
+  <meta name="description" content="Repository Pattern, en basit tanımıyla: Veri erişim (data access) kodunu, iş mantığından (business logic) ayıran bir tasarım yaklaşımıdır. Buradaki bazı terimleri netleşt"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="Repository Pattern Nedir? Gerçekte Ne İşe Yarar?"><meta property="og:description" content="Repository Pattern, en basit tanımıyla: Veri erişim (data access) kodunu, iş mantığından (business logic) ayıran bir tasarım yaklaşımıdır. Buradaki bazı terimleri netleşt">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*0240ppJUIJZw---KFVd0EA.png"><meta property="article:published_time" content="2026-05-12T19:38:42.093Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/repository-pattern-nedir-ger%C3%A7ekte-ne-i%CC%87%C5%9Fe-yarar-6ed7e09daa85"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">6<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Neden Repository Pattern Kullanılır?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Neden Repository Pattern Kullanılır?</span></a><a href="#bolum-2" aria-label="Adım Adım Uygulama"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Adım Adım Uygulama</span></a><a href="#bolum-3" aria-label="En Büyük Hata: IQueryable Dışarı Sızdırmak"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">En Büyük Hata: IQueryable Dışarı Sızdırmak</span></a><a href="#bolum-4" aria-label="Repository Pattern Ne Değildir?"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Repository Pattern Ne Değildir?</span></a><a href="#bolum-5" aria-label="Ne Zaman Kullanılmalı?"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Ne Zaman Kullanılmalı?</span></a><a href="#bolum-6" aria-label="Sonuç"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Sonuç</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*0240ppJUIJZw---KFVd0EA.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>Repository Pattern Nedir? Gerçekte Ne İşe Yarar?</h1>
+          <div class="reader-meta"><span>repository-pattern</span><i aria-hidden="true">·</i><time datetime="2026-05-12T19:38:42.093Z">12 Mayıs 2026</time><i aria-hidden="true">·</i><span>~3 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*0240ppJUIJZw---KFVd0EA.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Repository Pattern, en basit tanımıyla:</p><blockquote><em>Veri erişim (data access) kodunu, iş mantığından (business logic) ayıran bir tasarım yaklaşımıdır.</em></blockquote><p>Buradaki bazı terimleri netleştirelim:</p><ul><li><strong>Data Access (Veri Erişimi):</strong> Veritabanına gidip veri okuma/yazma işlemleri</li><li><strong>Business Logic (İş Mantığı):</strong> Uygulamanın karar verme kısmı (örneğin “kullanıcı aktif mi?” gibi kurallar)</li></ul><h3 id="bolum-1">Neden Repository Pattern Kullanılır?</h3><p>Bir projede doğrudan şöyle kod yazarsan:</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">var</span> user = db.<span class="hljs-property">Users</span>.<span class="hljs-title class_">First</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.<span class="hljs-property">Id</span> == <span class="hljs-number">1</span>);</code></pre><p>Bu kod:</p><ul><li>Veritabanına bağımlıdır</li><li>Test edilmesi zordur</li><li>Kod tekrarına yol açar</li></ul><p>Repository Pattern bu bağımlılığı azaltır.</p><h4>Temel Mantık</h4><p>Repository Pattern şunu yapar:</p><ul><li>Veritabanı detayını gizler</li><li>Uygulamaya sade bir arayüz (interface) sunar</li></ul><p>Yani sen şunu dersin:</p><blockquote><em>“Bana kullanıcıyı getir”<br>&#160;Ama </em><strong><em>nasıl getirildiği önemli değildir</em></strong></blockquote><h3 id="bolum-2">Adım Adım&#160;Uygulama</h3><h4>1. Entity (Veri&#160;Modeli)</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-comment">// Kullanıcıyı temsil eden sınıf</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Id { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } <span class="hljs-comment">// Kullanıcının benzersiz kimliği</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } <span class="hljs-comment">// Kullanıcının adı</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> IsActive { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } <span class="hljs-comment">// Kullanıcı aktif mi bilgisi</span>
+}</code></pre><h4>2. Repository Interface (Sözleşme)</h4><p>Interface (arayüz), “ne yapılacağını” tanımlar ama “nasıl yapılacağını” söylemez.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title">IUserRepository</span> <span class="hljs-comment">// Kullanıcı işlemleri için sözleşme</span>
+{
+    <span class="hljs-function">User <span class="hljs-title">GetById</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> id</span>)</span>; <span class="hljs-comment">// ID ile kullanıcı getirir</span>
+    <span class="hljs-function">List&lt;User&gt; <span class="hljs-title">GetActiveUsers</span>()</span>; <span class="hljs-comment">// Aktif kullanıcıları getirir</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Add</span>(<span class="hljs-params">User user</span>)</span>; <span class="hljs-comment">// Yeni kullanıcı ekler</span>
+}</code></pre><p>Interface:</p><ul><li>Uygulamanın DB’den bağımsız olmasını sağlar</li><li>Mock (sahte veri) ile test yazmayı kolaylaştırır</li></ul><h4>3. Repository Implementation (Gerçek&#160;Kod)</h4><p>Burada artık veritabanı ile konuşan kodu yazarız.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">EfUserRepository</span> : <span class="hljs-title">IUserRepository</span> <span class="hljs-comment">// Entity Framework kullanan repository</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> AppDbContext _context; <span class="hljs-comment">// Veritabanı bağlantısı</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">EfUserRepository</span>(<span class="hljs-params">AppDbContext context</span>) <span class="hljs-comment">// Constructor (yapıcı metot)</span></span>
+    {
+        _context = context; <span class="hljs-comment">// Dışarıdan gelen context atanır</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> User <span class="hljs-title">GetById</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> id</span>) <span class="hljs-comment">// Kullanıcıyı ID ile getiren metot</span></span>
+    {
+        <span class="hljs-keyword">return</span> _context.Users <span class="hljs-comment">// Users tablosuna erişilir</span>
+            .FirstOrDefault(x =&gt; x.Id == id); <span class="hljs-comment">// ID eşleşen kullanıcı bulunur</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;User&gt; <span class="hljs-title">GetActiveUsers</span>() <span class="hljs-comment">// Aktif kullanıcıları getiren metot</span></span>
+    {
+        <span class="hljs-keyword">return</span> _context.Users <span class="hljs-comment">// Users tablosuna erişilir</span>
+            .Where(x =&gt; x.IsActive) <span class="hljs-comment">// Sadece aktif kullanıcılar filtrelenir</span>
+            .ToList(); <span class="hljs-comment">// Sonuç listeye çevrilir</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Add</span>(<span class="hljs-params">User user</span>) <span class="hljs-comment">// Yeni kullanıcı ekleyen metot</span></span>
+    {
+        _context.Users.Add(user); <span class="hljs-comment">// Kullanıcı context'e eklenir</span>
+        _context.SaveChanges(); <span class="hljs-comment">// Değişiklikler veritabanına yazılır</span>
+    }
+}</code></pre><h4>4. Service Katmanında Kullanım</h4><p>Artık business logic içinde direkt DB kullanmazsın.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserService</span> <span class="hljs-comment">// İş mantığını yöneten sınıf</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IUserRepository _userRepository; <span class="hljs-comment">// Repository bağımlılığı</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserService</span>(<span class="hljs-params">IUserRepository userRepository</span>) <span class="hljs-comment">// Constructor injection</span></span>
+    {
+        _userRepository = userRepository; <span class="hljs-comment">// Repository atanır</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">CreateUser</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> name</span>) <span class="hljs-comment">// Yeni kullanıcı oluşturma işlemi</span></span>
+    {
+        <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User <span class="hljs-comment">// Yeni kullanıcı nesnesi oluşturulur</span>
+        {
+            Name = name, <span class="hljs-comment">// Kullanıcı adı atanır</span>
+            IsActive = <span class="hljs-literal">true</span> <span class="hljs-comment">// Varsayılan aktif yapılır</span>
+        };
+
+        _userRepository.Add(user); <span class="hljs-comment">// Repository üzerinden kaydedilir</span>
+    }
+}</code></pre><h3 id="bolum-3">En Büyük Hata: IQueryable Dışarı Sızdırmak</h3><p>Çok kritik bir konu.</p><p>Kötü kullanım:</p><pre><code class="hljs language-csharp"><span class="hljs-function"><span class="hljs-keyword">public</span> IQueryable&lt;User&gt; <span class="hljs-title">GetAll</span>()</span></code></pre><h4>Neden kötü?</h4><ul><li>Query (sorgu) dış katmana taşar</li><li>Business layer DB bağımlı olur</li><li>Kontrol kaybolur</li></ul><h4>Doğru yaklaşım</h4><pre><code class="hljs language-csharp"><span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;User&gt; <span class="hljs-title">GetActiveUsers</span>()</span></code></pre><p>Yani:</p><blockquote><em>Repository “ne yapılacağını” anlatır, “nasıl yapılacağını” saklar</em></blockquote><h3 id="bolum-4">Repository Pattern Ne Değildir?</h3><p>Bu çok önemli.</p><p>Repository:</p><ul><li>Generic CRUD makinesi değildir</li><li>Her tabloya birebir yazılmak zorunda değildir</li><li>Her projede şart değildir</li></ul><h3 id="bolum-5">Ne Zaman Kullanılmalı?</h3><p>Kullan:</p><ul><li>Orta/büyük projelerde</li><li>Test yazıyorsan</li><li>DB bağımlılığını azaltmak istiyorsan</li></ul><p>Kullanma:</p><ul><li>Küçük projede</li><li>Basit CRUD uygulamasında</li><li>Zaten ORM her şeyi çözüyorsa</li></ul><p>Repository Pattern’in amacı:</p><blockquote><em>“DB’yi gizlemek” değil<br>&#160;“Domain dilini korumak”</em></blockquote><p>Yani:</p><pre><code class="hljs language-plaintext">GetActiveUsers()</code></pre><p>şu anlama gelir:</p><blockquote><em>“Sistemde aktif kullanıcılar vardır ve bu bir iş kuralıdır”</em></blockquote><h3 id="bolum-6">Sonuç</h3><p>Repository Pattern doğru kullanılırsa:</p><ul><li>Kod okunabilir olur</li><li>Test yazmak kolaylaşır</li><li>DB bağımlılığı azalır</li></ul><p>Ama yanlış kullanılırsa:</p><ul><li>Gereksiz abstraction oluşur</li><li>Kod karmaşıklaşır</li><li>Performans düşebilir</li></ul>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/repository-pattern-nedir-ger%C3%A7ekte-ne-i%CC%87%C5%9Fe-yarar-6ed7e09daa85" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/yaz-bunu-ise-yarar/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*ldm-RY2ZfTZYP3eYnLa2ug.jpeg" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*ldm-RY2ZfTZYP3eYnLa2ug.jpeg" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2018-03-20T19:35:44.166Z">20 Mar 2018</time><h3 class="article-title">Yaz Bunu, İşe Yarar</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/ienumerable-vs-iqueryable-performansi-sessizce-bozan-kritik-fark/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*sUaDcCK1fAsg-16JmF-x5A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*sUaDcCK1fAsg-16JmF-x5A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-03-15T01:21:00.518Z">15 Mar 2026</time><h3 class="article-title">IEnumerable vs IQueryable — Performansı Sessizce Bozan Kritik Fark</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:50.631Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #03 Veri Katmanı ve ORM (Entity Framework Core)</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

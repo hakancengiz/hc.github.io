@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.Net Core Serisi — #10 Final: MVC, API, Identity ve Middleware ile Genel Pratikler — Hakan Cengiz</title>
+  <meta name="description" content="1. Proje Oluşturma ve Başlangıç Ayarları .NET projesinin temeli, doğru yapılandırma ile atılır. Program.cs dosyası, uygulamanın servislerinin (DI) ve HTTP istek hattının "><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content=".Net Core Serisi — #10 Final: MVC, API, Identity ve Middleware ile Genel Pratikler"><meta property="og:description" content="1. Proje Oluşturma ve Başlangıç Ayarları .NET projesinin temeli, doğru yapılandırma ile atılır. Program.cs dosyası, uygulamanın servislerinin (DI) ve HTTP istek hattının ">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*km7I_EhEc2IvB-68edBNSw.png"><meta property="article:published_time" content="2025-10-22T06:36:21.979Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler-3e5b1595924a"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">33<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. Proje Oluşturma ve Başlangıç Ayarları"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Proje Oluşturma ve Başlangıç Ayarları</span></a><a href="#bolum-2" aria-label="2. Controllers, IActionResult ve View Eşlemesi"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Controllers, IActionResult ve View Eşlemesi</span></a><a href="#bolum-3" aria-label="3. Program.cs — Uygulama Kalbi"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Program.cs — Uygulama Kalbi</span></a><a href="#bolum-4" aria-label="4. Razor Syntax ve @ Kullanımı"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Razor Syntax ve @ Kullanımı</span></a><a href="#bolum-5" aria-label="5. HtmlHelper ve TagHelper’lar"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">HtmlHelper ve TagHelper’lar</span></a><a href="#bolum-6" aria-label="6. ViewBag ve ViewData"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">ViewBag ve ViewData</span></a><a href="#bolum-7" aria-label="7. Formlar, Model Binding ve DataAnnotations"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Formlar, Model Binding ve DataAnnotations</span></a><a href="#bolum-8" aria-label="8. Custom `ValidationAttribute` Örneği"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Custom `ValidationAttribute` Örneği</span></a><a href="#bolum-9" aria-label="9. Entity Framework Core — Scaffold ve DbContext"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Entity Framework Core — Scaffold ve DbContext</span></a><a href="#bolum-10" aria-label="10. Dependency Injection ve DbContext Yaşam Süreleri"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Dependency Injection ve DbContext Yaşam Süreleri</span></a><a href="#bolum-11" aria-label="11. ProductController — CRUD Örnekleri"><span class="toc-number" aria-hidden="true">11</span><span class="toc-title">ProductController — CRUD Örnekleri</span></a><a href="#bolum-12" aria-label="12. ViewModel — Entity Mapping"><span class="toc-number" aria-hidden="true">12</span><span class="toc-title">ViewModel — Entity Mapping</span></a><a href="#bolum-13" aria-label="13. View Tarafı: @model, @using ve Partial Views"><span class="toc-number" aria-hidden="true">13</span><span class="toc-title">View Tarafı: @model, @using ve Partial Views</span></a><a href="#bolum-14" aria-label="14. Sayfalama: TagHelper ile Component Hale Getirme"><span class="toc-number" aria-hidden="true">14</span><span class="toc-title">Sayfalama: TagHelper ile Component Hale Getirme</span></a><a href="#bolum-15" aria-label="15. Session, Cookies ve Sepet (Cart) Yönetimi"><span class="toc-number" aria-hidden="true">15</span><span class="toc-title">Session, Cookies ve Sepet (Cart) Yönetimi</span></a><a href="#bolum-16" aria-label="16. IHttpContextAccessor ve _Layout’ta Oturum Bilgisi Görüntüleme"><span class="toc-number" aria-hidden="true">16</span><span class="toc-title">IHttpContextAccessor ve _Layout’ta Oturum Bilgisi Görüntüleme</span></a><a href="#bolum-17" aria-label="17. ASP.NET Core Identity — Scaffolding ve Razor Pages"><span class="toc-number" aria-hidden="true">17</span><span class="toc-title">ASP.NET Core Identity — Scaffolding ve Razor Pages</span></a><a href="#bolum-18" aria-label="18. Custom User ve Identity Yapılandırması"><span class="toc-number" aria-hidden="true">18</span><span class="toc-title">Custom User ve Identity Yapılandırması</span></a><a href="#bolum-19" aria-label="19. UserController, UserManager ve SignInManager Kullanımı"><span class="toc-number" aria-hidden="true">19</span><span class="toc-title">UserController, UserManager ve SignInManager Kullanımı</span></a><a href="#bolum-20" aria-label="20. Authorization, [Authorize], [AllowAnonymous] ve Roller"><span class="toc-number" aria-hidden="true">20</span><span class="toc-title">Authorization, [Authorize], [AllowAnonymous] ve Roller</span></a><a href="#bolum-21" aria-label="21. TempData ile Redirect Sonrası Mesaj Gösterme"><span class="toc-number" aria-hidden="true">21</span><span class="toc-title">TempData ile Redirect Sonrası Mesaj Gösterme</span></a><a href="#bolum-22" aria-label="22. SaveChanges() Dönüş Değeri"><span class="toc-number" aria-hidden="true">22</span><span class="toc-title">SaveChanges() Dönüş Değeri</span></a><a href="#bolum-23" aria-label="23. Web API Projesi ve Swagger (OpenAPI)"><span class="toc-number" aria-hidden="true">23</span><span class="toc-title">Web API Projesi ve Swagger (OpenAPI)</span></a><a href="#bolum-24" aria-label="24. Client (MVC) — ApiProvider ve HttpClientFactory"><span class="toc-number" aria-hidden="true">24</span><span class="toc-title">Client (MVC) — ApiProvider ve HttpClientFactory</span></a><a href="#bolum-25" aria-label="25. Activator.CreateInstance ile Runtime’da Nesne Oluşturma"><span class="toc-number" aria-hidden="true">25</span><span class="toc-title">Activator.CreateInstance ile Runtime’da Nesne Oluşturma</span></a><a href="#bolum-26" aria-label="26. DI Registration ve Scoped ApiProvider Örneği"><span class="toc-number" aria-hidden="true">26</span><span class="toc-title">DI Registration ve Scoped ApiProvider Örneği</span></a><a href="#bolum-27" aria-label="27. Çift Projeyi Aynı Anda Çalıştırma"><span class="toc-number" aria-hidden="true">27</span><span class="toc-title">Çift Projeyi Aynı Anda Çalıştırma</span></a><a href="#bolum-28" aria-label="28. ApiProvider — POST/PUT/DELETE Örnekleri"><span class="toc-number" aria-hidden="true">28</span><span class="toc-title">ApiProvider — POST/PUT/DELETE Örnekleri</span></a><a href="#bolum-29" aria-label="29. JWT Authentication — Sunucu Tarafı (API)"><span class="toc-number" aria-hidden="true">29</span><span class="toc-title">JWT Authentication — Sunucu Tarafı (API)</span></a><a href="#bolum-30" aria-label="30. ApiUserService — Token Üretimi"><span class="toc-number" aria-hidden="true">30</span><span class="toc-title">ApiUserService — Token Üretimi</span></a><a href="#bolum-31" aria-label="31. Client: Token Alma ve Sonraki İsteklerde Kullanma"><span class="toc-number" aria-hidden="true">31</span><span class="toc-title">Client: Token Alma ve Sonraki İsteklerde Kullanma</span></a><a href="#bolum-32" aria-label="32. Middleware ve Custom Filter Örnekleri"><span class="toc-number" aria-hidden="true">32</span><span class="toc-title">Middleware ve Custom Filter Örnekleri</span></a><a href="#bolum-33" aria-label="33. Localization (Yerelleştirme)"><span class="toc-number" aria-hidden="true">33</span><span class="toc-title">Localization (Yerelleştirme)</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*km7I_EhEc2IvB-68edBNSw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>.Net Core Serisi — #10 Final: MVC, API, Identity ve Middleware ile Genel Pratikler</h1>
+          <div class="reader-meta"><span>aspnetcore</span><i aria-hidden="true">·</i><time datetime="2025-10-22T06:36:21.979Z">22 Ekim 2025</time><i aria-hidden="true">·</i><span>~16 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:100%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>.Net Core Serisi</span><span aria-hidden="true">·</span><span class="series-position">10/10</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label=".Net Core Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><span class="series-chapter-number" aria-hidden="true">01</span><span>Giriş ve Temeller</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>Katmanlı Yapı ve Uygulama Mimarisi</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-chapter-number" aria-hidden="true">03</span><span>Veri Katmanı ve ORM (Entity Framework Core)</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><span class="series-chapter-number" aria-hidden="true">04</span><span>Web API Geliştirme</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Güvenlik ve Kimlik Doğrulama</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><span class="series-chapter-number" aria-hidden="true">06</span><span>İleri Konular ve Performans</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Yayınlama, Test ve DevOps Süreçleri</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-chapter-number" aria-hidden="true">09</span><span>Bonus: İleri Seviye .NET Core Konuları</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">10</span><span>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*km7I_EhEc2IvB-68edBNSw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><h3 id="bolum-1">1. Proje Oluşturma ve Başlangıç Ayarları</h3><p>.NET projesinin temeli, doğru yapılandırma ile atılır. Program.cs dosyası, uygulamanın servislerinin (DI) ve HTTP istek hattının (middleware) yapılandırıldığı merkezi noktadır.</p><h4>Authentication Tipi (Individual):</h4><p>Bu seçenek, projenize ASP.NET Core Identity altyapısını otomatik olarak ekler. Kullanıcı kaydı, girişi, parola yönetimi gibi özellikler için hazır bir temel sunar.</p><h4>Container Support (Docker):</h4><p>Bu özellik, uygulamanızın bir Docker konteyneri içinde çalışabilmesi için gerekli olan Dockerfile’ı projenize ekler. Bu, uygulamanızın farklı ortamlarda (geliştirme, test, production) tutarlı bir şekilde çalışmasını sağlar.</p><h4>Razor Runtime Compilation</h4><p>Geliştirme sürecinde&#160;.cshtml dosyalarında yaptığınız değişikliklerin, projeyi yeniden başlatmadan tarayıcıda anında görünmesini sağlar. Bu, UI geliştirme hızını önemli ölçüde artırır.</p><h4>Örnek: Program.cs Başlangıç Yapılandırması</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Uygulama oluşturucusunu (builder) başlatır.</span>
+<span class="hljs-comment">// Bu nesne üzerinden servisler ve yapılandırmalar eklenir.</span>
+<span class="hljs-keyword">var</span> builder = WebApplication.CreateBuilder(<span class="hljs-keyword">args</span>);
+
+<span class="hljs-comment">// Servis koleksiyonuna MVC (Model-View-Controller) yapısını ve</span>
+<span class="hljs-comment">// Razor view'lerinin anlık derlenmesi özelliğini ekler.</span>
+builder.Services.AddControllersWithViews()
+ .AddRazorRuntimeCompilation(); <span class="hljs-comment">// Sadece geliştirme ortamında kullanılması önerilir.</span>
+
+<span class="hljs-comment">// Builder'dan uygulama nesnesini (app) oluşturur.</span>
+<span class="hljs-comment">// Bu noktadan sonra middleware'ler yapılandırılır.</span>
+<span class="hljs-keyword">var</span> app = builder.Build();
+
+<span class="hljs-comment">// HTTP isteklerini HTTPS'e yönlendirir. Güvenlik için önemlidir.</span>
+app.UseHttpsRedirection();
+
+<span class="hljs-comment">// wwwroot klasöründeki statik dosyaların (css, js, img) sunulmasını sağlar.</span>
+app.UseStaticFiles();
+
+<span class="hljs-comment">// Gelen isteğin hangi Controller/Action'a gideceğini belirleyen</span>
+yönlendirme altyapısını aktif eder.
+app.UseRouting();
+
+<span class="hljs-comment">// Kimlik doğrulama ve yetkilendirme mekanizmalarını devreye alır.</span>
+app.UseAuthorization();
+
+<span class="hljs-comment">// Varsayılan URL rotasını tanımlar:</span>
+/{controller=Home}/{action=Index}/{id?}
+app.MapDefaultControllerRoute();
+
+<span class="hljs-comment">// Uygulamayı çalıştırır ve gelen istekleri dinlemeye başlar.</span>
+app.Run();</code></pre><h3 id="bolum-2">2. Controllers, IActionResult ve View&#160;Eşlemesi</h3><p>Controller’lar, gelen istekleri işleyen ve kullanıcıya bir yanıt (genellikle bir View) döndüren sınıflardır.</p><p>IActionResult, bir Action metodunun döndürebileceği farklı sonuç türlerini (View, JSON, Not Found, Redirect vb.) temsil eden bir arayüzdür.</p><h4>Örnek: Basit ProductController Action’ları</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> Microsoft.AspNetCore.Mvc;
+<span class="hljs-keyword">using</span> Microsoft.EntityFrameworkCore;
+<span class="hljs-keyword">using</span> System.Linq;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ProductController</span> : <span class="hljs-title">Controller</span>
+{
+    <span class="hljs-comment">// Dependency Injection ile veritabanı context'ini alır.</span>
+    <span class="hljs-comment">// 'readonly' olması, sadece constructor'da atanabileceği anlamına gelir.</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> NWContext _ctx;
+
+    <span class="hljs-comment">// Constructor Injection: Program.cs'de kaydedilen NWContext servisi buraya enjekte edilir.</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProductController</span>(<span class="hljs-params">NWContext ctx</span>)</span>
+    {
+        _ctx = ctx;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Index</span>()</span>
+    {
+        <span class="hljs-comment">// Veritabanından tüm ürünleri çeker ve listeye dönüştürür.</span>
+        <span class="hljs-keyword">var</span> list = _ctx.Products.ToList();
+
+        <span class="hljs-comment">// Modeli (list) ilgili View'e gönderir.</span>
+        <span class="hljs-comment">// Varsayılan olarak Views/Product/Index.cshtml aranır.</span>
+        <span class="hljs-keyword">return</span> View(list);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Details</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> id</span>)</span>
+    {
+        <span class="hljs-comment">// İlgili ürünü ve tedarikçi bilgisini "eager loading" ile tek sorguda getirir.</span>
+        <span class="hljs-comment">// Bu, N+1 sorgu problemini engeller.</span>
+        <span class="hljs-keyword">var</span> p = _ctx.Products
+                    .Include(p =&gt; p.Supplier)
+                    .FirstOrDefault(x =&gt; x.ProductId == id);
+
+        <span class="hljs-comment">// Ürün bulunamazsa HTTP 404 Not Found durum kodunu döndürür.</span>
+        <span class="hljs-keyword">if</span> (p == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> NotFound();
+
+        <span class="hljs-comment">// Entity'yi doğrudan View'e göndermek yerine bir ViewModel'e mapleyerek göndeririz.</span>
+        <span class="hljs-comment">// Bu, en iyi pratiklerden biridir.</span>
+        <span class="hljs-keyword">return</span> View(<span class="hljs-keyword">new</span> ProductViewModel(p));
+    }
+}</code></pre><h3 id="bolum-3">3. Program.cs — Uygulama&#160;Kalbi</h3><p>.NET 6 ve sonrası “Minimal APIs” yaklaşımı ile Program.cs, uygulamanın tüm başlangıç yapılandırmasını tek bir dosyada toplar.</p><p>Middleware’lerin sırası çok önemlidir çünkü her biri bir sonraki adımı etkiler.</p><h4>Örnek: Servis ve Middleware Kayıtları</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">var</span> builder = <span class="hljs-title class_">WebApplication</span>.<span class="hljs-title class_">CreateBuilder</span>(args);
+
+<span class="hljs-comment">// Session (Oturum) yönetimini DI container'a ekler.</span>
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddSession</span>(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+{
+    <span class="hljs-comment">// Oturumun ne kadar süre boşta kalabileceğini belirtir.</span>
+    options.<span class="hljs-property">IdleTimeout</span> = <span class="hljs-title class_">TimeSpan</span>.<span class="hljs-title class_">FromMinutes</span>(<span class="hljs-number">30</span>);
+    <span class="hljs-comment">// Cookie'nin sadece sunucu tarafından okunmasını sağlar (güvenlik).</span>
+    options.<span class="hljs-property">Cookie</span>.<span class="hljs-property">HttpOnly</span> = <span class="hljs-literal">true</span>;
+});
+
+<span class="hljs-comment">// Entity Framework Core DbContext'ini DI container'a kaydeder.</span>
+<span class="hljs-comment">// AddDbContext, varsayılan olarak Scoped bir yaşam süresi kullanır.</span>
+builder.<span class="hljs-property">Services</span>.<span class="hljs-property">AddDbContext</span>&lt;<span class="hljs-title class_">NWContext</span>&gt;(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+    options.<span class="hljs-title class_">UseSqlServer</span>(decryptedConnectionString)
+);
+
+<span class="hljs-comment">// HttpContext'e dışarıdan erişim sağlamak için IHttpContextAccessor'ı kaydeder.</span>
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddHttpContextAccessor</span>();
+
+<span class="hljs-keyword">var</span> app = builder.<span class="hljs-title class_">Build</span>();
+
+<span class="hljs-comment">// ... Diğer middleware'ler ...</span>
+
+<span class="hljs-comment">// Session middleware'ini HTTP pipeline'ına ekler.</span>
+<span class="hljs-comment">// UseRouting'den sonra, UseAuthorization'dan önce gelmelidir.</span>
+app.<span class="hljs-title class_">UseSession</span>();
+
+<span class="hljs-comment">// Kimlik doğrulama (Authentication) middleware'ini ekler.</span>
+app.<span class="hljs-title class_">UseAuthentication</span>();
+
+<span class="hljs-comment">// Yetkilendirme (Authorization) middleware'ini ekler.</span>
+app.<span class="hljs-title class_">UseAuthorization</span>();
+
+<span class="hljs-comment">// ...</span></code></pre><h3 id="bolum-4">4. Razor Syntax ve @ Kullanımı</h3><p>Razor, C# kodunu HTML ile iç içe yazmayı sağlayan bir “view engine”dir. @ sembolü, C# kodunun başlangıcını belirtir.</p><h4>Örnek: Razor Sözdizimi</h4><pre><code class="hljs language-xml">@{
+    // Bu bir C# kod bloğudur.
+    var x = 5;
+    var message = "Merhaba Dünya";
+}
+
+<span class="hljs-comment">&lt;!-- Değişkenin değerini HTML içine yazar. --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Value: @x<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- '@:' ifadesi, bir satırlık düz metin çıktısı verir ve Razor'un
+     HTML etiketlerini yanlış yorumlamasını engeller. --&gt;</span>
+@:Bu bir düz metin satırıdır.
+
+<span class="hljs-comment">&lt;!-- C# ifadesinin sonucunu parantez içinde yazdırır. --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Mesajınız: @(message.ToUpper())<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></code></pre><h3 id="bolum-5">5. HtmlHelper ve TagHelper’lar</h3><p>Bu yapılar, sunucu tarafında HTML üretmeyi kolaylaştırır.</p><p>TagHelper’lar (asp-* öznitelikleri), standart HTML etiketlerine eklenerek sunucu taraflı yetenekler kazandırır ve daha modern, okunabilir bir sözdizimi sunar.</p><h4>Örnek: Link ve Form Oluşturma</h4><pre><code class="hljs language-xml"><span class="hljs-comment">&lt;!-- Bu TagHelper, sunucu tarafında doğru URL'yi (/Product/Edit/5) oluşturur. --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">asp-controller</span>=<span class="hljs-string">"Product"</span> <span class="hljs-attr">asp-action</span>=<span class="hljs-string">"Edit"</span> <span class="hljs-attr">asp-route-id</span>=<span class="hljs-string">"@item.ProductId"</span>&gt;</span>Düzenle<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Bu form, /Product/Create adresine POST isteği gönderir ve CSRF koruması için gizli bir token alanını otomatik olarak ekler. --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">asp-action</span>=<span class="hljs-string">"Create"</span> <span class="hljs-attr">asp-controller</span>=<span class="hljs-string">"Product"</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- Bu TagHelper, modeldeki 'ProductName' özelliği için bir input ve label oluşturur.
+         Ayrıca validation mesajları için de gerekli öznitelikleri ekler. --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">asp-for</span>=<span class="hljs-string">"ProductName"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">asp-for</span>=<span class="hljs-string">"ProductName"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-control"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">asp-validation-for</span>=<span class="hljs-string">"ProductName"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"text-danger"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>Kaydet<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></code></pre><h3 id="bolum-6">6. ViewBag ve&#160;ViewData</h3><p>Controller’dan View’e küçük, tek kullanımlık veriler aktarmak için kullanılırlar. İkisi de aynı veriyi paylaşır (ViewBag.Isim ve ViewData[“Isim”] aynı değere erişir).</p><p>Tip güvenliği (type safety) olmadığı ve Redirect sonrası veriyi korumadıkları için genellikle ViewModel’ler veya TempData tercih edilir.</p><h4>Controller Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Index</span>()</span>
+{
+ ViewBag.Sayi = <span class="hljs-number">123</span>;
+ ViewData[<span class="hljs-string">"Mesaj"</span>] = <span class="hljs-string">"Bu bir deneme mesajıdır."</span>;
+ <span class="hljs-keyword">return</span> View();
+}</code></pre><h4>View Örneği</h4><pre><code class="hljs language-xml"><span class="hljs-comment">&lt;!-- View tarafı (.cshtml) --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>ViewBag'den gelen sayı: @ViewBag.Sayi<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>ViewData'dan gelen mesaj: @ViewData["Mesaj"]<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></code></pre><h3 id="bolum-7">7. Formlar, Model Binding ve DataAnnotations</h3><h4>Model Binding:</h4><p>HTTP isteğiyle gelen verilerin, Action metodunun parametresi olan bir nesnenin (ViewModel) özellikleriyle otomatik eşleştirilmesidir.</p><h4>DataAnnotations:</h4><p>Modelin özelliklerine eklenen ve doğrulama kurallarını (zorunlu alan, uzunluk vb.) tanımlayan özniteliklerdir.</p><h4>ViewModel:</h4><p>Sadece View’in ihtiyaç duyduğu verileri içeren sınıflardır. Entity’leri doğrudan View’e göndermek güvenlik ve esneklik açısından önerilmez.</p><h4>ProductViewModel Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Models/ProductViewModel.cs</span>
+<span class="hljs-keyword">using</span> System.ComponentModel;
+<span class="hljs-keyword">using</span> System.ComponentModel.DataAnnotations;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ProductViewModel</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> ProductId { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    [<span class="hljs-meta">DisplayName(<span class="hljs-string">"Ürün Adı"</span>)</span>]
+    [<span class="hljs-meta">Required(ErrorMessage = <span class="hljs-string">"Ürün adı alanı boş bırakılamaz."</span>)</span>]
+    [<span class="hljs-meta">StringLength(50)</span>]
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> ProductName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProductViewModel</span>()</span> { }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProductViewModel</span>(<span class="hljs-params">Product p</span>)</span>
+    {
+        ProductId = p.ProductId;
+        ProductName = p.ProductName;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Product <span class="hljs-title">ConvertToEntity</span>()</span> =&gt; <span class="hljs-keyword">new</span> Product
+    {
+        ProductId = <span class="hljs-keyword">this</span>.ProductId,
+        ProductName = <span class="hljs-keyword">this</span>.ProductName,
+    };
+}</code></pre><h4>Controller Create Action&#160;Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Controllers/ProductController.cs</span>
+[<span class="hljs-meta">HttpPost</span>]
+[<span class="hljs-meta">ValidateAntiForgeryToken</span>]
+<span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Create</span>(<span class="hljs-params">ProductViewModel model</span>)</span>
+{
+    <span class="hljs-comment">// DataAnnotations ile tanımlanan kurallara göre modelin geçerli olup olmadığını kontrol eder.</span>
+    <span class="hljs-keyword">if</span> (!ModelState.IsValid)
+    {
+        <span class="hljs-keyword">return</span> View(model);
+    }
+
+    <span class="hljs-keyword">var</span> entity = model.ConvertToEntity();
+    _ctx.Products.Add(entity);
+    <span class="hljs-built_in">int</span> res = _ctx.SaveChanges();
+
+    <span class="hljs-keyword">if</span> (res &gt; <span class="hljs-number">0</span>)
+        <span class="hljs-keyword">return</span> RedirectToAction(<span class="hljs-string">"Index"</span>);
+
+    ModelState.AddModelError(<span class="hljs-string">""</span>, <span class="hljs-string">"Kayıt işlemi sırasında bir hata oluştu."</span>);
+    <span class="hljs-keyword">return</span> View(model);
+}</code></pre><h3 id="bolum-8">8. Custom `ValidationAttribute` Örneği</h3><p>Mevcut doğrulama kurallarının yetersiz kaldığı durumlarda, `ValidationAttribute` sınıfından miras alarak kendi özel doğrulama kurallarınızı oluşturabilirsiniz.</p><h4>SubeCheckerAttribute Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System.ComponentModel.DataAnnotations;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">SubeCheckerAttribute</span> : <span class="hljs-title">ValidationAttribute</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">override</span> ValidationResult <span class="hljs-title">IsValid</span>(<span class="hljs-params"><span class="hljs-built_in">object</span> <span class="hljs-keyword">value</span>, ValidationContext validationContext</span>)</span>
+    {
+        <span class="hljs-keyword">var</span> s = <span class="hljs-keyword">value</span> <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">string</span>.IsNullOrWhiteSpace(s) || !IsValidBranch(s))
+        {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ValidationResult(ErrorMessage ?? <span class="hljs-string">"Geçersiz şube kodu girdiniz."</span>);
+        }
+        <span class="hljs-keyword">return</span> ValidationResult.Success;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">IsValidBranch</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> branchCode</span>)</span>
+    {
+        <span class="hljs-keyword">return</span> branchCode.StartsWith(<span class="hljs-string">"SUB"</span>);
+    }
+}</code></pre><h3 id="bolum-9">9. Entity Framework Core — Scaffold ve DbContext</h3><p>Scaffold-DbContext komutu, mevcut bir veritabanından C# entity ve DbContext sınıflarını otomatik olarak oluşturur.</p><p>Bu, “Database First” yaklaşımı için kullanılır.</p><h4>Scaffold Komutu</h4><pre><code class="hljs language-csharp"><span class="hljs-meta"># Package Manager Console'da çalıştırılır.</span>
+Scaffold-DbContext `
+    <span class="hljs-string">"Server=SUNUCU_ADI;Database=NORTHWIND;Trusted_Connection=True;TrustServerCertificate=True"</span> `
+    Microsoft.EntityFrameworkCore.SqlServer `
+    -OutputDir Data/Northwind `
+    -Context NWContext</code></pre><h3 id="bolum-10">10. Dependency Injection ve DbContext Yaşam&#160;Süreleri</h3><p>Dependency Injection (DI), bir sınıfın bağımlı olduğu nesneleri dışarıdan almasıdır. Bu, kodun daha modüler ve test edilebilir olmasını sağlar. DbContext için Scoped yaşam süresi en uygunudur. Çünkü her web isteği kendi izole veritabanı işlem birimine sahip olmalıdır. Singleton kullanmak ciddi eşzamanlılık sorunlarına yol açar.</p><h3 id="bolum-11">11. ProductController — CRUD Örnekleri</h3><p>CRUD (Create, Read, Update, Delete) operasyonları, web uygulamalarının temelini oluşturur.</p><h4>CRUD Action’ları</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Index (Listeleme) - Sayfalama ile</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Index</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> page = <span class="hljs-number">1</span></span>)</span>
+{
+    <span class="hljs-built_in">int</span> pageSize = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">var</span> list = _ctx.Products
+                   .Include(p =&gt; p.Category)
+                   .OrderBy(p =&gt; p.ProductId)
+                   .Skip((page - <span class="hljs-number">1</span>) * pageSize)
+                   .Take(pageSize)
+                   .Select(p =&gt; <span class="hljs-keyword">new</span> ProductViewModel(p))
+                   .ToList();
+
+    <span class="hljs-keyword">return</span> View(list);
+}
+
+<span class="hljs-comment">// Update (Güncelleme)</span>
+[<span class="hljs-meta">HttpPost</span>]
+[<span class="hljs-meta">ValidateAntiForgeryToken</span>]
+<span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Update</span>(<span class="hljs-params">ProductViewModel model</span>)</span>
+{
+    <span class="hljs-keyword">if</span> (!ModelState.IsValid) 
+        <span class="hljs-keyword">return</span> View(model);
+
+    <span class="hljs-keyword">var</span> entity = model.ConvertToEntity();
+    _ctx.Products.Update(entity);
+
+    <span class="hljs-keyword">if</span> (_ctx.SaveChanges() &gt; <span class="hljs-number">0</span>)
+    {
+        TempData[<span class="hljs-string">"Sonuc"</span>] = <span class="hljs-string">"Ürün başarıyla güncellendi."</span>;
+    }
+
+    <span class="hljs-keyword">return</span> RedirectToAction(<span class="hljs-string">"Index"</span>);
+}
+
+<span class="hljs-comment">// Delete (Silme)</span>
+[<span class="hljs-meta">HttpPost</span>]
+[<span class="hljs-meta">ValidateAntiForgeryToken</span>]
+<span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Delete</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> id</span>)</span>
+{
+    <span class="hljs-keyword">var</span> item = _ctx.Products.Find(id);
+    <span class="hljs-keyword">if</span> (item == <span class="hljs-literal">null</span>) 
+        <span class="hljs-keyword">return</span> NotFound();
+
+    _ctx.Products.Remove(item);
+
+    <span class="hljs-keyword">if</span> (_ctx.SaveChanges() &gt; <span class="hljs-number">0</span>)
+    {
+        TempData[<span class="hljs-string">"Sonuc"</span>] = <span class="hljs-string">"Ürün başarıyla silindi."</span>;
+    }
+
+    <span class="hljs-keyword">return</span> RedirectToAction(<span class="hljs-string">"Index"</span>);
+}</code></pre><h3 id="bolum-12">12. ViewModel — Entity&#160;Mapping</h3><p>Bu desen, uygulamanın veritabanı katmanı (Entity) ile sunum katmanı (View) arasında bir ayrım sağlar.</p><p>Bu, güvenlik, esneklik ve bakım kolaylığı açısından kritik öneme sahiptir.</p><h4>Detaylı ProductViewModel</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ProductViewModel</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> ProductId { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> ProductName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">decimal</span>? UnitPrice { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">short</span>? UnitsInStock { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span>? CategoryId { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> CategoryName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProductViewModel</span>()</span> { }
+
+    <span class="hljs-comment">// Constructor Mapping: Entity'den ViewModel'e.</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProductViewModel</span>(<span class="hljs-params">Product entity</span>)</span>
+    {
+        ProductId = entity.ProductId;
+        ProductName = entity.ProductName;
+        UnitPrice = entity.UnitPrice;
+        UnitsInStock = entity.UnitsInStock;
+        CategoryId = entity.CategoryId;
+        CategoryName = entity.Category?.CategoryName;
+    }
+
+    <span class="hljs-comment">// Metot Mapping: ViewModel'den Entity'ye.</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Product <span class="hljs-title">ConvertToEntity</span>()</span> =&gt; <span class="hljs-keyword">new</span> Product
+    {
+        ProductId = <span class="hljs-keyword">this</span>.ProductId,
+        ProductName = <span class="hljs-keyword">this</span>.ProductName,
+        UnitPrice = <span class="hljs-keyword">this</span>.UnitPrice,
+        UnitsInStock = <span class="hljs-keyword">this</span>.UnitsInStock,
+        CategoryId = <span class="hljs-keyword">this</span>.CategoryId
+    };
+}</code></pre><h3 id="bolum-13">13. View Tarafı: @model, @using ve Partial&#160;Views</h3><ul><li>@model: View’in hangi tipte bir model beklediğini belirtir.</li><li>@using: View içinde sık kullanılan namespace’leri ekler.</li><li>Partial View: Tekrar kullanılabilir küçük View parçalarıdır.</li></ul><h4>Razor View&#160;Örneği</h4><pre><code class="hljs language-xml">@model List<span class="hljs-tag">&lt;<span class="hljs-name">ProductViewModel</span>&gt;</span>
+@using MyApp.Models
+
+@foreach (var p in Model)
+{
+    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>@p.ProductName<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+}
+
+<span class="hljs-comment">&lt;!-- Partial View çağırma --&gt;</span>
+@await Html.PartialAsync("_CategoryDetailsPartial", categoryViewModel)</code></pre><h3 id="bolum-14">14. Sayfalama: TagHelper ile Component Hale&#160;Getirme</h3><p>TagHelper’lar, Razor view’lerinde yeniden kullanılabilir, sunucu taraflı bileşenler oluşturmak için güçlü bir yoldur.</p><h4>PagingTagHelper Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> Microsoft.AspNetCore.Razor.TagHelpers;
+<span class="hljs-keyword">using</span> System.Text;
+
+[<span class="hljs-meta">HtmlTargetElement(<span class="hljs-string">"paging"</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">PagingTagHelper</span> : <span class="hljs-title">TagHelper</span>
+{
+    [<span class="hljs-meta">HtmlAttributeName(<span class="hljs-string">"for-PageIndex"</span>)</span>]
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> PageIndex { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    [<span class="hljs-meta">HtmlAttributeName(<span class="hljs-string">"for-PageCount"</span>)</span>]
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> PageCount { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    [<span class="hljs-meta">HtmlAttributeName(<span class="hljs-string">"for-ControllerName"</span>)</span>]
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> ControllerName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    [<span class="hljs-meta">HtmlAttributeName(<span class="hljs-string">"for-ActionName"</span>)</span>]
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> ActionName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Process</span>(<span class="hljs-params">TagHelperContext context, TagHelperOutput output</span>)</span>
+    {
+        <span class="hljs-keyword">var</span> sb = <span class="hljs-keyword">new</span> StringBuilder();
+        sb.AppendLine(<span class="hljs-string">"&lt;nav&gt;&lt;ul class='pagination'&gt;"</span>);
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">1</span>; i &lt;= PageCount; i++)
+        {
+            <span class="hljs-keyword">var</span> active = i == PageIndex ? <span class="hljs-string">"active"</span> : <span class="hljs-string">""</span>;
+            sb.AppendLine(<span class="hljs-string">$@"
+                &lt;li class='page-item <span class="hljs-subst">{active}</span>'&gt;
+                    &lt;a class='page-link' href='/<span class="hljs-subst">{ControllerName}</span>/<span class="hljs-subst">{ActionName}</span>?page=<span class="hljs-subst">{i}</span>'&gt;<span class="hljs-subst">{i}</span>&lt;/a&gt;
+                &lt;/li&gt;"</span>);
+        }
+
+        sb.AppendLine(<span class="hljs-string">"&lt;/ul&gt;&lt;/nav&gt;"</span>);
+
+        output.TagName = <span class="hljs-literal">null</span>;
+        output.Content.SetHtmlContent(sb.ToString());
+    }
+}</code></pre><h3 id="bolum-15">15. Session, Cookies ve Sepet (Cart)&#160;Yönetimi</h3><ul><li>Session: Sunucu tarafında, kullanıcıya özel olarak saklanan veridir.</li><li>Cookie: Kullanıcının tarayıcısında saklanan küçük metin dosyalarıdır.</li></ul><h4>Session ile Sepet&#160;Yönetimi</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Sepet modeli (basit)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">SepetModel</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> ProductId { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Adet { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+}
+
+<span class="hljs-comment">// Sepete Ekleme Action'ı</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">AddToCart</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> productId, <span class="hljs-built_in">int</span> adet</span>)</span>
+{
+    <span class="hljs-keyword">var</span> sepetJson = HttpContext.Session.GetString(<span class="hljs-string">"Sepetim"</span>);
+
+    <span class="hljs-keyword">var</span> sepet = <span class="hljs-built_in">string</span>.IsNullOrEmpty(sepetJson)
+        ? <span class="hljs-keyword">new</span> List&lt;SepetModel&gt;()
+        : JsonSerializer.Deserialize&lt;List&lt;SepetModel&gt;&gt;(sepetJson);
+
+    <span class="hljs-keyword">var</span> mevcutUrun = sepet.FirstOrDefault(s =&gt; s.ProductId == productId);
+
+    <span class="hljs-keyword">if</span> (mevcutUrun != <span class="hljs-literal">null</span>)
+    {
+        mevcutUrun.Adet += adet;
+    }
+    <span class="hljs-keyword">else</span>
+    {
+        sepet.Add(<span class="hljs-keyword">new</span> SepetModel { ProductId = productId, Adet = adet });
+    }
+
+    HttpContext.Session.SetString(<span class="hljs-string">"Sepetim"</span>, JsonSerializer.Serialize(sepet));
+
+    <span class="hljs-keyword">return</span> RedirectToAction(<span class="hljs-string">"Index"</span>);
+}</code></pre><h3 id="bolum-16">16. IHttpContextAccessor ve _Layout’ta Oturum Bilgisi Görüntüleme</h3><p>IHttpContextAccessor, Controller dışında (örneğin _Layout.cshtml) geçerli HttpContext’e erişmek için kullanılan bir servistir.</p><h4>Program.cs Yapılandırması</h4><pre><code class="hljs language-plaintext">builder.Services.AddHttpContextAccessor();</code></pre><h4>_Layout.cshtml Örneği</h4><pre><code class="hljs language-typescript"><span class="hljs-meta">@using</span> <span class="hljs-title class_">System</span>.<span class="hljs-property">Text</span>.<span class="hljs-property">Json</span>
+<span class="hljs-meta">@using</span> <span class="hljs-title class_">MyApp</span>.<span class="hljs-property">Models</span>
+<span class="hljs-meta">@inject</span> <span class="hljs-title class_">IHttpContextAccessor</span> accessor
+
+@{
+    <span class="hljs-keyword">var</span> session = accessor.<span class="hljs-property">HttpContext</span>.<span class="hljs-property">Session</span>;
+    <span class="hljs-keyword">var</span> urunSayisi = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (session.<span class="hljs-property">IsAvailable</span> &amp;&amp; session.<span class="hljs-property">Keys</span>.<span class="hljs-title class_">Any</span>(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> k == <span class="hljs-string">"Sepetim"</span>))
+    {
+        <span class="hljs-keyword">var</span> sepetJson = session.<span class="hljs-title class_">GetString</span>(<span class="hljs-string">"Sepetim"</span>);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">string</span>.<span class="hljs-title class_">IsNullOrEmpty</span>(sepetJson))
+        {
+            <span class="hljs-keyword">var</span> sepet = <span class="hljs-title class_">JsonSerializer</span>.<span class="hljs-property">Deserialize</span>&lt;<span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">SepetModel</span>&gt;&gt;(sepetJson);
+            urunSayisi = sepet?.<span class="hljs-title class_">Sum</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s.<span class="hljs-property">Adet</span>) ?? <span class="hljs-number">0</span>;
+        }
+    }
+}
+
+&lt;a asp-action=<span class="hljs-string">"Cart"</span> asp-controller=<span class="hljs-string">"Home"</span>&gt;<span class="hljs-title class_">Sepet</span> (<span class="hljs-meta">@urunSayisi</span>)&lt;/a&gt;</code></pre><h3 id="bolum-17">17. ASP.NET Core Identity — Scaffolding ve Razor&#160;Pages</h3><p>Identity’yi “scaffold” etmek, Login, Register gibi sayfaların fiziksel dosyalarını (.cshtml ve&#160;.cshtml.cs) projenize ekler.</p><p>Bu, bu sayfaların kodlarını doğrudan değiştirmenize olanak tanır. Bu sayfalar Razor Pages mimarisini kullanır.</p><h3 id="bolum-18">18. Custom User ve Identity Yapılandırması</h3><p>Identity’nin varsayılan IdentityUser sınıfını, kendi ihtiyaçlarınıza göre ek alanlar içerecek şekilde genişletebilirsiniz.</p><h4>Özel User&#160;Sınıfı</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">User</span> : <span class="hljs-title">IdentityUser</span>
+{
+ [<span class="hljs-meta">StringLength(11)</span>]
+ <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> TCKN { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+}</code></pre><h4>Program.cs Yapılandırması</h4><pre><code class="hljs language-javascript">builder.<span class="hljs-property">Services</span>.<span class="hljs-property">AddIdentity</span>&lt;<span class="hljs-title class_">User</span>, <span class="hljs-title class_">IdentityRole</span>&gt;(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+{
+    options.<span class="hljs-property">Password</span>.<span class="hljs-property">RequiredLength</span> = <span class="hljs-number">8</span>;
+})
+.<span class="hljs-property">AddEntityFrameworkStores</span>&lt;<span class="hljs-title class_">ApplicationDbContext</span>&gt;()
+.<span class="hljs-title class_">AddDefaultTokenProviders</span>();
+
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">ConfigureApplicationCookie</span>(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+{
+    options.<span class="hljs-property">LoginPath</span> = <span class="hljs-string">"/Account/Login"</span>;
+    options.<span class="hljs-property">AccessDeniedPath</span> = <span class="hljs-string">"/Account/AccessDenied"</span>;
+});</code></pre><h3 id="bolum-19">19. UserController, UserManager ve SignInManager Kullanımı</h3><ul><li>UserManager: Kullanıcı oluşturma, silme, rol atama gibi işlemleri yönetir.</li><li>SignInManager: Kullanıcı girişi, çıkışı gibi oturum işlemlerini yönetir.</li></ul><h4>Kayıt (Register) Action&#160;Örneği</h4><pre><code class="hljs language-csharp">[<span class="hljs-meta">HttpPost</span>]
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">Register</span>(<span class="hljs-params">UserViewModel model</span>)</span>
+{
+    <span class="hljs-keyword">if</span> (!ModelState.IsValid) 
+        <span class="hljs-keyword">return</span> View(model);
+
+    <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User 
+    { 
+        UserName = model.UserName, 
+        Email = model.Email 
+    };
+
+    <span class="hljs-keyword">var</span> result = <span class="hljs-keyword">await</span> _userManager.CreateAsync(user, model.Password);
+
+    <span class="hljs-keyword">if</span> (result.Succeeded)
+    {
+        <span class="hljs-keyword">await</span> _signInManager.SignInAsync(user, isPersistent: <span class="hljs-literal">false</span>);
+        <span class="hljs-keyword">return</span> RedirectToAction(<span class="hljs-string">"Index"</span>, <span class="hljs-string">"Home"</span>);
+    }
+
+    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> error <span class="hljs-keyword">in</span> result.Errors)
+    {
+        ModelState.AddModelError(<span class="hljs-string">""</span>, error.Description);
+    }
+
+    <span class="hljs-keyword">return</span> View(model);
+}</code></pre><h3 id="bolum-20">20. Authorization, [Authorize], [AllowAnonymous] ve&#160;Roller</h3><ul><li>[Authorize]: Sadece kimliği doğrulanmış (giriş yapmış) kullanıcıların erişimine izin verir.</li><li>[AllowAnonymous]: Herkesin erişebilmesini sağlar.</li><li>[Authorize(Roles = “Admin”)]: Sadece belirtilen roldeki kullanıcıların erişimine izin verir.</li></ul><h4>Controller Yetkilendirme Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> Microsoft.AspNetCore.Authorization;
+<span class="hljs-keyword">using</span> Microsoft.AspNetCore.Mvc;
+
+[<span class="hljs-meta">Authorize(Roles = <span class="hljs-string">"Admin,Moderator"</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">AdminController</span> : <span class="hljs-title">Controller</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Index</span>()</span> 
+    { 
+        <span class="hljs-keyword">return</span> View(); 
+    }
+
+    <span class="hljs-comment">// Bu action'a herkes erişebilir.</span>
+    [<span class="hljs-meta">AllowAnonymous</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">PublicInfo</span>()</span> 
+    { 
+        <span class="hljs-keyword">return</span> View(); 
+    }
+}</code></pre><h3 id="bolum-21">21. TempData ile Redirect Sonrası Mesaj&#160;Gösterme</h3><p>TempData, bir istekten hemen sonraki tek bir istek boyunca veriyi saklar. “PostRedirect-Get” deseninde kullanıcıya mesaj göstermek için idealdir.</p><h4>Controller Action&#160;Örneği</h4><pre><code class="hljs language-csharp">[<span class="hljs-meta">HttpPost</span>]
+<span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Update</span>(<span class="hljs-params">MyViewModel model</span>)</span>
+{
+    <span class="hljs-comment">// ... güncelleme işlemleri ...</span>
+
+    TempData[<span class="hljs-string">"SuccessMessage"</span>] = <span class="hljs-string">"İşlem başarıyla tamamlandı!"</span>;
+    <span class="hljs-keyword">return</span> RedirectToAction(<span class="hljs-string">"Index"</span>);
+}</code></pre><h4>View Örneği (`_Layout.cshtml`)</h4><pre><code class="hljs language-typescript"><span class="hljs-meta">@if</span> (<span class="hljs-title class_">TempData</span>[<span class="hljs-string">"SuccessMessage"</span>] != <span class="hljs-literal">null</span>)
+{
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"alert alert-success"</span>&gt;</span>@TempData["SuccessMessage"]<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+}</code></pre><h3 id="bolum-22">22. SaveChanges() Dönüş&#160;Değeri</h3><p>SaveChanges() metodu, veritabanında etkilenen (eklenen, güncellenen, silinen) satır sayısını int olarak döndürür.</p><p>Bu değer, işlemin başarılı olup olmadığını kontrol etmek için kullanılabilir. Ancak en güvenilir yöntem, DbUpdateException gibi istisnaları trycatch ile yakalamaktır.</p><h4>Try-Catch ile&#160;Kullanım</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">try</span>
+{
+    <span class="hljs-built_in">int</span> affectedRows = _ctx.SaveChanges();
+    <span class="hljs-keyword">if</span> (affectedRows &gt; <span class="hljs-number">0</span>)
+    {
+        <span class="hljs-comment">// Başarılı</span>
+    }
+}
+<span class="hljs-keyword">catch</span> (DbUpdateException ex)
+{
+    <span class="hljs-comment">// Hata yönetimi, loglama vb.</span>
+}</code></pre><h3 id="bolum-23">23. Web API Projesi ve Swagger (OpenAPI)</h3><p>Web API: Genellikle JSON formatında veri döndüren, UI içermeyen HTTP servisleridir.</p><ul><li>ApiController: API controller’ları için varsayılan davranışları etkinleştirir.</li><li>Swagger (OpenAPI): API’nizin belgelenmesini ve tarayıcı üzerinden test edilmesini sağlayan bir araçtır.</li></ul><h4>CustomerApiController Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> Microsoft.AspNetCore.Mvc;
+
+[<span class="hljs-meta">ApiController</span>]
+[<span class="hljs-meta">Route(<span class="hljs-string">"custapi"</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">CustomerApiController</span> : <span class="hljs-title">ControllerBase</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> NWContext _ctx;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CustomerApiController</span>(<span class="hljs-params">NWContext ctx</span>)</span>
+    {
+        _ctx = ctx;
+    }
+
+    [<span class="hljs-meta">HttpGet</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">GetAll</span>()</span> =&gt; Ok(_ctx.Customers.ToList());
+
+    [<span class="hljs-meta">HttpGet(<span class="hljs-string">"{id}"</span>)</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">GetById</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> id</span>)</span>
+    {
+        <span class="hljs-keyword">var</span> customer = _ctx.Customers.Find(id);
+        <span class="hljs-keyword">if</span> (customer == <span class="hljs-literal">null</span>) 
+            <span class="hljs-keyword">return</span> NotFound();
+
+        <span class="hljs-keyword">return</span> Ok(customer);
+    }
+
+    [<span class="hljs-meta">HttpPost</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> IActionResult <span class="hljs-title">Create</span>(<span class="hljs-params">[FromBody] Customer customer</span>)</span>
+    {
+        _ctx.Customers.Add(customer);
+        _ctx.SaveChanges();
+        <span class="hljs-keyword">return</span> StatusCode(<span class="hljs-number">201</span>, customer);
+    }
+}</code></pre><h3 id="bolum-24">24. Client (MVC) — ApiProvider ve HttpClientFactory</h3><p>IHttpClientFactory:&#160;.NET Core’da HttpClient nesnelerini yönetmenin en doğru yoludur. Soket tüketimi gibi yaygın sorunları önler.</p><h4>ApiProvider Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System.Net.Http;
+<span class="hljs-keyword">using</span> System.Net.Http.Json;
+<span class="hljs-keyword">using</span> System.Threading.Tasks;
+<span class="hljs-keyword">using</span> System.Collections.Generic;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ApiProvider</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IHttpClientFactory _httpClientFactory;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-built_in">string</span> _baseUrl = <span class="hljs-string">"https://localhost:5001/"</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ApiProvider</span>(<span class="hljs-params">IHttpClientFactory httpClientFactory</span>)</span>
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> <span class="hljs-title">Task</span>&lt;<span class="hljs-title">List</span>&lt;<span class="hljs-title">T</span>&gt;&gt; <span class="hljs-title">GetService</span>&lt;<span class="hljs-title">T</span>&gt;(<span class="hljs-params"><span class="hljs-built_in">string</span> address</span>) <span class="hljs-keyword">where</span> T : <span class="hljs-keyword">class</span></span>
+    {
+        <span class="hljs-keyword">var</span> client = _httpClientFactory.CreateClient();
+        client.BaseAddress = <span class="hljs-keyword">new</span> Uri(_baseUrl);
+
+        <span class="hljs-keyword">var</span> response = <span class="hljs-keyword">await</span> client.GetAsync(address);
+
+        <span class="hljs-keyword">if</span> (response.IsSuccessStatusCode)
+        {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> response.Content.ReadFromJsonAsync&lt;List&lt;T&gt;&gt;();
+        }
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> List&lt;T&gt;();
+    }
+}</code></pre><h3 id="bolum-25">25. Activator.CreateInstance ile Runtime’da Nesne Oluşturma</h3><p>Bu metot, bir tipin (Type) adını kullanarak çalışma zamanında (runtime) o tipten bir nesne örneği oluşturmanızı sağlar.</p><h4>Kullanım Örneği</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// T tipinin parametresiz bir constructor'ı olmalıdır.</span>
+T obj = Activator.CreateInstance&lt;T&gt;();
+
+<span class="hljs-comment">// Veya Type nesnesi üzerinden oluşturma</span>
+<span class="hljs-built_in">object</span> productObj = Activator.CreateInstance(<span class="hljs-keyword">typeof</span>(Product));</code></pre><h3 id="bolum-26">26. DI Registration ve Scoped ApiProvider Örneği</h3><p>Servis kaydederken, lambda ifadesi kullanarak kaydı özelleştirebilir ve IConfiguration gibi başka servislerden değerler alabilirsiniz.</p><h4>Program.cs Örneği</h4><pre><code class="hljs language-typescript">builder.<span class="hljs-property">Services</span>.<span class="hljs-property">AddScoped</span>&lt;<span class="hljs-title class_">IProvider</span>, <span class="hljs-title class_">ApiProvider</span>&gt;(<span class="hljs-function"><span class="hljs-params">sp</span> =&gt;</span>
+{
+    <span class="hljs-keyword">var</span> factory = sp.<span class="hljs-property">GetRequiredService</span>&lt;<span class="hljs-title class_">IHttpClientFactory</span>&gt;();
+    <span class="hljs-keyword">var</span> config = sp.<span class="hljs-property">GetRequiredService</span>&lt;<span class="hljs-title class_">IConfiguration</span>&gt;();
+    <span class="hljs-built_in">string</span> apiUrl = config.<span class="hljs-property">GetValue</span>&lt;<span class="hljs-built_in">string</span>&gt;(<span class="hljs-string">"ApiSettings:BaseUrl"</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ApiProvider</span>(factory) { <span class="hljs-title class_">ServerAddress</span> = apiUrl };
+});</code></pre><h3 id="bolum-27">27. Çift Projeyi Aynı Anda Çalıştırma</h3><p>Visual Studio’da Solution’a sağ tıklayıp “Configure Startup Projects…” ile “Multiple startup projects” seçeneğini aktif ederek hem API’yi hem de Client’ı aynı anda hata ayıklama modunda başlatabilirsiniz.</p><p>Projelerin farklı portlarda çalıştığından emin olun. API projesinde CORS (Cross-Origin Resource Sharing) yapılandırması gerekebilir.</p><h3 id="bolum-28">28. ApiProvider — POST/PUT/DELETE Örnekleri</h3><p>Bu metotlar, API’ye veri gönderme, güncelleme ve silme işlemlerini gerçekleştirir.</p><pre><code class="hljs language-csharp"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> <span class="hljs-title">Task</span>&lt;<span class="hljs-title">bool</span>&gt; <span class="hljs-title">PostService</span>&lt;<span class="hljs-title">T</span>&gt;(<span class="hljs-params"><span class="hljs-built_in">string</span> address, T model</span>) <span class="hljs-keyword">where</span> T : <span class="hljs-keyword">class</span></span>
+{
+    <span class="hljs-keyword">var</span> client = GetClient();
+    <span class="hljs-keyword">var</span> response = <span class="hljs-keyword">await</span> client.PostAsJsonAsync(address, model);
+    <span class="hljs-keyword">return</span> response.IsSuccessStatusCode;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> <span class="hljs-title">Task</span>&lt;<span class="hljs-title">bool</span>&gt; <span class="hljs-title">PutService</span>&lt;<span class="hljs-title">T</span>&gt;(<span class="hljs-params"><span class="hljs-built_in">string</span> address, <span class="hljs-built_in">int</span> id, T model</span>) <span class="hljs-keyword">where</span> T : <span class="hljs-keyword">class</span></span>
+{
+    <span class="hljs-keyword">var</span> client = GetClient();
+    <span class="hljs-keyword">var</span> response = <span class="hljs-keyword">await</span> client.PutAsJsonAsync(<span class="hljs-string">$"<span class="hljs-subst">{address}</span>/<span class="hljs-subst">{id}</span>"</span>, model);
+    <span class="hljs-keyword">return</span> response.IsSuccessStatusCode;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;<span class="hljs-built_in">bool</span>&gt; <span class="hljs-title">DeleteService</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> address, <span class="hljs-built_in">int</span> id</span>)</span>
+{
+    <span class="hljs-keyword">var</span> client = GetClient();
+    <span class="hljs-keyword">var</span> response = <span class="hljs-keyword">await</span> client.DeleteAsync(<span class="hljs-string">$"<span class="hljs-subst">{address}</span>/<span class="hljs-subst">{id}</span>"</span>);
+    <span class="hljs-keyword">return</span> response.IsSuccessStatusCode;
+}</code></pre><h3 id="bolum-29">29. JWT Authentication — Sunucu Tarafı&#160;(API)</h3><p>JWT (JSON Web Token): Taraflar arasında güvenli bir şekilde bilgi aktarımını sağlayan bir standarttır. API’leri güvence altına almak için yaygın olarak kullanılır.</p><h4>Program.cs JWT Yapılandırması</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">using</span> <span class="hljs-title class_">Microsoft</span>.<span class="hljs-property">AspNetCore</span>.<span class="hljs-property">Authentication</span>.<span class="hljs-property">JwtBearer</span>;
+<span class="hljs-keyword">using</span> <span class="hljs-title class_">Microsoft</span>.<span class="hljs-property">IdentityModel</span>.<span class="hljs-property">Tokens</span>;
+<span class="hljs-keyword">using</span> <span class="hljs-title class_">System</span>.<span class="hljs-property">Text</span>;
+
+<span class="hljs-keyword">var</span> key = <span class="hljs-title class_">Encoding</span>.<span class="hljs-property">UTF8</span>.<span class="hljs-title class_">GetBytes</span>(builder.<span class="hljs-property">Configuration</span>[<span class="hljs-string">"Jwt:Key"</span>]);
+
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddAuthentication</span>(<span class="hljs-title class_">JwtBearerDefaults</span>.<span class="hljs-property">AuthenticationScheme</span>)
+    .<span class="hljs-title class_">AddJwtBearer</span>(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+    {
+        options.<span class="hljs-property">TokenValidationParameters</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TokenValidationParameters</span>
+        {
+            <span class="hljs-title class_">ValidateIssuer</span> = <span class="hljs-literal">false</span>,
+            <span class="hljs-title class_">ValidateAudience</span> = <span class="hljs-literal">false</span>,
+            <span class="hljs-title class_">ValidateLifetime</span> = <span class="hljs-literal">true</span>,
+            <span class="hljs-title class_">ValidateIssuerSigningKey</span> = <span class="hljs-literal">true</span>,
+            <span class="hljs-title class_">IssuerSigningKey</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SymmetricSecurityKey</span>(key),
+            <span class="hljs-title class_">ClockSkew</span> = <span class="hljs-title class_">TimeSpan</span>.<span class="hljs-property">Zero</span>
+        };
+    });</code></pre><h3 id="bolum-30">30. ApiUserService — Token&#160;Üretimi</h3><p>Kullanıcı adı ve parola ile giriş yapan kullanıcıya, başarılı olması durumunda bir JWT döndürülür.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System.IdentityModel.Tokens.Jwt;
+<span class="hljs-keyword">using</span> System.Security.Claims;
+<span class="hljs-keyword">using</span> System.Text;
+<span class="hljs-keyword">using</span> Microsoft.IdentityModel.Tokens;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;<span class="hljs-built_in">string</span>&gt; <span class="hljs-title">ApiLoginAsync</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> username, <span class="hljs-built_in">string</span> password</span>)</span>
+{
+    <span class="hljs-keyword">var</span> result = <span class="hljs-keyword">await</span> _signInManager.PasswordSignInAsync(username, password, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">if</span> (!result.Succeeded) 
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">var</span> claims = <span class="hljs-keyword">new</span>[] { <span class="hljs-keyword">new</span> Claim(ClaimTypes.Name, username) };
+    <span class="hljs-keyword">var</span> key = <span class="hljs-keyword">new</span> SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration[<span class="hljs-string">"Jwt:Key"</span>]));
+    <span class="hljs-keyword">var</span> creds = <span class="hljs-keyword">new</span> SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    <span class="hljs-keyword">var</span> tokenDescriptor = <span class="hljs-keyword">new</span> SecurityTokenDescriptor
+    {
+        Subject = <span class="hljs-keyword">new</span> ClaimsIdentity(claims),
+        Expires = DateTime.UtcNow.AddHours(<span class="hljs-number">3</span>),
+        SigningCredentials = creds
+    };
+
+    <span class="hljs-keyword">var</span> tokenHandler = <span class="hljs-keyword">new</span> JwtSecurityTokenHandler();
+    <span class="hljs-keyword">var</span> token = tokenHandler.CreateToken(tokenDescriptor);
+
+    <span class="hljs-keyword">return</span> tokenHandler.WriteToken(token);
+}</code></pre><h3 id="bolum-31">31. Client: Token Alma ve Sonraki İsteklerde Kullanma</h3><p>Client, API’den aldığı token’ı sonraki isteklerde Authorization başlığına eklemelidir.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System.Net.Http.Headers;
+
+<span class="hljs-comment">// Token'ı aldıktan sonra session'a kaydetme</span>
+HttpContext.Session.SetString(<span class="hljs-string">"JwtToken"</span>, token);
+
+<span class="hljs-comment">// Sonraki isteklerde token'ı header'a ekleme</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> HttpClient <span class="hljs-title">GetClientWithToken</span>()</span>
+{
+    <span class="hljs-keyword">var</span> client = _httpClientFactory.CreateClient();
+    <span class="hljs-keyword">var</span> token = _httpContextAccessor.HttpContext.Session.GetString(<span class="hljs-string">"JwtToken"</span>);
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">string</span>.IsNullOrEmpty(token))
+    {
+        client.DefaultRequestHeaders.Authorization = <span class="hljs-keyword">new</span> AuthenticationHeaderValue(<span class="hljs-string">"Bearer"</span>, token);
+    }
+
+    <span class="hljs-keyword">return</span> client;
+}</code></pre><h3 id="bolum-32">32. Middleware ve Custom Filter Örnekleri</h3><ul><li>Middleware: Her isteği işleyen bileşenlerdir. Global davranışlar için kullanılırlar.</li><li>Filter: Action’ların yürütme pipeline’ında belirli aşamalarda çalışırlar.</li></ul><h4>Örnek Rate-Limit Middleware</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> Microsoft.AspNetCore.Http;
+<span class="hljs-keyword">using</span> System.Threading.Tasks;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">RequestLimitMiddleware</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> RequestDelegate _next;
+    <span class="hljs-comment">// ... sayaç ve zaman mantığı ...</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">RequestLimitMiddleware</span>(<span class="hljs-params">RequestDelegate next</span>)</span>
+    {
+        _next = next;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task <span class="hljs-title">InvokeAsync</span>(<span class="hljs-params">HttpContext context</span>)</span>
+    {
+        <span class="hljs-comment">// ... limit kontrol mantığı ...</span>
+        <span class="hljs-keyword">if</span> (limitExceeded)
+        {
+            context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            <span class="hljs-keyword">await</span> context.Response.WriteAsync(<span class="hljs-string">"Too many requests."</span>);
+            <span class="hljs-keyword">return</span>;
+        }
+
+        <span class="hljs-keyword">await</span> _next(context);
+    }
+}
+
+<span class="hljs-comment">// Program.cs içinde:</span>
+<span class="hljs-comment">// app.UseMiddleware&lt;RequestLimitMiddleware&gt;();</span></code></pre><h3 id="bolum-33">33. Localization (Yerelleştirme)</h3><p>Uygulamanızın birden fazla dili desteklemesini sağlar. Metinler genellikle&#160;.resx uzantılı kaynak dosyalarında tutulur.</p><ul><li>AddLocalization: Yerelleştirme servislerini DI container’a ekler.</li><li>UseRequestLocalization: Tarayıcı dil tercihlerine göre uygulamanın kültürünü ayarlayan middleware’i pipeline’a ekler.</li></ul><h4>Program.cs Yerelleştirme Yapılandırması</h4><pre><code class="hljs language-javascript"><span class="hljs-keyword">using</span> <span class="hljs-title class_">Microsoft</span>.<span class="hljs-property">AspNetCore</span>.<span class="hljs-property">Builder</span>;
+<span class="hljs-keyword">using</span> <span class="hljs-title class_">Microsoft</span>.<span class="hljs-property">AspNetCore</span>.<span class="hljs-property">Localization</span>;
+<span class="hljs-keyword">using</span> <span class="hljs-title class_">System</span>.<span class="hljs-property">Globalization</span>;
+
+<span class="hljs-comment">// 1. Yerelleştirme servislerini ekle ve kaynak dosyalarının yolunu belirt.</span>
+<span class="hljs-comment">// "Resources" klasörü, projenin kök dizininde yer almalıdır.</span>
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddLocalization</span>(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span> options.<span class="hljs-property">ResourcesPath</span> = <span class="hljs-string">"Resources"</span>);
+
+<span class="hljs-comment">// 2. Desteklenecek dilleri ve kültürleri tanımla.</span>
+<span class="hljs-keyword">var</span> supportedCultures = <span class="hljs-keyword">new</span>[]
+{
+    <span class="hljs-keyword">new</span> <span class="hljs-title class_">CultureInfo</span>(<span class="hljs-string">"tr-TR"</span>),
+    <span class="hljs-keyword">new</span> <span class="hljs-title class_">CultureInfo</span>(<span class="hljs-string">"en-US"</span>)
+};
+
+<span class="hljs-comment">// 3. Yerelleştirme seçeneklerini yapılandır.</span>
+<span class="hljs-keyword">var</span> localizationOptions = <span class="hljs-keyword">new</span> <span class="hljs-title class_">RequestLocalizationOptions</span>()
+    <span class="hljs-comment">// Hiçbir dil belirtilmezse varsayılan olarak bu kültürü kullan.</span>
+    .<span class="hljs-title class_">SetDefaultCulture</span>(supportedCultures[<span class="hljs-number">0</span>].<span class="hljs-property">Name</span>)
+    <span class="hljs-comment">// Uygulamanın desteklediği kültürleri listeye ekle.</span>
+    .<span class="hljs-title class_">AddSupportedCultures</span>(supportedCultures.<span class="hljs-title class_">Select</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-property">Name</span>).<span class="hljs-title class_">ToArray</span>())
+    <span class="hljs-comment">// UI için desteklenen kültürleri listeye ekle (genellikle aynıdır).</span>
+    .<span class="hljs-title class_">AddSupportedUICultures</span>(supportedCultures.<span class="hljs-title class_">Select</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-property">Name</span>).<span class="hljs-title class_">ToArray</span>());
+
+<span class="hljs-keyword">var</span> app = builder.<span class="hljs-title class_">Build</span>();
+<span class="hljs-comment">// ...</span>
+
+<span class="hljs-comment">// 4. Yapılandırılan seçeneklerle yerelleştirme middleware'ini pipeline'a ekle.</span>
+<span class="hljs-comment">// Bu, UseRouting'den önce gelmelidir.</span>
+app.<span class="hljs-title class_">UseRequestLocalization</span>(localizationOptions);
+<span class="hljs-comment">// ...</span></code></pre><p>— Final.</p>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>Bonus: İleri Seviye .NET Core Konuları</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler-3e5b1595924a" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:58:01.853Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #04 Web API Geliştirme</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:30:13.116Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #01 Giriş ve Temeller</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:50.631Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #03 Veri Katmanı ve ORM (Entity Framework Core)</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

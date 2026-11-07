@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Production’da Yaşanan Bir Bug Nasıl Günlerce Bulunamaz? — Hakan Cengiz</title>
+  <meta name="description" content="Bir bug’ın production ortamında ortaya çıkması, geliştirme sürecindeki sıradan bir hatadan çok daha yorucudur. Çünkü artık olay yalnızca “kod çalışıyor mu?” meselesi deği"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="Production’da Yaşanan Bir Bug Nasıl Günlerce Bulunamaz?"><meta property="og:description" content="Bir bug’ın production ortamında ortaya çıkması, geliştirme sürecindeki sıradan bir hatadan çok daha yorucudur. Çünkü artık olay yalnızca “kod çalışıyor mu?” meselesi deği">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*ogujGy88v4UutGBSXDCkVg.png"><meta property="article:published_time" content="2026-04-07T20:21:51.381Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/productionda-ya%C5%9Fanan-bir-bug-nas%C4%B1l-g%C3%BCnlerce-bulunamaz-cd0607ce3b9a"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">13<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Production neden bu kadar zor bir ortamdır?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Production neden bu kadar zor bir ortamdır?</span></a><a href="#bolum-2" aria-label="Bug neden testte görünmemiş olabilir?"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Bug neden testte görünmemiş olabilir?</span></a><a href="#bolum-3" aria-label="En sık görülen senaryo: Sorun sadece bazen oluşur"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">En sık görülen senaryo: Sorun sadece bazen oluşur</span></a><a href="#bolum-4" aria-label="Kötü loglama, bug’ı haftalarca görünmez yapabilir"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Kötü loglama, bug’ı haftalarca görünmez yapabilir</span></a><a href="#bolum-5" aria-label="Reprodüksiyon yoksa teşhis de zor olur"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Reprodüksiyon yoksa teşhis de zor olur</span></a><a href="#bolum-6" aria-label="Production bug’larının en büyük düşmanı: varsayım"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Production bug’larının en büyük düşmanı: varsayım</span></a><a href="#bolum-7" aria-label="Hatanın başka bir sistemden geliyor olması"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Hatanın başka bir sistemden geliyor olması</span></a><a href="#bolum-8" aria-label="İzolasyon yapılmadan çözüm aranırsa zaman kaybedilir"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">İzolasyon yapılmadan çözüm aranırsa zaman kaybedilir</span></a><a href="#bolum-9" aria-label="Hata aslında veri kaynaklı olabilir"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Hata aslında veri kaynaklı olabilir</span></a><a href="#bolum-10" aria-label="Monitoring ve observability farkı"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Monitoring ve observability farkı</span></a><a href="#bolum-11" aria-label="Küçük bir bug neden büyük etki yaratır?"><span class="toc-number" aria-hidden="true">11</span><span class="toc-title">Küçük bir bug neden büyük etki yaratır?</span></a><a href="#bolum-12" aria-label="Production bug’ını bulmak için nasıl düşünmelisin?"><span class="toc-number" aria-hidden="true">12</span><span class="toc-title">Production bug’ını bulmak için nasıl düşünmelisin?</span></a><a href="#bolum-13" aria-label="Sonuç"><span class="toc-number" aria-hidden="true">13</span><span class="toc-title">Sonuç</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*ogujGy88v4UutGBSXDCkVg.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>Production’da Yaşanan Bir Bug Nasıl Günlerce Bulunamaz?</h1>
+          <div class="reader-meta"><span>testing</span><i aria-hidden="true">·</i><time datetime="2026-04-07T20:21:51.381Z">7 Nisan 2026</time><i aria-hidden="true">·</i><span>~8 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*ogujGy88v4UutGBSXDCkVg.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Bir bug’ın production ortamında ortaya çıkması, geliştirme sürecindeki sıradan bir hatadan çok daha yorucudur. Çünkü artık olay yalnızca “kod çalışıyor mu?” meselesi değildir. Gerçek kullanıcılar etkilenir, loglar yetersiz kalabilir, hata yeniden üretilemeyebilir ve herkes aynı soruyu sorar: “<strong>Bu sorun neden testte görünmedi?</strong>”</p><p>İşin zor kısmı şudur: Production’daki bug’lar çoğu zaman büyük ve açık hatalar değildir. Tam tersine, küçük bir koşul birleşimi, nadir bir veri seti, yanlış zamanlama ya da dış bir sistemin beklenmedik davranışı yüzünden ortaya çıkar. Bu yüzden günlerce bulunamayan bug’lar genelde “gizli” değil, “çok iyi kamufle olmuş” bug’lardır.</p><p>Bu yazıda, production’da bir bug’ın neden günlerce bulunamadığını ve böyle durumlarda nasıl daha sistemli yaklaşılması gerektiğini anlatacağım.</p><h3 id="bolum-1">Production neden bu kadar zor bir ortamdır?</h3><p>Geliştirme ortamı ile production aynı şey değildir. Bu cümle basit görünür ama çoğu sorunun kökü buradadır.</p><p>Development ortamında:</p><ul><li>veri daha küçüktür,</li><li>kullanıcı sayısı düşüktür,</li><li>sistem daha az yük altındadır,</li><li>test verileri daha düzenlidir,</li><li>birçok kenar durum hiç oluşmaz.</li></ul><p>Production ortamında ise:</p><ul><li>gerçek kullanıcı davranışı vardır,</li><li>trafik dalgalanır,</li><li>veri çeşitliliği çok fazladır,</li><li>dış servisler devrededir,</li><li>zamanlama farklılıkları ortaya çıkar,</li><li>aynı kod, farklı koşullarda bambaşka davranabilir.</li></ul><p>Burada önemli bir terim var: <strong>edge case</strong>. Türkçe olarak “uç durum” ya da “nadir senaryo” demektir. Yani normal akışta çok sık görmediğin ama sistemin bir yerinde problem çıkarabilen özel durumlar.</p><p>Production bug’larının çoğu tam da bu uç durumlarda yaşanır.</p><h3 id="bolum-2">Bug neden testte görünmemiş olabilir?</h3><p>Bir bug’ın testte çıkmaması, mutlaka testin kötü olduğu anlamına gelmez. Bazen sorun şu nedenlerden biri olur:</p><ol><li>Gerçek veri testte yoktur.</li><li>Aynı kullanıcı akışı denenmemiştir.</li><li>Sistem yük altındayken davranış değişiyordur.</li><li>Zamanlama farkı vardır.</li><li>Üçüncü parti bir servis farklı cevap veriyordur.</li><li>Bir kültür, saat dilimi veya bölgesel ayar farkı bug’ı tetikliyordur.</li></ol><p>Örneğin saat bazlı çalışan bir iş, yerel makinede sorunsuz görünür ama production’da farklı zaman diliminde bozulur. Ya da boş görünmeyen bir alan, gerçek veride beklenmeyen bir karakter içerdiği için patlar.</p><p>Bir başka kavram da <strong>race condition</strong>. Türkçesi kabaca “yarış durumu”dur. Aynı anda birden fazla işlemin birbirinin sonucunu etkilediği durumlarda ortaya çıkar. Bu tür hatalar çok zor yakalanır, çünkü her çalıştırmada oluşmaz.</p><h3 id="bolum-3">En sık görülen senaryo: Sorun sadece bazen&#160;oluşur</h3><p>Günlerce bulunamayan bug’ların büyük kısmı deterministik değildir. <strong>Deterministik</strong> demek, her zaman aynı sonucu veren anlamına gelir. Eğer bug her zaman oluşmuyorsa, onu yeniden üretmek çok zorlaşır.</p><p>Örneğin:</p><ul><li>her 100 isteğin 1’inde hata oluşuyorsa,</li><li>yalnızca belirli veri gelince tetikleniyorsa,</li><li>sadece bir kullanıcı türünde görülüyorsa,</li><li>sadece yoğun saatlerde ortaya çıkıyorsa,</li></ul><p>sorunu bulmak doğal olarak zorlaşır.</p><p>Bu yüzden “ben burada göremedim” ifadesi, sorunun olmadığı anlamına gelmez. Sadece o koşullarda oluşmadığı anlamına gelir.</p><h3 id="bolum-4">Kötü loglama, bug’ı haftalarca görünmez yapabilir</h3><p>Log, yani kayıt, bir sistemin içerde ne yaptığını anlamanın en güçlü araçlarından biridir. Ama log varsa faydalıdır. Eksik, düzensiz veya anlamsız loglar çoğu zaman hiçbir işe yaramaz.</p><p>Kötü loglamanın tipik sorunları:</p><ul><li>Hangi isteğin hangi kullanıcıya ait olduğu belli değildir.</li><li>Hata oluştu ama bağlam yoktur.</li><li>Sadece “error occurred” gibi genel mesajlar yazılmıştır.</li><li>İlgili parametreler kaydedilmemiştir.</li><li>İstekler birbiriyle ilişkilendirilememiştir.</li></ul><p>Burada önemli bir kavram daha var: <strong>correlation id</strong>. Türkçesi “ilişkilendirme kimliği” gibi düşünülebilir. Bir isteğin sistem boyunca takip edilmesini sağlayan benzersiz bir değerdir. Bir bug günlerce bulunamıyorsa, çoğu zaman problem bu iz sürmenin eksik yapılmasıdır.</p><h4>Örnek: Basit ama işe yarayan&#160;loglama</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">OrderService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ILogger&lt;OrderService&gt; _logger;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">OrderService</span>(<span class="hljs-params">ILogger&lt;OrderService&gt; logger</span>)</span>
+    {
+        <span class="hljs-comment">// Logger nesnesini dışarıdan alıyoruz</span>
+        _logger = logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">CreateOrder</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> userId, <span class="hljs-built_in">decimal</span> amount</span>)</span>
+    {
+        <span class="hljs-comment">// Sipariş işlemi başladığını ve önemli verileri logluyoruz</span>
+        _logger.LogInformation(<span class="hljs-string">"Sipariş oluşturuluyor. UserId: {UserId}, Amount: {Amount}"</span>, userId, amount);
+
+        <span class="hljs-keyword">try</span>
+        {
+            <span class="hljs-comment">// Burada gerçek sipariş oluşturma işlemi yapılır</span>
+            <span class="hljs-comment">// Örneğin veritabanına kayıt atılır, ödeme doğrulanır, stok kontrol edilir</span>
+        }
+        <span class="hljs-keyword">catch</span> (Exception ex)
+        {
+            <span class="hljs-comment">// Hata oluştuğunda detaylı kayıt alıyoruz</span>
+            _logger.LogError(ex, <span class="hljs-string">"Sipariş oluşturulurken hata oluştu. UserId: {UserId}"</span>, userId);
+            <span class="hljs-keyword">throw</span>;
+        }
+    }
+}</code></pre><p>Bu örnekte önemli olan şey yalnızca hata kaydetmek değil, hata anındaki bağlamı da saklamaktır. Sonradan bakıldığında “hangi kullanıcı, hangi tutar, hangi akış” sorularına cevap verebilmek gerekir.</p><h3 id="bolum-5">Reprodüksiyon yoksa teşhis de zor&#160;olur</h3><p>Bir bug’ı bulmanın en büyük hızlandırıcısı, onu yeniden üretebilmektir. Buna <strong>reproduce etmek</strong> denir. Türkçesi “yeniden oluşturmak” ya da “tekrar üretmek” şeklinde açıklanabilir.</p><p>Eğer bir bug’ı üretemiyorsan:</p><ul><li>hangi koşulda çıktığını tam bilemezsin,</li><li>çözümünü doğrulamak zorlaşır,</li><li>yanlış yere müdahale etme ihtimalin artar.</li></ul><p>Bu yüzden sağlam bir hata ayıklama süreci önce şu soruları sorar:</p><ul><li>Hangi kullanıcı etkileniyor?</li><li>Hangi tarih ve saatte oluşuyor?</li><li>Hangi veri ile tetikleniyor?</li><li>Hangi ortamda görülüyor?</li><li>Her seferinde mi oluyor, bazen mi?</li></ul><p>Bu sorular netleşmeden yapılan her müdahale biraz tahmindir.</p><h3 id="bolum-6">Production bug’larının en büyük düşmanı:&#160;varsayım</h3><p>Varsayım, yazılımda çok pahalıya patlar. Çünkü çoğu bug, “böyle gelmez”, “burası boş olmaz”, “bu servis hep döner”, “bu alan max 20 karakterdir” gibi kabuller yüzünden çıkar.</p><p>Oysa production’da gerçek hayat farklıdır.</p><p>Bir alan beklenmedik şekilde boş gelebilir.<br>Bir servis kısa süreliğine yanıt vermeyebilir.<br>Bir kullanıcı aynı butona iki kez basabilir.<br>Bir cron job, beklenmeyen saatte tetiklenebilir.</p><p>Burada bir başka terim var: <strong>cron job</strong>. Türkçe olarak “zamanlanmış görev” diyebiliriz. Belirli aralıklarla otomatik çalışan işlerdir. Bu tip işlerde saat farkı, çakışma ve tekrar tetiklenme gibi sorunlar sık görülür.</p><h3 id="bolum-7">Hatanın başka bir sistemden geliyor&#160;olması</h3><p>Bazen bug senin kodunda değildir. Dış servislerde, API entegrasyonlarında, kuyruk sistemlerinde veya altyapıda olabilir.</p><p>Örneğin:</p><ul><li>ödeme servisi geç cevap veriyordur,</li><li>bir API zaman zaman boş veri dönüyordur,</li><li>mesaj kuyruğu gecikiyordur,</li><li>DNS tarafında kısa süreli yönlendirme problemi vardır.</li></ul><p>Bu durumda sorun senin ekranında görünür ama kök neden başka yerdedir.</p><p>Burada <strong>dependency</strong> kelimesi geçer. Türkçesi “bağımlılık”tır. Sistemin çalışması için ihtiyaç duyduğu dış parça anlamına gelir. Bir bug günlerce bulunamıyorsa, çoğu zaman bağımlılıkların davranışı yeterince izlenmemiştir.</p><h3 id="bolum-8">İzolasyon yapılmadan çözüm aranırsa zaman kaybedilir</h3><p>Sorunu bulmak için en doğru yöntemlerden biri izolasyondur. Yani sistemi küçük parçalara ayırıp hangi parçanın sorun çıkardığını görmek.</p><p>Örneğin:</p><ul><li>yalnızca input doğrulamasını kontrol et,</li><li>yalnızca veritabanı çağrısını test et,</li><li>yalnızca dış servis çağrısını incele,</li><li>yalnızca ilgili branch’i çalıştır.</li></ul><p>Sorunu bir anda tüm sistem üzerinden çözmeye çalışmak çoğu zaman kafa karıştırır.</p><p>Aşağıdaki basit yaklaşım, logları daha anlamlı hale getirmek için kullanılabilir:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">PaymentService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ILogger&lt;PaymentService&gt; _logger;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">PaymentService</span>(<span class="hljs-params">ILogger&lt;PaymentService&gt; logger</span>)</span>
+    {
+        <span class="hljs-comment">// Logger'ı alıyoruz</span>
+        _logger = logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">ProcessPayment</span>(<span class="hljs-params"><span class="hljs-built_in">decimal</span> amount, <span class="hljs-built_in">string</span> orderNo</span>)</span>
+    {
+        <span class="hljs-comment">// İşlem başlangıcını logluyoruz</span>
+        _logger.LogInformation(<span class="hljs-string">"Ödeme işlemi başladı. OrderNo: {OrderNo}, Amount: {Amount}"</span>, orderNo, amount);
+
+        <span class="hljs-keyword">if</span> (amount &lt;= <span class="hljs-number">0</span>)
+        {
+            <span class="hljs-comment">// Geçersiz veri geldiğinde bunu açıkça yazıyoruz</span>
+            _logger.LogWarning(<span class="hljs-string">"Geçersiz ödeme tutarı. OrderNo: {OrderNo}"</span>, orderNo);
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+
+        <span class="hljs-comment">// Burada dış ödeme servisi çağrılıyor olabilir</span>
+        <span class="hljs-comment">// Dış sistem hatası burada yakalanmalı ve kaydedilmelidir</span>
+
+        _logger.LogInformation(<span class="hljs-string">"Ödeme işlemi başarıyla tamamlandı. OrderNo: {OrderNo}"</span>, orderNo);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    }
+}</code></pre><p>Bu tarz loglar sayesinde sorun üretimden sonra da izlenebilir hale gelir.</p><h3 id="bolum-9">Hata aslında veri kaynaklı&#160;olabilir</h3><p>Production bug’larının önemli kısmı koddan değil veriden çıkar. Çünkü gerçek veri:</p><ul><li>kirli olabilir,</li><li>eksik olabilir,</li><li>beklenmedik formatta gelebilir,</li><li>eski sistemlerden taşınmış olabilir,</li><li>manuel müdahaleler içerebilir.</li></ul><p>Test ortamındaki temiz veri ile production’daki karmaşık veri aynı değildir. Bu yüzden bir alanın “string” olması, oraya her zaman düzgün metin geleceği anlamına gelmez. İçine farklı karakterler, uzun değerler veya bozuk kayıtlar girebilir.</p><p>Bu yüzden veri doğrulama, sadece ekran tarafında değil, uygulamanın kritik noktalarında da düşünülmelidir.</p><h3 id="bolum-10">Monitoring ve observability farkı</h3><p>Burada iki kavramı ayırmak gerekir.</p><p><strong>Monitoring</strong>, sistemi izlemek demektir. CPU kullanımı, hata oranı, cevap süresi gibi metrikleri takip edersin.</p><p><strong>Observability</strong> ise sistemin iç durumunu dışarıdan anlayabilme yeteneğidir. Yani sorun çıktığında “ne oldu?” sorusuna cevap verebilme kapasitesidir.</p><p>Basitçe söylemek gerekirse:</p><ul><li>Monitoring = “Bir sorun var mı?”</li><li>Observability = “Sorun neden oldu?”</li></ul><p>Günlerce bulunamayan bug’larda observability seviyesi zayıfsa iş çok uzar.</p><h3 id="bolum-11">Küçük bir bug neden büyük etki&#160;yaratır?</h3><p>Çünkü production’da küçük bir hata, etkisini kullanıcı sayısı ile çarpar. Geliştirme ortamında sadece birkaç kişi test eder. Production’da binlerce kullanıcı aynı anda etkilenebilir.</p><p>Örneğin:</p><ul><li>tek bir null değer yüzünden ekran çökebilir,</li><li>tek bir timeout tüm akışı bozabilir,</li><li>küçük bir tarih farkı raporlamayı yanlış gösterebilir,</li><li>tek bir yanlış cache davranışı eski veriyi herkese yayabilir.</li></ul><p>Burada <strong>null</strong> kavramını da netleştirelim. Null, “değer yok” demektir. Yazılımda en çok sorun çıkaran şeylerden biridir, çünkü beklenmeden geldiğinde akışı bozabilir.</p><h3 id="bolum-12">Production bug’ını bulmak için nasıl düşünmelisin?</h3><p>Sistemli ilerlemek gerekir. Panik yapmak yerine şu sırayla düşün:</p><ol><li>Sorunun etkisi ne?</li><li>Kim etkileniyor?</li><li>Hangi veri ile oluşuyor?</li><li>Hangi saatlerde ortaya çıkıyor?</li><li>Hangi servisler devrede?</li><li>En son ne değişti?</li><li>Sorun kodda mı, veride mi, altyapıda mı?</li></ol><p>Özellikle “en son ne değişti?” sorusu çok değerlidir. Çünkü production bug’ları çoğu zaman son yapılan değişiklikle ilişkilidir, ama her zaman doğrudan onun yüzünden çıkmaz. Bazen sadece mevcut bir problemi görünür hale getirir.</p><h3 id="bolum-13">Sonuç</h3><p>Production’da yaşanan bir bug’ın günlerce bulunamamasının nedeni çoğu zaman tek bir hata değildir. Eksik loglama, zayıf izleme, yetersiz reprodüksiyon, yanlış varsayımlar, veri farkları ve dış bağımlılıklar birleşir. Problem büyüktür çünkü görünmezdir.</p><p>İyi haber şu: Daha iyi loglama, anlamlı correlation id kullanımı, doğru izolasyon, veri odaklı düşünme ve sistematik hata ayıklama ile sorunlar çok daha hızlı bulunabilir.</p><p>Asıl farkı yaratan şey daha çok kod yazmak değil, doğru soruları doğru sırayla sormaktır.</p>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/productionda-ya%C5%9Fanan-bir-bug-nas%C4%B1l-g%C3%BCnlerce-bulunamaz-cd0607ce3b9a" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*yh1THtF_WefcMNH9Z6m94w.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*yh1THtF_WefcMNH9Z6m94w.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-20T21:43:50.946Z">21 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #07 Yayınlama, Test ve DevOps Süreçleri</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-09-react-testing-library-ve-jest-ile-test-etme/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*3UeumyiSzk9VLcPqPZTKrw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*3UeumyiSzk9VLcPqPZTKrw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-27T09:23:55.007Z">27 Eki 2025</time><h3 class="article-title">React Serisi — #09 React Testing Library ve Jest ile Test Etme</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/dependency-injection-her-sorunu-cozmez-net-te-dogru-kullanim-rehberi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nVXv9LLsyk94fe4-CH-g2g.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nVXv9LLsyk94fe4-CH-g2g.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-04-01T21:48:49.211Z">2 Nis 2026</time><h3 class="article-title">Dependency Injection Her Sorunu Çözmez: .NET’te Doğru Kullanım Rehberi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

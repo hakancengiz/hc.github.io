@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entity Framework Performans Tuzakları — Hakan Cengiz</title>
+  <meta name="description" content="Kısa bir not: Aşağıda ele alınan başlıklar, gerçek proje deneyimlerinde sıklıkla karşılaşılan performans ve tasarım kaynaklı durumlara dayanmaktadır. Her bir bölümde önce"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="Entity Framework Performans Tuzakları"><meta property="og:description" content="Kısa bir not: Aşağıda ele alınan başlıklar, gerçek proje deneyimlerinde sıklıkla karşılaşılan performans ve tasarım kaynaklı durumlara dayanmaktadır. Her bir bölümde önce">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*U53weqf9VvgIiui4aTWM8Q.jpeg"><meta property="article:published_time" content="2026-03-03T19:48:01.553Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/entity-framework-performans-tuzaklar%C4%B1-3c8f5af82ba8"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout no-toc">
+      
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*U53weqf9VvgIiui4aTWM8Q.jpeg" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>Entity Framework Performans Tuzakları</h1>
+          <div class="reader-meta"><span>csharp</span><i aria-hidden="true">·</i><time datetime="2026-03-03T19:48:01.553Z">3 Mart 2026</time><i aria-hidden="true">·</i><span>~6 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*U53weqf9VvgIiui4aTWM8Q.jpeg" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Kısa bir not: Aşağıda ele alınan başlıklar, gerçek proje deneyimlerinde sıklıkla karşılaşılan performans ve tasarım kaynaklı durumlara dayanmaktadır. Her bir bölümde önce ilgili problem çerçevelenmiş, ardından uygulanabilir çözüm yaklaşımı ve oluşabilecek örnek SQL çıktısı üzerinden teknik değerlendirme sunulmuştur.</p><h4>1) N+1 problemi — döngü içinde veritabanına tekrar tekrar&#160;bakmak</h4><p><strong>Durum:</strong> Bir liste çekip, her öğe için ilişkili veriye ayrı ayrı erişildiğinde veritabanına çok sayıda sorgu gider. Bu, beklenenden yavaş çalışır.</p><p>Kötü örnek (N+1):</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Kötü örnek: N+1 riski</span>
+<span class="hljs-keyword">var</span> customers = <span class="hljs-keyword">await</span> db.Customers.ToListAsync(); <span class="hljs-comment">// tüm müşteriler çekiliyor</span>
+<span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> c <span class="hljs-keyword">in</span> customers)
+{
+    <span class="hljs-comment">// Eğer Orders lazy loading ile geliyorsa veya ayrı sorgu çağrısı oluyorsa</span>
+    <span class="hljs-keyword">var</span> orderCount = <span class="hljs-keyword">await</span> db.Orders.CountAsync(o =&gt; o.CustomerId == c.Id);
+    Console.WriteLine(<span class="hljs-string">$"<span class="hljs-subst">{c.Id}</span> -&gt; <span class="hljs-subst">{orderCount}</span>"</span>);
+}</code></pre><p>Bu yaklaşımla veritabanına <code>1 + N</code> (Customers için 1, her customer için 1) sorgu gidebilir.</p><p>Daha iyi yaklaşım — tek sorguda hesapla (projection):</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// İyi: tek sorguda hesaplama (projection)</span>
+<span class="hljs-keyword">var</span> users = <span class="hljs-keyword">await</span> db.<span class="hljs-property">Users</span>
+    .<span class="hljs-title class_">Select</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> <span class="hljs-keyword">new</span> {
+        u.<span class="hljs-property">Id</span>,
+        u.<span class="hljs-property">Name</span>,
+        <span class="hljs-title class_">ActiveOrders</span> = db.<span class="hljs-property">Orders</span>.<span class="hljs-title class_">Count</span>(<span class="hljs-function"><span class="hljs-params">o</span> =&gt;</span> o.<span class="hljs-property">UserId</span> == u.<span class="hljs-property">Id</span> &amp;&amp; o.<span class="hljs-property">Status</span> == <span class="hljs-string">"Active"</span>)
+    })
+    .<span class="hljs-title class_">AsNoTracking</span>()
+    .<span class="hljs-title class_">ToListAsync</span>();</code></pre><p>Bu LINQ ifadesinin SQL’e dönüştüğü tipik örnek (SQL Server için örnek):</p><pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span> [u].[Id], [u].[Name],
+       (<span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">FROM</span> [Orders] <span class="hljs-keyword">AS</span> [o] <span class="hljs-keyword">WHERE</span> [o].[UserId] <span class="hljs-operator">=</span> [u].[Id] <span class="hljs-keyword">AND</span> [o].[Status] <span class="hljs-operator">=</span> N<span class="hljs-string">'Active'</span>) <span class="hljs-keyword">AS</span> [ActiveOrders]
+<span class="hljs-keyword">FROM</span> [Users] <span class="hljs-keyword">AS</span> [u];</code></pre><p>Bu yöntemle tek seferde gerekli aggregate hesap alınır; ağ trafiği ve round-trip sayısı azalır.</p><h4>2) <code>AsNoTracking()</code> — sadece okuma yapıyorsanız faydası&#160;olur</h4><p><strong>Durum:</strong> EF Core, varsayılan olarak çekilen entity’leri <code>ChangeTracker</code> ile takip eder. Eğer veriyi sadece okumak istiyorsanız bu takip fazladan bellek ve CPU kullanabilir.</p><p>Kötü örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Kötü: sadece okuma ama tracking açık</span>
+<span class="hljs-keyword">var</span> customers = <span class="hljs-keyword">await</span> db.Customers.ToListAsync();</code></pre><p>İyi örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// İyi: okuma işlemlerinde AsNoTracking tercih edilebilir</span>
+<span class="hljs-keyword">var</span> customers = <span class="hljs-keyword">await</span> db.Customers
+    .AsNoTracking() <span class="hljs-comment">// takip devre dışı =&gt; daha az bellek/CPU</span>
+    .ToListAsync();</code></pre><p><strong>Not:</strong> <code>AsNoTracking()</code> SQL çıktısını değiştirmez — sorgu aynı SQL'i üretir. Fark, client-side davranıştadır (nesneler ChangeTracker'a eklenmez).</p><p>Örnek SQL (basit SELECT):</p><pre><code class="hljs language-css"><span class="hljs-selector-tag">SELECT</span> <span class="hljs-selector-attr">[c]</span>.<span class="hljs-selector-attr">[Id]</span>, <span class="hljs-selector-attr">[c]</span>.<span class="hljs-selector-attr">[Name]</span>, <span class="hljs-selector-attr">[c]</span>.<span class="hljs-selector-attr">[Email]</span>
+<span class="hljs-selector-tag">FROM</span> <span class="hljs-selector-attr">[Customers]</span> AS <span class="hljs-selector-attr">[c]</span>;</code></pre><h4>3) Büyük result set’leri bellekle çekmekten kaçınmak</h4><p><strong>Durum:</strong> Tüm tabloyu bir kerede&#160;<code>.ToList()</code> ile almak bellek tüketimini artırabilir; çok büyük tablolar için risk vardır.</p><p>Çözüm 1 — Sayfalama (paging):</p><pre><code class="hljs language-csharp"><span class="hljs-built_in">int</span> page = <span class="hljs-number">1</span>;
+<span class="hljs-built_in">int</span> pageSize = <span class="hljs-number">1000</span>;
+<span class="hljs-keyword">var</span> pageData = <span class="hljs-keyword">await</span> db.Logs
+    .OrderBy(l =&gt; l.Id) <span class="hljs-comment">// sıralama, paging için gerekli</span>
+    .Skip((page - <span class="hljs-number">1</span>) * pageSize)
+    .Take(pageSize)
+    .AsNoTracking()
+    .ToListAsync();</code></pre><p>Bu LINQ’in SQL karşılığı (SQL Server):</p><pre><code class="hljs language-css"><span class="hljs-selector-tag">SELECT</span> <span class="hljs-selector-attr">[l]</span>.*
+<span class="hljs-selector-tag">FROM</span> <span class="hljs-selector-attr">[Logs]</span> AS <span class="hljs-selector-attr">[l]</span>
+<span class="hljs-attribute">ORDER</span> BY <span class="hljs-selector-attr">[l]</span>.<span class="hljs-selector-attr">[Id]</span>
+<span class="hljs-attribute">OFFSET</span> <span class="hljs-number">0</span> ROWS FETCH NEXT <span class="hljs-number">1000</span> ROWS ONLY;</code></pre><p>Çözüm 2 — Streaming (büyük veriyi satır satır işlemek):</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// EF Core 3+ ile AsAsyncEnumerable kullanarak stream edebilirsiniz</span>
+<span class="hljs-keyword">await</span> <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> log <span class="hljs-keyword">in</span> db.Logs.AsNoTracking().AsAsyncEnumerable())
+{
+    ProcessLog(log);
+}</code></pre><p>Stream edilen sorgu genelde standart bir SELECT olarak gider; ancak veriler işlem sırasında belleğe toplanmaz.</p><h4>4) <code>Include</code> vs <code>Select</code> (projection) — gereksiz join'lerden kaçınmak</h4><p><strong>Durum:</strong> <code>Include</code> ilişkili tüm nesneleri getirir. Eğer sadece birkaç alan veya bir aggregate istiyorsanız <code>Select</code> genelde daha hafif olur.</p><p>Kötü örnek (gereksiz grafik çekme):</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">var</span> customers = <span class="hljs-keyword">await</span> db.<span class="hljs-property">Customers</span>
+    .<span class="hljs-title class_">Include</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-property">Orders</span>) <span class="hljs-comment">// bütün order nesnelerini getirir</span>
+    .<span class="hljs-title class_">ToListAsync</span>();</code></pre><p>Bu tip bir <code>Include</code> için oluşabilecek SQL (basit LEFT JOIN örneği):</p><pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span> [c].<span class="hljs-operator">*</span>, [o].<span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span> [Customers] <span class="hljs-keyword">AS</span> [c]
+<span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">JOIN</span> [Orders] <span class="hljs-keyword">AS</span> [o] <span class="hljs-keyword">ON</span> [o].[CustomerId] <span class="hljs-operator">=</span> [c].[Id]</code></pre><p>Eğer sadece order sayısı gerekiyorsa projection daha uygun:</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">var</span> list = <span class="hljs-keyword">await</span> db.<span class="hljs-property">Customers</span>
+    .<span class="hljs-title class_">Select</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> <span class="hljs-keyword">new</span> {
+        c.<span class="hljs-property">Id</span>,
+        c.<span class="hljs-property">Name</span>,
+        <span class="hljs-title class_">OrderCount</span> = c.<span class="hljs-property">Orders</span>.<span class="hljs-title class_">Count</span>()
+    })
+    .<span class="hljs-title class_">AsNoTracking</span>()
+    .<span class="hljs-title class_">ToListAsync</span>();</code></pre><p>Bu, genelde correlated subquery veya GROUP BY kullanılarak şu SQL’e dönüşür:</p><pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span> [c].[Id], [c].[Name],
+       (<span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">FROM</span> [Orders] <span class="hljs-keyword">AS</span> [o] <span class="hljs-keyword">WHERE</span> [o].[CustomerId] <span class="hljs-operator">=</span> [c].[Id]) <span class="hljs-keyword">AS</span> [OrderCount]
+<span class="hljs-keyword">FROM</span> [Customers] <span class="hljs-keyword">AS</span> [c];</code></pre><p>Projection çoğu durumda daha az veri taşır ve client hafızasında daha az obje oluşturur.</p><h4>5) Client-side evaluation — LINQ içinde C# fonksiyonları kullanırken dikkat</h4><p><strong>Durum:</strong> <code>Where</code> gibi bir filtrede C# tarafında bir metot kullanırsanız (EF bunu SQL’e çeviremezse) tüm tablo client’a çekilip filtre client-side uygulanır.</p><p>Kötü örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-function"><span class="hljs-built_in">bool</span> <span class="hljs-title">IsGood</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> s</span>)</span> =&gt; s.StartsWith(<span class="hljs-string">"A"</span>);
+
+<span class="hljs-keyword">var</span> q = db.Customers.Where(c =&gt; IsGood(c.Name)).ToList(); <span class="hljs-comment">// EF bu durumu SQL'e çeviremeyebilir</span></code></pre><p>Bunun yerine mümkün olduğunca SQL çevirisi yapılabilen ifadeler kullanın:</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">var</span> q = <span class="hljs-keyword">await</span> db.<span class="hljs-property">Customers</span>
+    .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-property">Name</span>.<span class="hljs-title class_">StartsWith</span>(<span class="hljs-string">"A"</span>)) <span class="hljs-comment">// SQL'e çevrilebilir</span>
+    .<span class="hljs-title class_">ToListAsync</span>();</code></pre><p>Bu durumda SQL örneği:</p><pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span> [c].<span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span> [Customers] <span class="hljs-keyword">AS</span> [c]
+<span class="hljs-keyword">WHERE</span> [c].[Name] <span class="hljs-keyword">LIKE</span> N<span class="hljs-string">'A%'</span>;</code></pre><h4>6) <code>DbContext</code> lifetime — genelde Scoped tercih&#160;edilir</h4><p><strong>Durum:</strong> <code>DbContext</code> uzun ömürlü (ör. singleton) tutulursa concurrency, bellek artışı veya beklenmeyen hatalar görülebilir. Genelde web uygulamalarında <code>Scoped</code> (her HTTP isteği için yeni) daha uygundur.</p><p>Öneri ifadesi (yumuşak):<br>&#160;Genellikle, <code>DbContext</code>’i <code>Scoped</code> olarak kaydetmek uygulamalar için daha güvenli ve öngörülebilir davranış sağlar. Çok uzun süre açık tutulan context’ler beklenmeyen durumlara yol açabilir.</p><p><code>Program.cs</code> örneği:</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// Genellikle önerilen kullanım (ASP.NET Core)</span>
+services.<span class="hljs-property">AddDbContext</span>&lt;<span class="hljs-title class_">MyDbContext</span>&gt;(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+    options.<span class="hljs-title class_">UseSqlServer</span>(connectionString));</code></pre><h4>7) Çok sık <code>SaveChanges()</code> çağırmak — batch yapmak daha verimli&#160;olur</h4><p><strong>Durum:</strong> Döngü içinde her öğe için <code>SaveChanges()</code> çağırmak her seferinde veritabanına gidilmesine neden olur; büyük işlemlerde maliyetlendirir.</p><p>Kötü örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> item <span class="hljs-keyword">in</span> items)
+{
+    db.Set&lt;MyEntity&gt;().Add(item);
+    db.SaveChanges(); <span class="hljs-comment">// her iterasyonda veritabanına gidiliyor</span>
+}</code></pre><p>Daha verimli:</p><pre><code class="hljs language-csharp">db.Set&lt;MyEntity&gt;().AddRange(items);
+<span class="hljs-keyword">await</span> db.SaveChangesAsync(); <span class="hljs-comment">// tek seferde kaydet</span></code></pre><p>Çok büyük hacimlerde <code>SqlBulkCopy</code> veya <code>EFCore.BulkExtensions</code> gibi araçlar değerlendirilebilir.</p><h4>8) Transaction süreleri — kısa tutmak genelde daha&#160;iyi</h4><p><strong>Durum:</strong> Uzun süre açık kalan transaction’lar kilitlenmelere ve blocking’e yol açabilir. Mümkünse transaction’ı kısa tutun; uzun işlemleri transaction dışında yapılan adımlar olarak tasarlayın (ör. background job, saga pattern).</p><p>Örnek (kısa tutma):</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> <span class="hljs-keyword">var</span> tx = <span class="hljs-keyword">await</span> db.Database.BeginTransactionAsync();
+<span class="hljs-keyword">try</span>
+{
+    <span class="hljs-comment">// mümkün olduğunca hızlı işlemler</span>
+    <span class="hljs-keyword">await</span> db.SaveChangesAsync();
+    <span class="hljs-keyword">await</span> tx.CommitAsync();
+}
+<span class="hljs-keyword">catch</span>
+{
+    <span class="hljs-keyword">await</span> tx.RollbackAsync();
+    <span class="hljs-keyword">throw</span>;
+}</code></pre><h4>9) Asenkronu bloklayıcı çağrılarla karıştırmamak — <code>await</code> tercih&#160;edin</h4><p><strong>Durum:</strong>&#160;<code>.Result</code> veya&#160;<code>.Wait()</code> gibi blocking çağrılar threadpool'u meşgul edebilir; özellikle yüksek istek hacminde önerilmez. <code>async/await</code> zincirini korumaya çalışın.</p><p>Kötü örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">var</span> customers = db.Customers.ToListAsync().Result; <span class="hljs-comment">// blocking, tavsiye edilmez</span></code></pre><p>İyi örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">var</span> customers = <span class="hljs-keyword">await</span> db.Customers.ToListAsync(); <span class="hljs-comment">// non-blocking, önerilen yol</span></code></pre><h4>10) Compiled Queries — sık kullanılan karmaşık sorgularda fayda sağlayabilir</h4><p><strong>Durum:</strong> Çok sık çağrılan karmaşık LINQ sorgularının ifade ağacı derlenmesi maliyet yaratabilir. <code>EF.CompileQuery</code> ile çağrı maliyetini azaltabilirsiniz.</p><p>Örnek (EF Core):</p><pre><code class="hljs language-typescript"><span class="hljs-comment">// Derlenmiş sorgu örneği: sık kullanılan bir sorguda fayda sağlar</span>
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">readonly</span> <span class="hljs-title class_">Func</span>&lt;<span class="hljs-title class_">MyDbContext</span>, int, <span class="hljs-title class_">Task</span>&lt;<span class="hljs-title class_">Customer</span>&gt;&gt; _getById =
+    <span class="hljs-variable constant_">EF</span>.<span class="hljs-title class_">CompileAsyncQuery</span>(<span class="hljs-function">(<span class="hljs-params"><span class="hljs-title class_">MyDbContext</span> ctx, int id</span>) =&gt;</span>
+        ctx.<span class="hljs-property">Customers</span>.<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-property">Id</span> == id));
+
+<span class="hljs-keyword">var</span> customer = <span class="hljs-keyword">await</span> <span class="hljs-title function_">_getById</span>(db, <span class="hljs-number">123</span>);</code></pre><p>SQL aynı olacaktır; ama sorgunun expression tree derlenmesi tekrar yapılmaz, bu da CPU kazancı sağlayabilir.</p><h4>11) Ham SQL kullanırken parametreleme — injection riskine&#160;dikkat</h4><p><strong>Durum:</strong> Raw SQL ile çalışırken parametreleri interpolasyonla doğrudan eklemek riskli olabilir. Parametreli/Interpolated API’leri kullanmak daha güvenli.</p><p>Riskli örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">var</span> sql = <span class="hljs-string">$"SELECT * FROM Customers WHERE Name = '<span class="hljs-subst">{userInput}</span>'"</span>;
+<span class="hljs-keyword">var</span> list = db.Customers.FromSqlRaw(sql).ToList(); <span class="hljs-comment">// injection riski</span></code></pre><p>Güvenli örnek:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">var</span> list = db.Customers.FromSqlInterpolated(<span class="hljs-string">$"SELECT * FROM Customers WHERE Name = <span class="hljs-subst">{userInput}</span>"</span>).ToList();</code></pre><h4>12) Ölçme ve loglama — tahmin yerine veriyle&#160;gidin</h4><p><strong>Durum:</strong> Performansla ilgili değişiklik yapmadan önce ölçüm yapmak her zaman daha güvenli. EF SQL loglarını açıp slow query’leri tespit edin; APM, MiniProfiler veya basit Stopwatch ile hot-path’leri inceleyin.</p><p>EF Core logging örneği:</p><pre><code class="hljs language-javascript"><span class="hljs-keyword">var</span> loggerFactory = <span class="hljs-title class_">LoggerFactory</span>.<span class="hljs-title class_">Create</span>(<span class="hljs-function"><span class="hljs-params">builder</span> =&gt;</span>
+{
+    builder.<span class="hljs-title class_">AddConsole</span>();
+});
+
+optionsBuilder
+    .<span class="hljs-title class_">UseLoggerFactory</span>(loggerFactory)
+    .<span class="hljs-title class_">EnableSensitiveDataLogging</span>(); <span class="hljs-comment">// production'da hassas veri loglanmasına dikkat</span></code></pre><figure><img src="https://cdn-images-1.medium.com/max/800/1*dLQEZt0SXBoXADkNviYWqw.jpeg" loading="lazy" decoding="async"></figure><h4>Final, kısa kontrol&#160;listesi:</h4><ul><li>Okuma endpoint’lerinde <code>AsNoTracking()</code> genellikle faydalıdır.</li><li>Döngüler içinde ayrı DB çağrısı olup olmadığına bakın; varsa tek sorguda çözmeyi düşünün.</li><li>Büyük listelerde sayfalama veya streaming uygulamak belleği rahatlatır.</li><li><code>DbContext</code> genelde <code>Scoped</code> olarak kullanılması uygulama davranışını öngörülebilir kılar.</li><li>Çok sayıda küçük <code>SaveChanges()</code> yerine batch işlemler performans sağlar.</li><li>Sorguları loglayıp, gerçek SQL’i incelemek ve index planını kontrol etmek en etkili yöntemlerden biridir.</li></ul>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/entity-framework-performans-tuzaklar%C4%B1-3c8f5af82ba8" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:50.631Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #03 Veri Katmanı ve ORM (Entity Framework Core)</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-20T21:45:42.211Z">21 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #09 Bonus: İleri Seviye .NET Core Konuları</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:59:09.527Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #05 Güvenlik ve Kimlik Doğrulama</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

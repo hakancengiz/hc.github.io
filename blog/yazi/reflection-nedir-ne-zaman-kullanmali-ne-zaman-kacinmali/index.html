@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reflection Nedir? Ne Zaman Kullanmalı, Ne Zaman Kaçınmalı? — Hakan Cengiz</title>
+  <meta name="description" content="C# ekosisteminde Reflection, çoğu geliştiricinin ilk başta “gizli bir güç” gibi gördüğü ama yanlış kullanıldığında performans, bakım ve güvenlik tarafında ciddi sorunlar "><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="Reflection Nedir? Ne Zaman Kullanmalı, Ne Zaman Kaçınmalı?"><meta property="og:description" content="C# ekosisteminde Reflection, çoğu geliştiricinin ilk başta “gizli bir güç” gibi gördüğü ama yanlış kullanıldığında performans, bakım ve güvenlik tarafında ciddi sorunlar ">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*eW0Hv9qx3E6CcLd74mzYDw.png"><meta property="article:published_time" content="2026-03-26T20:03:09.105Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/reflection-nedir-ne-zaman-kullanmal%C4%B1-ne-zaman-ka%C3%A7%C4%B1nmal%C4%B1-6ea629570f6f"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">11<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Reflection Nedir?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Reflection Nedir?</span></a><a href="#bolum-2" aria-label="Reflection Nasıl Çalışır?"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Reflection Nasıl Çalışır?</span></a><a href="#bolum-3" aria-label="Reflection’ın En Güçlü Olduğu Yerler"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Reflection’ın En Güçlü Olduğu Yerler</span></a><a href="#bolum-4" aria-label="Metod Çağırma: Invoke ile Dinamik Çalışma"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Metod Çağırma: Invoke ile Dinamik Çalışma</span></a><a href="#bolum-5" aria-label="Nesne Oluşturma: Dynamic Instance Creation"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Nesne Oluşturma: Dynamic Instance Creation</span></a><a href="#bolum-6" aria-label="Reflection’ın Bedeli Nedir?"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Reflection’ın Bedeli Nedir?</span></a><a href="#bolum-7" aria-label="Reflection Kullanırken Yapılan Klasik Hatalar"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Reflection Kullanırken Yapılan Klasik Hatalar</span></a><a href="#bolum-8" aria-label="Reflection Yerine Ne Kullanılabilir?"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Reflection Yerine Ne Kullanılabilir?</span></a><a href="#bolum-9" aria-label="Reflection Ne Zaman Kullanılmalı?"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Reflection Ne Zaman Kullanılmalı?</span></a><a href="#bolum-10" aria-label="Pratik Bir Örnek: Property Mapping"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Pratik Bir Örnek: Property Mapping</span></a><a href="#bolum-11" aria-label="Sonuç"><span class="toc-number" aria-hidden="true">11</span><span class="toc-title">Sonuç</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*eW0Hv9qx3E6CcLd74mzYDw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>Reflection Nedir? Ne Zaman Kullanmalı, Ne Zaman Kaçınmalı?</h1>
+          <div class="reader-meta"><span>reflections</span><i aria-hidden="true">·</i><time datetime="2026-03-26T20:03:09.105Z">26 Mart 2026</time><i aria-hidden="true">·</i><span>~8 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*eW0Hv9qx3E6CcLd74mzYDw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>C# ekosisteminde Reflection, çoğu geliştiricinin ilk başta “gizli bir güç” gibi gördüğü ama yanlış kullanıldığında performans, bakım ve güvenlik tarafında ciddi sorunlar çıkarabilen bir mekanizmadır. Özellikle enterprise uygulamalarda, plugin mimarilerinde, generic olmayan dinamik senaryolarda ve framework geliştirme süreçlerinde çok iş görür. Ama şunu net söylemek gerekir: Reflection, günlük kod yazımında ilk başvurulacak araç değildir. Çoğu zaman “olur da lazım olursa” kullanılmalı, mümkünse daha açık ve tip güvenli alternatifler tercih edilmelidir.</p><p>Bu yazıda Reflection’ın ne olduğunu, arka planda nasıl çalıştığını, hangi senaryolarda güçlü olduğunu ve hangi durumlarda uzak durman gerektiğini detaylı biçimde ele alacağız.</p><h3 id="bolum-1">Reflection Nedir?</h3><p><code>Reflection</code>, bir uygulamanın kendi tip bilgilerini çalışma zamanında inceleyebilmesini sağlayan mekanizmadır.</p><p>Yani derleme zamanında kodun ne olduğunu zaten biliyor olsan bile, runtime sırasında şu sorulara cevap alabilirsin:</p><ul><li>Bu nesnenin tipi ne?</li><li>Hangi property’lere sahip?</li><li>Hangi method’lar var?</li><li>Hangi attribute’lar eklenmiş?</li><li>Bu type’ın constructor’ı nasıl?</li><li>Private bir üyeye erişilebilir mi?</li></ul><p>Kısacası Reflection, kodun kendisini veri gibi inceleme ve gerektiğinde çalışma zamanında manipüle etme imkanı verir.</p><h4>Basit Bir Reflection Örneği</h4><p>Aşağıdaki örnekte bir nesnenin tipini inceleyip property bilgilerini listeleyelim:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.Reflection;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Person</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> FirstName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }  <span class="hljs-comment">// Kişinin adını tutar</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> LastName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }   <span class="hljs-comment">// Kişinin soyadını tutar</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Age { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }           <span class="hljs-comment">// Kişinin yaşını tutar</span>
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Program</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>()</span>
+    {
+        <span class="hljs-comment">// İncelenecek nesneyi oluşturuyoruz</span>
+        Person person = <span class="hljs-keyword">new</span> Person
+        {
+            FirstName = <span class="hljs-string">"Ahmet"</span>,
+            LastName = <span class="hljs-string">"Yılmaz"</span>,
+            Age = <span class="hljs-number">32</span>
+        };
+
+        <span class="hljs-comment">// Nesnenin runtime tipini alıyoruz</span>
+        Type type = person.GetType();
+
+        <span class="hljs-comment">// Tip adını ekrana yazdırıyoruz</span>
+        Console.WriteLine(<span class="hljs-string">"Type: "</span> + type.Name);
+
+        <span class="hljs-comment">// Type içindeki public property'leri alıyoruz</span>
+        PropertyInfo[] properties = type.GetProperties();
+
+        <span class="hljs-keyword">foreach</span> (PropertyInfo property <span class="hljs-keyword">in</span> properties)
+        {
+            <span class="hljs-comment">// Property adını ve değerini ekrana yazdırıyoruz</span>
+            <span class="hljs-built_in">object</span> <span class="hljs-keyword">value</span> = property.GetValue(person);
+            Console.WriteLine(<span class="hljs-string">$"<span class="hljs-subst">{property.Name}</span> = <span class="hljs-subst">{<span class="hljs-keyword">value</span>}</span>"</span>);
+        }
+    }
+}</code></pre><p>Bu örnekte Reflection sayesinde <code>Person</code> sınıfının property’lerini önceden tek tek yazmadan dinamik olarak gezebildik.</p><h3 id="bolum-2">Reflection Nasıl&#160;Çalışır?</h3><p>Reflection’ın temelinde <code>System.Type</code>, <code>Assembly</code>, <code>MemberInfo</code>, <code>PropertyInfo</code>, <code>MethodInfo</code>, <code>FieldInfo</code>, <code>ConstructorInfo</code> gibi yapılar vardır.</p><p>Genellikle akış şöyledir:</p><ul><li>Bir type elde edilir.</li><li>Bu type üzerinden üyeler sorgulanır.</li><li>Gerekirse belirli bir member invoke edilir.</li><li>Attribute’lar okunur.</li><li>İstenirse nesne runtime’da oluşturulur.</li></ul><p>Örneğin bir type’ın method’larını listelemek oldukça kolaydır:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.Reflection;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">SampleService</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>()</span> { }
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Stop</span>()</span> { }
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">InternalWork</span>()</span> { }
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Program</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>()</span>
+    {
+        <span class="hljs-comment">// SampleService tipini alıyoruz</span>
+        Type type = <span class="hljs-keyword">typeof</span>(SampleService);
+
+        <span class="hljs-comment">// Sadece public instance method'ları alıyoruz</span>
+        MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+
+        <span class="hljs-keyword">foreach</span> (MethodInfo method <span class="hljs-keyword">in</span> methods)
+        {
+            <span class="hljs-comment">// Method adını yazdırıyoruz</span>
+            Console.WriteLine(method.Name);
+        }
+    }
+}</code></pre><p>Burada dikkat etmen gereken şey şu: Reflection ile neyi görmek istediğini sen belirlersin. Public, private, static, instance gibi üyeleri <code>BindingFlags</code> ile filtreleyebilirsin.</p><h3 id="bolum-3">Reflection’ın En Güçlü Olduğu&#160;Yerler</h3><p>Reflection her yerde kullanılmaz ama bazı alanlarda gerçekten değerlidir.</p><h4>1. Framework ve kütüphane geliştirme</h4><p>Kendi altyapını, ORM benzeri bir yapı, validation framework’ü veya mapping mekanizması yazıyorsan Reflection çok işe yarar. Çünkü senin kodunu kullanan geliştiriciye esneklik sağlamak istersin.</p><p>Örneğin attribute bazlı doğrulama:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.Reflection;
+
+[<span class="hljs-meta">AttributeUsage(AttributeTargets.Property)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">RequiredAttribute</span> : <span class="hljs-title">Attribute</span>
+{
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
+{
+    [<span class="hljs-meta">Required</span>] <span class="hljs-comment">// Bu alanın boş geçilemeyeceğini belirtir</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> UserName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Email { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Validator</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Validate</span>(<span class="hljs-params"><span class="hljs-built_in">object</span> obj</span>)</span>
+    {
+        <span class="hljs-comment">// Nesnenin tipini alıyoruz</span>
+        Type type = obj.GetType();
+
+        <span class="hljs-comment">// Tüm public property'leri geziyoruz</span>
+        <span class="hljs-keyword">foreach</span> (PropertyInfo property <span class="hljs-keyword">in</span> type.GetProperties())
+        {
+            <span class="hljs-comment">// Property üzerinde Required attribute'u var mı kontrol ediyoruz</span>
+            <span class="hljs-built_in">bool</span> isRequired = Attribute.IsDefined(property, <span class="hljs-keyword">typeof</span>(RequiredAttribute));
+
+            <span class="hljs-keyword">if</span> (!isRequired)
+                <span class="hljs-keyword">continue</span>;
+
+            <span class="hljs-comment">// Property değerini alıyoruz</span>
+            <span class="hljs-built_in">object</span> <span class="hljs-keyword">value</span> = property.GetValue(obj);
+
+            <span class="hljs-comment">// Null veya boş string kontrolü yapıyoruz</span>
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">value</span> == <span class="hljs-literal">null</span> || <span class="hljs-built_in">string</span>.IsNullOrWhiteSpace(<span class="hljs-keyword">value</span>.ToString()))
+            {
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Exception(<span class="hljs-string">$"<span class="hljs-subst">{property.Name}</span> alanı zorunludur."</span>);
+            }
+        }
+    }
+}</code></pre><p>Bu yaklaşım, özellikle validation, mapping ve serialization gibi alanlarda çok kullanılır.</p><h4>2. Plugin mimarileri</h4><p>Bir uygulama dışarıdan yeni sınıflar yükleyecekse Reflection çok güçlüdür. Örneğin bir klasöre DLL atılıyor ve uygulama bunları runtime’da tarayıp ilgili interface’i implement edenleri buluyor olabilir.</p><p>Bu, modüler sistemlerde sık görülür.</p><h4>3. Serialization / Deserialization</h4><p>JSON serializer’lar, XML serializer’lar ve benzeri araçlar çoğu zaman Reflection kullanır. Çünkü bir objenin property’lerini runtime’da keşfetmeleri gerekir.</p><h4>4. Attribute tabanlı davranışlar</h4><p>ASP.NET Core, validation, routing, model binding, dependency injection gibi mekanizmaların bir kısmı Reflection’dan yararlanır.</p><h3 id="bolum-4">Metod Çağırma: Invoke ile Dinamik&#160;Çalışma</h3><p>Reflection sadece bilgi okumaz, aynı zamanda method da çağırabilir.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.Reflection;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Calculator</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> <span class="hljs-title">Add</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> a, <span class="hljs-built_in">int</span> b</span>)</span>
+    {
+        <span class="hljs-keyword">return</span> a + b; <span class="hljs-comment">// İki sayıyı toplar</span>
+    }
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Program</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>()</span>
+    {
+        <span class="hljs-comment">// Nesneyi oluşturuyoruz</span>
+        Calculator calculator = <span class="hljs-keyword">new</span> Calculator();
+
+        <span class="hljs-comment">// Tip bilgisini alıyoruz</span>
+        Type type = <span class="hljs-keyword">typeof</span>(Calculator);
+
+        <span class="hljs-comment">// Add method'unu buluyoruz</span>
+        MethodInfo method = type.GetMethod(<span class="hljs-string">"Add"</span>);
+
+        <span class="hljs-comment">// Method'u dinamik olarak çağırıyoruz</span>
+        <span class="hljs-built_in">object</span> result = method.Invoke(calculator, <span class="hljs-keyword">new</span> <span class="hljs-built_in">object</span>[] { <span class="hljs-number">10</span>, <span class="hljs-number">20</span> });
+
+        <span class="hljs-comment">// Sonucu ekrana yazdırıyoruz</span>
+        Console.WriteLine(result);
+    }
+}</code></pre><p>Bu güçlüdür ama maliyetlidir. Çünkü burada compile-time güvenliği kaybedersin. Method adı string ile yazıldığı için yazım hatası derleme anında değil çalışma anında patlar.</p><h3 id="bolum-5">Nesne Oluşturma: Dynamic Instance&#160;Creation</h3><p>Reflection ile constructor üzerinden nesne de üretebilirsin:</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.Reflection;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ReportGenerator</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ReportGenerator</span>()</span>
+    {
+        <span class="hljs-comment">// Default constructor</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Generate</span>()</span>
+    {
+        Console.WriteLine(<span class="hljs-string">"Rapor oluşturuldu."</span>);
+    }
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Program</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>()</span>
+    {
+        <span class="hljs-comment">// Type bilgisini alıyoruz</span>
+        Type type = <span class="hljs-keyword">typeof</span>(ReportGenerator);
+
+        <span class="hljs-comment">// Nesneyi runtime'da oluşturuyoruz</span>
+        <span class="hljs-built_in">object</span> instance = Activator.CreateInstance(type);
+
+        <span class="hljs-comment">// Oluşturulan nesneyi doğru tipe cast ediyoruz</span>
+        ReportGenerator generator = (ReportGenerator)instance;
+
+        <span class="hljs-comment">// Method'u çağırıyoruz</span>
+        generator.Generate();
+    }
+}</code></pre><p>Bu kullanım, factory benzeri senaryolarda işe yarar. Fakat gereksiz yere kullanılırsa kodun okunabilirliğini ciddi şekilde bozar.</p><h3 id="bolum-6">Reflection’ın Bedeli&#160;Nedir?</h3><p>Burada asıl kritik konu performanstır. Reflection, normal method çağrısına göre daha maliyetlidir.</p><p>Bunun sebepleri:</p><ul><li>Runtime type çözümleme yapılır</li><li>Metadata okunur</li><li>Member lookup yapılır</li><li>Invoke işlemi ek maliyet getirir</li><li>Tip güvenliği compile-time’da değil runtime’da sağlanır</li></ul><p>Bu nedenle Reflection’ın sık dönen hot path kodlarda kullanılması önerilmez. Özellikle:</p><ul><li>milyonlarca kayıt işleniyorsa</li><li>sık çağrılan API endpoint’lerinde çalışıyorsa</li><li>düşük gecikme isteniyorsa</li><li>tight loop içinde çalışıyorsa</li></ul><p>Reflection maliyeti fark edilir hale gelir.</p><p>Bu noktada çoğu durumda daha iyi alternatifler vardır:</p><ul><li>Delegate kullanmak</li><li>Expression Tree kullanmak</li><li>Interface tabanlı tasarım</li><li>Generic yapı kurmak</li><li>Source generator kullanmak</li><li>Önceden cache’lenmiş metadata ile çalışmak</li></ul><h3 id="bolum-7">Reflection Kullanırken Yapılan Klasik&#160;Hatalar</h3><h4>1. Her yerde Reflection kullanmak</h4><p>Her dinamik ihtiyacı Reflection ile çözmeye çalışmak kötü alışkanlıktır. Çoğu problem interface veya polymorphism ile çözülür.</p><h4>2. String tabanlı member&#160;erişimi</h4><p><code>GetMethod("Add")</code> gibi string ile çalışan kodlar kırılgandır. Rename refactor sırasında kolayca bozulur.</p><h4>3. Tekrar tekrar metadata&#160;okumak</h4><p>Aynı type için her seferinde property listelemek pahalıdır. Metadata’yı cache’lemek gerekir.</p><h4>4. Private üyeleri gereksiz yere&#160;zorlamak</h4><p>Private field veya method’lara Reflection ile ulaşmak çoğu zaman tasarım kokusudur.</p><h4>5. Hata yönetimini ihmal&#160;etmek</h4><p>Method bulunamadı, constructor yok, parametre uyumsuz gibi senaryolar mutlaka ele alınmalıdır.</p><h3 id="bolum-8">Reflection Yerine Ne Kullanılabilir?</h3><p>Bazı durumlarda Reflection’a hiç gerek yoktur.</p><h4>Interface kullanımı</h4><p>Eğer amaç farklı tipleri ortak bir sözleşmeyle çalıştırmaksa interface daha doğrudur.</p><h4>Generic tasarım</h4><p>Tip bağımsız ama compile-time güvenli yapı kurmak istiyorsan generics daha iyidir.</p><h4>Strategy Pattern</h4><p>Davranış değişiyorsa strategy pattern çoğu zaman Reflection’dan daha temizdir.</p><h4>Source Generator</h4><p>Modern&#160;.NET dünyasında bazı runtime Reflection senaryoları build-time code generation ile daha verimli çözülebilir.</p><h4>Expression Tree</h4><p>Özellikle property erişimi ve mapping tarafında Reflection’dan hızlı alternatif olabilir.</p><h3 id="bolum-9">Reflection Ne Zaman Kullanılmalı?</h3><p>Bence net kriterler şöyle:</p><h4>Reflection kullan:</h4><ul><li>Type’lar runtime’da belli oluyorsa</li><li>Framework veya altyapı geliştiriyorsan</li><li>Attribute bazlı kurallar işliyorsa</li><li>Plugin mimarisi kuruyorsan</li><li>Metadata okuman gerekiyorsa</li><li>Dinamik nesne analizi yapıyorsan</li></ul><h4>Reflection kullanma:</h4><ul><li>Basit iş akışlarını çözüyorsan</li><li>Compile-time güvenlik önemliyse</li><li>Performans kritikse</li><li>Kodun okunabilirliği bozuluyorsa</li><li>Aynı işi interface/generic ile rahat çözebiliyorsan</li></ul><h3 id="bolum-10">Pratik Bir Örnek: Property&#160;Mapping</h3><p>Reflection’ın en sık görülen kullanım alanlarından biri mapping’dir.</p><pre><code class="hljs language-csharp"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.Reflection;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserDto</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }   <span class="hljs-comment">// DTO içindeki isim alanı</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Age { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }        <span class="hljs-comment">// DTO içindeki yaş alanı</span>
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserEntity</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Name { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }   <span class="hljs-comment">// Entity içindeki isim alanı</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> Age { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }       <span class="hljs-comment">// Entity içindeki yaş alanı</span>
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Mapper</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> TTarget <span class="hljs-title">Map</span>&lt;<span class="hljs-title">TSource</span>, <span class="hljs-title">TTarget</span>&gt;(<span class="hljs-params">TSource source</span>) <span class="hljs-keyword">where</span> TTarget : <span class="hljs-keyword">new</span>()</span>
+    {
+        <span class="hljs-comment">// Hedef nesneyi oluşturuyoruz</span>
+        TTarget target = <span class="hljs-keyword">new</span> TTarget();
+
+        <span class="hljs-comment">// Kaynak ve hedef tiplerini alıyoruz</span>
+        Type sourceType = <span class="hljs-keyword">typeof</span>(TSource);
+        Type targetType = <span class="hljs-keyword">typeof</span>(TTarget);
+
+        <span class="hljs-comment">// Kaynaktaki tüm public property'leri geziyoruz</span>
+        <span class="hljs-keyword">foreach</span> (PropertyInfo sourceProperty <span class="hljs-keyword">in</span> sourceType.GetProperties())
+        {
+            <span class="hljs-comment">// Hedefte aynı isimli property'yi arıyoruz</span>
+            PropertyInfo targetProperty = targetType.GetProperty(sourceProperty.Name);
+
+            <span class="hljs-comment">// Hedef property yoksa veya yazılabilir değilse devam ediyoruz</span>
+            <span class="hljs-keyword">if</span> (targetProperty == <span class="hljs-literal">null</span> || !targetProperty.CanWrite)
+                <span class="hljs-keyword">continue</span>;
+
+            <span class="hljs-comment">// Kaynak property değerini alıyoruz</span>
+            <span class="hljs-built_in">object</span> <span class="hljs-keyword">value</span> = sourceProperty.GetValue(source);
+
+            <span class="hljs-comment">// Değeri hedef property'ye aktarıyoruz</span>
+            targetProperty.SetValue(target, <span class="hljs-keyword">value</span>);
+        }
+
+        <span class="hljs-keyword">return</span> target;
+    }
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Program</span>
+{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>()</span>
+    {
+        <span class="hljs-comment">// Kaynak nesneyi oluşturuyoruz</span>
+        UserDto dto = <span class="hljs-keyword">new</span> UserDto
+        {
+            Name = <span class="hljs-string">"Zeynep"</span>,
+            Age = <span class="hljs-number">28</span>
+        };
+
+        <span class="hljs-comment">// DTO'dan entity'ye map ediyoruz</span>
+        UserEntity entity = Mapper.Map&lt;UserDto, UserEntity&gt;(dto);
+
+        <span class="hljs-comment">// Sonucu yazdırıyoruz</span>
+        Console.WriteLine(<span class="hljs-string">$"<span class="hljs-subst">{entity.Name}</span> - <span class="hljs-subst">{entity.Age}</span>"</span>);
+    }
+}</code></pre><p>Bu örnek öğretici ama production için sınırlıdır. Çünkü:</p><ul><li>tip dönüşümleri yok</li><li>performans optimize edilmemiş</li><li>nested object desteği yok</li><li>null handling zayıf</li><li>cache yok</li></ul><p>Yani Reflection ile mapping yapılabilir, ama ciddi işte genelde AutoMapper benzeri araçlar veya daha optimize çözümler tercih edilir.</p><h3 id="bolum-11">Sonuç</h3><p>Reflection, C#’ta çok güçlü ama keskin bir araçtır. Seni dinamik ve esnek çözümlere götürür, fakat aynı zamanda performans, güvenlik ve bakım maliyeti getirir. Bu yüzden onu “varsayılan araç” değil, “özel durum aracı” olarak görmek gerekir.</p><h4>Kısa özetle:</h4><ul><li>Metadata incelemek için mükemmeldir.</li><li>Framework ve altyapı geliştirmede çok değerlidir.</li><li>Runtime esneklik sağlar.</li><li>Performans maliyeti vardır.</li><li>Compile-time güvenliği azaltır.</li><li>Gereksiz kullanılırsa kodu karmaşıklaştırır.</li></ul>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/reflection-nedir-ne-zaman-kullanmal%C4%B1-ne-zaman-ka%C3%A7%C4%B1nmal%C4%B1-6ea629570f6f" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/csharp-async-await-modern-net-core-icin-yanlis-bilinen-5-sey/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*o4xPpAxWmOCW0_QV8B_eDQ.jpeg" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*o4xPpAxWmOCW0_QV8B_eDQ.jpeg" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-03-15T00:46:12.521Z">15 Mar 2026</time><h3 class="article-title">C# Async/Await — Modern .NET (Core) için yanlış bilinen 5 şey</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/mulakatlarda-en-cok-sorulan-20-yazilim-farki-csharp-net/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*VWEZ7P4eH0Oxo4VNRucpog.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*VWEZ7P4eH0Oxo4VNRucpog.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-07-19T19:54:59.769Z">19 Tem 2026</time><h3 class="article-title">Mülakatlarda En Çok Sorulan 20 Yazılım Farkı (C#/.NET)</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/dependency-injection-her-sorunu-cozmez-net-te-dogru-kullanim-rehberi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nVXv9LLsyk94fe4-CH-g2g.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nVXv9LLsyk94fe4-CH-g2g.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-04-01T21:48:49.211Z">2 Nis 2026</time><h3 class="article-title">Dependency Injection Her Sorunu Çözmez: .NET’te Doğru Kullanım Rehberi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

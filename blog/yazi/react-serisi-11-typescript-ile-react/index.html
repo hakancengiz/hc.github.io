@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>React Serisi — #11 TypeScript ile React — Hakan Cengiz</title>
+  <meta name="description" content="TypeScript, JavaScript üzerine inşa edilmiş bir statik tip sistemidir. React ile birlikte kullanıldığında: Hataları daha derleyici aşamasında yakalayabiliriz Component’le"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="React Serisi — #11 TypeScript ile React"><meta property="og:description" content="TypeScript, JavaScript üzerine inşa edilmiş bir statik tip sistemidir. React ile birlikte kullanıldığında: Hataları daha derleyici aşamasında yakalayabiliriz Component’le">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*a0jITATwu5ryfNNgCTVfOw.png"><meta property="article:published_time" content="2025-10-28T17:34:50.503Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/react-serisi-11-typescript-ile-react-338984c831ed"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">7<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. TypeScript Kurulumu"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">TypeScript Kurulumu</span></a><a href="#bolum-2" aria-label="2. Component Props Tipleri"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Component Props Tipleri</span></a><a href="#bolum-3" aria-label="3. useState Tipleri"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">useState Tipleri</span></a><a href="#bolum-4" aria-label="4. useRef Tipleri"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">useRef Tipleri</span></a><a href="#bolum-5" aria-label="5. Generic Component Örneği"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Generic Component Örneği</span></a><a href="#bolum-6" aria-label="6. Context API ile Tip Güvenliği"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Context API ile Tip Güvenliği</span></a><a href="#bolum-7" aria-label="Özet"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Özet</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*a0jITATwu5ryfNNgCTVfOw.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>React Serisi — #11 TypeScript ile React</h1>
+          <div class="reader-meta"><span>react</span><i aria-hidden="true">·</i><time datetime="2025-10-28T17:34:50.503Z">28 Ekim 2025</time><i aria-hidden="true">·</i><span>~3 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:100%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>React Serisi</span><span aria-hidden="true">·</span><span class="series-position">11/11</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label="React Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><span class="series-chapter-number" aria-hidden="true">01</span><span>React Nedir? Neden Kullanılır?</span></a></li><li><a data-article-link href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>React ile Uygulama Mantığı</span></a></li><li><a data-article-link href="../../yazi/react-serisi-03-react-hook-larina-derin-dalis/"><span class="series-chapter-number" aria-hidden="true">03</span><span>React Hook’larına Derin Dalış</span></a></li><li><a data-article-link href="../../yazi/react-serisi-04-api-ve-veri-yonetimi/"><span class="series-chapter-number" aria-hidden="true">04</span><span>API ve Veri Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-05-redux-ile-uygulama-durum-yonetimi/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Redux ile Uygulama Durum Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-06-react-router-ve-sayfa-yonetimi/"><span class="series-chapter-number" aria-hidden="true">06</span><span>React Router ve Sayfa Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-07-performans-optimizasyonu/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Performans Optimizasyonu</span></a></li><li><a data-article-link href="../../yazi/react-serisi-08-formik-ve-yup-ile-gelismis-form-yonetimi/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Formik ve Yup ile Gelişmiş Form Yönetimi</span></a></li><li><a data-article-link href="../../yazi/react-serisi-09-react-testing-library-ve-jest-ile-test-etme/"><span class="series-chapter-number" aria-hidden="true">09</span><span>React Testing Library ve Jest ile Test Etme</span></a></li><li><a data-article-link href="../../yazi/react-serisi-10-proje-yapilandirmasi-ve-en-iyi-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Proje Yapılandırması ve En İyi Pratikler</span></a></li><li><a data-article-link href="../../yazi/react-serisi-11-typescript-ile-react/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">11</span><span>TypeScript ile React</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*a0jITATwu5ryfNNgCTVfOw.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>TypeScript, JavaScript üzerine inşa edilmiş bir <strong>statik tip sistemidir</strong>.<br>React ile birlikte kullanıldığında:</p><ul><li>Hataları daha derleyici aşamasında yakalayabiliriz</li><li>Component’ler ve hook’lar daha öngörülebilir hale gelir</li><li>Büyük projelerde refactoring ve bakım kolaylaşır</li></ul><h3 id="bolum-1">1. TypeScript Kurulumu</h3><p>Vite ile React + TS Projesi:</p><pre><code class="hljs language-sql">npm <span class="hljs-keyword">create</span> vite<span class="hljs-variable">@latest</span> my<span class="hljs-operator">-</span>app <span class="hljs-comment">-- --template react-ts</span>
+cd my<span class="hljs-operator">-</span>app
+npm install
+npm run dev</code></pre><blockquote>Artık proje&#160;<code>.tsx</code> uzantılı dosyalar ile çalışır ve TypeScript tip denetimi aktif olur.</blockquote><h3 id="bolum-2">2. Component Props&#160;Tipleri</h3><p>Fonksiyon Component Örneği:</p><pre><code class="hljs language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-comment">// Props tipi tanımlanır</span>
+<span class="hljs-keyword">type</span> <span class="hljs-title class_">ButtonProps</span> = {
+  <span class="hljs-attr">label</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-attr">onClick</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">void</span>; <span class="hljs-comment">// fonksiyon tipini belirtir</span>
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">Button</span>: <span class="hljs-title class_">React</span>.<span class="hljs-property">FC</span>&lt;<span class="hljs-title class_">ButtonProps</span>&gt; = <span class="hljs-function">(<span class="hljs-params">{ label, onClick }</span>) =&gt;</span> {
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{onClick}</span>&gt;</span>{label}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>;
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Button</span>;</code></pre><ul><li>Props tipleri sayesinde yanlış tipte değer göndermeye derleyici izin vermez.</li><li><code>React.FC</code> generic ile component tipi belirtilir.</li></ul><p>Kullanım:</p><pre><code class="hljs language-javascript">&lt;<span class="hljs-title class_">Button</span> label=<span class="hljs-string">"Gönder"</span> onClick={<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Tıklandı"</span>)} /&gt;</code></pre><blockquote>Eğer <code>label</code> sayısal olsaydı TypeScript derleyicide hata verecekti.</blockquote><h3 id="bolum-3">3. useState&#160;Tipleri</h3><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">Counter</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-comment">// Tip belirtme</span>
+  <span class="hljs-keyword">const</span> [count, setCount] = useState&lt;number&gt;(<span class="hljs-number">0</span>);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Sayaç: {count}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> setCount(count + 1)}&gt;Artır<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Counter</span>;</code></pre><ul><li>useState’in generic tipi <code>&lt;number&gt;</code> ile state’in tipi belirlenir</li><li>Yanlış tip atamaları derleme sırasında yakalanır</li></ul><h3 id="bolum-4">4. useRef&#160;Tipleri</h3><pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { useRef } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">InputFocus</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-comment">// HTMLInputElement tipini verdik</span>
+  <span class="hljs-keyword">const</span> inputRef = useRef&lt;<span class="hljs-title class_">HTMLInputElement</span>&gt;(<span class="hljs-literal">null</span>);
+
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">handleClick</span> = (<span class="hljs-params"></span>) =&gt; {
+    inputRef.<span class="hljs-property">current</span>?.<span class="hljs-title function_">focus</span>(); <span class="hljs-comment">// current nullable olduğu için ? kullandık</span>
+  };
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">{inputRef}</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"Adınızı girin"</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{handleClick}</span>&gt;</span>Focus<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">InputFocus</span>;</code></pre><p>useRef ile DOM elementlerini veya değerleri tip güvenli şekilde yönetebiliriz.</p><h3 id="bolum-5">5. Generic Component Örneği</h3><pre><code class="hljs language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-comment">// Generic component, tip parametresi ile çalışır</span>
+<span class="hljs-keyword">type</span> <span class="hljs-title class_">ListProps</span>&lt;T&gt; = {
+  <span class="hljs-attr">items</span>: T[];
+  <span class="hljs-attr">render</span>: <span class="hljs-function">(<span class="hljs-params"><span class="hljs-attr">item</span>: T</span>) =&gt;</span> <span class="hljs-variable constant_">JSX</span>.<span class="hljs-property">Element</span>;
+};
+
+<span class="hljs-keyword">function</span> <span class="hljs-title class_">List</span>&lt;T&gt;({ items, render }: <span class="hljs-title class_">ListProps</span>&lt;T&gt;) {
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>{items.map((item, index) =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{index}</span>&gt;</span>{render(item)}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>)}<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span>;
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">List</span>;</code></pre><p>Kullanım:</p><pre><code class="hljs language-javascript">&lt;<span class="hljs-title class_">List</span>
+  items={[<span class="hljs-string">"Elma"</span>, <span class="hljs-string">"Armut"</span>, <span class="hljs-string">"Muz"</span>]}
+  render={<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{item}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>}
+/&gt;</code></pre><p>Generic component ile farklı tiplerde listeleri tek bir component ile render edebiliriz.</p><h3 id="bolum-6">6. Context API ile Tip Güvenliği</h3><pre><code class="hljs language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span>, { createContext, useContext, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-comment">// Context tipi tanımlanır</span>
+<span class="hljs-keyword">type</span> <span class="hljs-title class_">AuthContextType</span> = {
+  <span class="hljs-attr">isLoggedIn</span>: <span class="hljs-built_in">boolean</span>;
+  <span class="hljs-attr">login</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">void</span>;
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">AuthContext</span> = createContext&lt;<span class="hljs-title class_">AuthContextType</span> | <span class="hljs-literal">undefined</span>&gt;(<span class="hljs-literal">undefined</span>);
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title class_">AuthProvider</span>: <span class="hljs-title class_">React</span>.<span class="hljs-property">FC</span>&lt;{ <span class="hljs-attr">children</span>: <span class="hljs-title class_">React</span>.<span class="hljs-property">ReactNode</span> }&gt; = <span class="hljs-function">(<span class="hljs-params">{ children }</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> [isLoggedIn, setIsLoggedIn] = <span class="hljs-title function_">useState</span>(<span class="hljs-literal">false</span>);
+
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">login</span> = (<span class="hljs-params"></span>) =&gt; <span class="hljs-title function_">setIsLoggedIn</span>(<span class="hljs-literal">true</span>);
+
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">AuthContext.Provider</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{{</span> <span class="hljs-attr">isLoggedIn</span>, <span class="hljs-attr">login</span> }}&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">AuthContext.Provider</span>&gt;</span></span>;
+};
+
+<span class="hljs-comment">// Context hook’u</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">useAuth</span> = (<span class="hljs-params"></span>) =&gt; {
+  <span class="hljs-keyword">const</span> context = <span class="hljs-title function_">useContext</span>(<span class="hljs-title class_">AuthContext</span>);
+  <span class="hljs-keyword">if</span> (!context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">"useAuth must be used within AuthProvider"</span>);
+  <span class="hljs-keyword">return</span> context;
+};</code></pre><ul><li>Context ile global state tip güvenli olur</li><li>Yanlış kullanım derleme sırasında hata verir</li></ul><h3 id="bolum-7">Özet</h3><pre><code class="hljs language-sql"><span class="hljs-operator">|</span> Konu                          <span class="hljs-operator">|</span> Açıklama                                               <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-comment">----------------------------- | ------------------------------------------------------ |</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Props Tipleri<span class="hljs-operator">*</span><span class="hljs-operator">*</span>             <span class="hljs-operator">|</span> Component’lere gönderilen değerlerin tipi güvenli olur <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>useState <span class="hljs-operator">/</span> useRef Tipleri<span class="hljs-operator">*</span><span class="hljs-operator">*</span> <span class="hljs-operator">|</span> State ve <span class="hljs-keyword">ref</span>’ler tip güvenli şekilde yönetilir         <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Generic Component<span class="hljs-operator">*</span><span class="hljs-operator">*</span>         <span class="hljs-operator">|</span> Tek component ile farklı tipler işlenebilir            <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Context API<span class="hljs-operator">*</span><span class="hljs-operator">*</span>               <span class="hljs-operator">|</span> <span class="hljs-keyword">Global</span> state tip güvenli ve predictable olur           <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>React.FC ve JSX.Element<span class="hljs-operator">*</span><span class="hljs-operator">*</span>   <span class="hljs-operator">|</span> Component tipleri ve render tipleri belirlenir         <span class="hljs-operator">|</span></code></pre>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/react-serisi-10-proje-yapilandirmasi-ve-en-iyi-pratikler/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>Proje Yapılandırması ve En İyi Pratikler</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/react-serisi-11-typescript-ile-react-338984c831ed" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:16:28.490Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #01 React Nedir? Neden Kullanılır?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:17:14.115Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #02 React ile Uygulama Mantığı</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-04-api-ve-veri-yonetimi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*-kDtowV9HcdxMP08NA3BuA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-25T08:36:35.869Z">25 Eki 2025</time><h3 class="article-title">React Serisi — #04 API ve Veri Yönetimi</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

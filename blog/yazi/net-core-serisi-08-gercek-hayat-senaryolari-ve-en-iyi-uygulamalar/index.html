@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.Net Core Serisi — #08 Gerçek Hayat Senaryoları ve En İyi Uygulamalar — Hakan Cengiz</title>
+  <meta name="description" content="Artık .NET Core mimarisini, katmanlı yapıyı, güvenliği, testleri ve dağıtımı öğrendik. Bu noktada mesele “nasıl çalışıyor”dan çok “gerçekte nasıl yönetilir” haline gelir."><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content=".Net Core Serisi — #08 Gerçek Hayat Senaryoları ve En İyi Uygulamalar"><meta property="og:description" content="Artık .NET Core mimarisini, katmanlı yapıyı, güvenliği, testleri ve dağıtımı öğrendik. Bu noktada mesele “nasıl çalışıyor”dan çok “gerçekte nasıl yönetilir” haline gelir.">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*Aum9bhLdzJr2WQOS8_LymA.png"><meta property="article:published_time" content="2025-10-20T21:44:37.812Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/net-core-serisi-08-ger%C3%A7ek-hayat-senaryolar%C4%B1-ve-en-i%CC%87yi-uygulamalar-c7725215d633"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">9<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. Gerçek Hayat Proje Yapısı"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Gerçek Hayat Proje Yapısı</span></a><a href="#bolum-2" aria-label="2. Clean Architecture Mantığı"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Clean Architecture Mantığı</span></a><a href="#bolum-3" aria-label="3. Katmanlar Arası Veri Akışı (Gerçek Senaryo)"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Katmanlar Arası Veri Akışı (Gerçek Senaryo)</span></a><a href="#bolum-4" aria-label="4. DTO, Entity ve Result Nesneleri"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">DTO, Entity ve Result Nesneleri</span></a><a href="#bolum-5" aria-label="5. Exception Handling (Gerçek Projede)"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Exception Handling (Gerçek Projede)</span></a><a href="#bolum-6" aria-label="6. Logging ve Monitoring (Gerçek Uygulamalarda)"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Logging ve Monitoring (Gerçek Uygulamalarda)</span></a><a href="#bolum-7" aria-label="7. Performans Optimizasyonu (Gerçek Senaryolar)"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Performans Optimizasyonu (Gerçek Senaryolar)</span></a><a href="#bolum-8" aria-label="8. Ekip Standardizasyonu"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Ekip Standardizasyonu</span></a><a href="#bolum-9" aria-label="9. Production İçin En İyi Uygulamalar"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Production İçin En İyi Uygulamalar</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*Aum9bhLdzJr2WQOS8_LymA.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>.Net Core Serisi — #08 Gerçek Hayat Senaryoları ve En İyi Uygulamalar</h1>
+          <div class="reader-meta"><span>aspnetcore</span><i aria-hidden="true">·</i><time datetime="2025-10-20T21:44:37.812Z">21 Ekim 2025</time><i aria-hidden="true">·</i><span>~5 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:80%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>.Net Core Serisi</span><span aria-hidden="true">·</span><span class="series-position">8/10</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label=".Net Core Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><span class="series-chapter-number" aria-hidden="true">01</span><span>Giriş ve Temeller</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>Katmanlı Yapı ve Uygulama Mimarisi</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-chapter-number" aria-hidden="true">03</span><span>Veri Katmanı ve ORM (Entity Framework Core)</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><span class="series-chapter-number" aria-hidden="true">04</span><span>Web API Geliştirme</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Güvenlik ve Kimlik Doğrulama</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/"><span class="series-chapter-number" aria-hidden="true">06</span><span>İleri Konular ve Performans</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Yayınlama, Test ve DevOps Süreçleri</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">08</span><span>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-chapter-number" aria-hidden="true">09</span><span>Bonus: İleri Seviye .NET Core Konuları</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*Aum9bhLdzJr2WQOS8_LymA.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Artık&#160;.NET Core mimarisini, katmanlı yapıyı, güvenliği, testleri ve dağıtımı öğrendik.<br>&#160;Bu noktada mesele “nasıl çalışıyor”dan çok <strong>“gerçekte nasıl yönetilir”</strong> haline gelir.</p><p>Bu yazıda:</p><ul><li>Gerçek dünyada kullanılan <strong>mimari desenleri</strong>,</li><li><strong>Performans ve bakım</strong> odaklı ipuçlarını,</li><li>Ve <strong>ekip içi standartlaşmayı</strong> ele alacağız.</li></ul><h3 id="bolum-1">1. Gerçek Hayat Proje&#160;Yapısı</h3><p>Profesyonel bir&#160;.NET Core projesi genellikle şu şekilde yapılandırılır;</p><blockquote><svg aria-label="Dosya" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 7V5h6l2 2h10v13H3V7Z" /></svg> MyCompany.MyProject<br>&#160;┣ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyProject.API → Controller’lar, DTO, Middleware<br>&#160;┣ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyProject.Application → Business logic (Service, Interface)<br>&#160;┣ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyProject.Domain → Entity, DTO, Validation<br>&#160;┣ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyProject.Infrastructure → EF Core, Repository, Logging, Email<br>&#160;┗ <svg aria-label="Klasör" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M3 10V5h6l2 2h9v3M3 10h19l-3 10H2l1-10Z" /></svg> MyProject.Tests → Unit &amp; Integration Tests</blockquote><p><strong>Not:</strong></p><ul><li>“Application” katmanı business mantığını taşır.</li><li>“Infrastructure” katmanı teknik detayları (ör. EF Core, Mail, Redis) kapsar.</li><li>“Domain” saf C# kodları içerir, dış bağımlılığı yoktur.</li></ul><p>Bu yapı, <strong>Clean Architecture</strong> veya <strong>Onion Architecture</strong> olarak da bilinir.</p><h3 id="bolum-2">2. Clean Architecture Mantığı</h3><p><strong>Clean Architecture</strong>’ın temel ilkesi şudur:</p><blockquote><em>“Bağımlılıklar dıştan içe doğru akabilir ama asla tersine değil.”</em></blockquote><p><svg aria-label="Odak" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M21 12a9 9 0 1 1-9-9M17 12a5 5 0 1 1-5-5m0 5 9-9m-5 0h5v5" /></svg> Yani:</p><ul><li><strong>API</strong> → <strong>Application</strong> → <strong>Domain</strong></li><li>Ancak <strong>Domain</strong>, hiçbir zaman <strong>API</strong>’ye veya <strong>Infrastructure</strong>’a bağımlı olamaz.</li></ul><p>Bu sayede:</p><ul><li>Test yazmak kolaylaşır,</li><li>Değişiklikler yalnızca ilgili katmanı etkiler,</li><li>Kod tekrar kullanılabilir hale gelir.</li></ul><h3 id="bolum-3">3. Katmanlar Arası Veri Akışı (Gerçek&#160;Senaryo)</h3><p>Gerçek bir senaryo:</p><blockquote><em>Kullanıcı yeni bir sipariş oluşturur ve sistem hem veritabanına kaydeder hem de e-posta gönderir.</em></blockquote><pre><code class="hljs language-csharp"><span class="hljs-comment">// API/Controllers/OrderController.cs</span>
+[<span class="hljs-meta">ApiController</span>]
+[<span class="hljs-meta">Route(<span class="hljs-string">"api/[controller]"</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">OrderController</span> : <span class="hljs-title">ControllerBase</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IOrderService _orderService;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">OrderController</span>(<span class="hljs-params">IOrderService orderService</span>)</span>
+    {
+        _orderService = orderService;
+    }
+
+    <span class="hljs-comment">// Yeni sipariş oluşturma endpoint'i</span>
+    [<span class="hljs-meta">HttpPost</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">CreateOrder</span>(<span class="hljs-params">CreateOrderDto orderDto</span>)</span>
+    {
+        <span class="hljs-comment">// 1️⃣ Servis katmanına sipariş verisini gönder</span>
+        <span class="hljs-keyword">var</span> result = <span class="hljs-keyword">await</span> _orderService.CreateOrderAsync(orderDto);
+
+        <span class="hljs-comment">// 2️⃣ Sonuç başarısızsa 400 döner</span>
+        <span class="hljs-keyword">if</span> (!result.Success)
+            <span class="hljs-keyword">return</span> BadRequest(result.Message);
+
+        <span class="hljs-comment">// 3️⃣ Başarılıysa 201 Created döner</span>
+        <span class="hljs-keyword">return</span> CreatedAtAction(<span class="hljs-keyword">nameof</span>(GetOrderById), <span class="hljs-keyword">new</span> { id = result.OrderId }, result);
+    }
+
+    [<span class="hljs-meta">HttpGet(<span class="hljs-string">"{id}"</span>)</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;IActionResult&gt; <span class="hljs-title">GetOrderById</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> id</span>)</span>
+    {
+        <span class="hljs-keyword">var</span> order = <span class="hljs-keyword">await</span> _orderService.GetOrderByIdAsync(id);
+        <span class="hljs-keyword">return</span> order != <span class="hljs-literal">null</span> ? Ok(order) : NotFound();
+    }
+}</code></pre><h4>İş Mantığı (Service&#160;Katmanı)</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Application/Services/OrderService.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">OrderService</span> : <span class="hljs-title">IOrderService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IOrderRepository _orderRepository;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IEmailService _emailService;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">OrderService</span>(<span class="hljs-params">IOrderRepository orderRepository, IEmailService emailService</span>)</span>
+    {
+        _orderRepository = orderRepository;
+        _emailService = emailService;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;ServiceResult&gt; <span class="hljs-title">CreateOrderAsync</span>(<span class="hljs-params">CreateOrderDto dto</span>)</span>
+    {
+        <span class="hljs-keyword">try</span>
+        {
+            <span class="hljs-comment">// 1️⃣ DTO → Entity dönüşümü</span>
+            <span class="hljs-keyword">var</span> order = <span class="hljs-keyword">new</span> Order
+            {
+                CustomerId = dto.CustomerId,
+                Total = dto.Total,
+                CreatedAt = DateTime.Now
+            };
+
+            <span class="hljs-comment">// 2️⃣ Veritabanına kayıt</span>
+            <span class="hljs-keyword">await</span> _orderRepository.AddAsync(order);
+
+            <span class="hljs-comment">// 3️⃣ E-posta bildirimi gönderimi</span>
+            <span class="hljs-keyword">await</span> _emailService.SendAsync(dto.CustomerEmail, <span class="hljs-string">"Sipariş alındı"</span>, <span class="hljs-string">"Siparişiniz başarıyla oluşturuldu."</span>);
+
+            <span class="hljs-comment">// 4️⃣ Başarı mesajı döndür</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ServiceResult(<span class="hljs-literal">true</span>, <span class="hljs-string">"Sipariş başarıyla oluşturuldu."</span>, order.Id);
+        }
+        <span class="hljs-keyword">catch</span> (Exception ex)
+        {
+            <span class="hljs-comment">// Hata loglanır</span>
+            Console.WriteLine(<span class="hljs-string">$"[ERROR] <span class="hljs-subst">{ex.Message}</span>"</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ServiceResult(<span class="hljs-literal">false</span>, <span class="hljs-string">"Sipariş oluşturulamadı."</span>);
+        }
+    }
+}</code></pre><h3 id="bolum-4">4. DTO, Entity ve Result Nesneleri</h3><p>Gerçek projelerde servis sonuçlarını sadece bool döndürmek yerine<br><strong>standardize edilmiş response modelleri</strong> kullanılır.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Domain/Models/ServiceResult.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ServiceResult</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> Success { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> Message { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } = <span class="hljs-built_in">string</span>.Empty;
+    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span>? OrderId { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ServiceResult</span>(<span class="hljs-params"><span class="hljs-built_in">bool</span> success, <span class="hljs-built_in">string</span> message, <span class="hljs-built_in">int</span>? orderId = <span class="hljs-literal">null</span></span>)</span>
+    {
+        Success = success;
+        Message = message;
+        OrderId = orderId;
+    }
+}</code></pre><p>Böylece tüm API yanıtları aynı yapıda döner:</p><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"success"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"message"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Sipariş başarıyla oluşturuldu."</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"orderId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span>
+<span class="hljs-punctuation">}</span></code></pre><h3 id="bolum-5">5. Exception Handling (Gerçek&#160;Projede)</h3><p>Gerçek projelerde hata yönetimi sadece <code>try-catch</code> ile değil,<br>&#160;<strong>global middleware</strong> üzerinden yapılır.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Middleware/ErrorHandlingMiddleware.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ErrorHandlingMiddleware</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> RequestDelegate _next;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ILogger&lt;ErrorHandlingMiddleware&gt; _logger;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ErrorHandlingMiddleware</span>(<span class="hljs-params">RequestDelegate next, ILogger&lt;ErrorHandlingMiddleware&gt; logger</span>)</span>
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task <span class="hljs-title">InvokeAsync</span>(<span class="hljs-params">HttpContext context</span>)</span>
+    {
+        <span class="hljs-keyword">try</span>
+        {
+            <span class="hljs-keyword">await</span> _next(context); <span class="hljs-comment">// Sonraki middleware'e geç</span>
+        }
+        <span class="hljs-keyword">catch</span> (Exception ex)
+        {
+            _logger.LogError(ex, <span class="hljs-string">"Beklenmeyen hata oluştu!"</span>);
+            context.Response.StatusCode = <span class="hljs-number">500</span>;
+            <span class="hljs-keyword">await</span> context.Response.WriteAsJsonAsync(<span class="hljs-keyword">new</span>
+            {
+                success = <span class="hljs-literal">false</span>,
+                message = <span class="hljs-string">"Sunucu hatası, lütfen tekrar deneyin."</span>
+            });
+        }
+    }
+}</code></pre><p>Kaydet:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+app.UseMiddleware&lt;ErrorHandlingMiddleware&gt;();</code></pre><h3 id="bolum-6">6. Logging ve Monitoring (Gerçek Uygulamalarda)</h3><p>Gerçek uygulamalarda loglar sadece konsola yazılmaz.<br>&#160;<strong>Serilog</strong>, <strong>Seq</strong>, <strong>Elastic Stack (ELK)</strong> veya <strong>Application Insights</strong> gibi sistemlerle entegre edilir.</p><h4>Serilog Kurulumu:</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+Log.Logger = <span class="hljs-keyword">new</span> LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File(<span class="hljs-string">"logs/app-.log"</span>, rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();</code></pre><p>Böylece günlük log dosyaları otomatik döner:</p><pre><code class="hljs language-plaintext">logs/
+ ┣ app-2025-10-17.log
+ ┣ app-2025-10-18.log</code></pre><h3 id="bolum-7">7. Performans Optimizasyonu (Gerçek Senaryolar)</h3><p>Gerçek sistemlerde performansın büyük kısmı:</p><ul><li>Gereksiz veritabanı çağrılarından,</li><li>Yanlış lifetime kullanımından,</li><li>Eksik cache yönetiminden kaybedilir.</li></ul><p>Örnek:</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// Gereksiz sorgu</span>
+<span class="hljs-keyword">var</span> allOrders = _context.<span class="hljs-property">Orders</span>.<span class="hljs-title class_">ToList</span>();
+
+<span class="hljs-comment">// Daha verimli yaklaşım</span>
+<span class="hljs-keyword">var</span> lastOrders = _context.<span class="hljs-property">Orders</span>
+    .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">o</span> =&gt;</span> o.<span class="hljs-property">CreatedAt</span> &gt; <span class="hljs-title class_">DateTime</span>.<span class="hljs-property">Today</span>.<span class="hljs-title class_">AddDays</span>(-<span class="hljs-number">7</span>))
+    .<span class="hljs-title class_">AsNoTracking</span>()
+    .<span class="hljs-title class_">ToList</span>();</code></pre><p>Öneriler:</p><blockquote><svg aria-label="Onay" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m5 12 4 4L19 6" /></svg> <code>AsNoTracking()</code> kullan<br><svg aria-label="Onay" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m5 12 4 4L19 6" /></svg> Gereksiz&#160;<code>.Include()</code> çağrılarından kaçın<br><svg aria-label="Onay" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m5 12 4 4L19 6" /></svg> Gerektiğinde MemoryCache veya Redis kullan<br><svg aria-label="Onay" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="m5 12 4 4L19 6" /></svg> <code>ILogger</code> ile performans logları tut</blockquote><h3 id="bolum-8">8. Ekip Standardizasyonu</h3><p>Gerçek hayatta kod kalitesini korumanın en etkili yolu: <strong>kuralların standartlaşmasıdır.</strong></p><p>Öneriler:</p><ul><li>Kodlama standartlarını (naming, indentation, yorum) belirle</li><li>Git branching modeli kullan (<code>main</code>, <code>develop</code>, <code>feature/*</code>)</li><li>Code review süreçlerini zorunlu tut</li><li>CI/CD pipeline’ına <code>dotnet test</code> dahil et</li><li>Pull request’lerde otomatik test sonucu kontrolü</li></ul><h3 id="bolum-9">9. Production İçin En İyi Uygulamalar</h3><pre><code class="hljs language-csharp">| Konu                  | En İyi Uygulama                   |
+| --------------------- | --------------------------------- |
+| **Bağlantı Dizeleri** | Environment variable’da sakla     |
+| **Loglar**            | Dosya + <span class="hljs-function">merkezi <span class="hljs-title">sistem</span> (<span class="hljs-params">ELK, Seq</span>) |
+| **Cache**             | Redis veya MemoryCache            |
+| **Hata Yönetimi**     | Global middleware kullan          |
+| **Config Yönetimi**   | appsettings.</span>{env}.json kullan     |
+| **Security**          | HTTPS, JWT, Rate Limiting         |
+| **Veritabanı**        | Migration’ları CI/CD’de çalıştır  |</code></pre>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>Yayınlama, Test ve DevOps Süreçleri</strong></a><a class="series-next" data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Bonus: İleri Seviye .NET Core Konuları</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/net-core-serisi-08-ger%C3%A7ek-hayat-senaryolar%C4%B1-ve-en-i%CC%87yi-uygulamalar-c7725215d633" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*i5VBRCu1yQH0hesgWSLIqQ.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:30:13.116Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #01 Giriş ve Temeller</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:58:01.853Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #04 Web API Geliştirme</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-20T21:45:42.211Z">21 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #09 Bonus: İleri Seviye .NET Core Konuları</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

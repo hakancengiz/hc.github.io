@@ -1,0 +1,83 @@
+name: Medium yazilarini guncelle
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pages: read
+    steps:
+      - name: Depoyu al
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+      - name: Node.js hazirla
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Bagimliliklari kur
+        run: npm ci --no-audit --no-fund
+        working-directory: blog/blog-files
+      - name: Kontrolleri calistir
+        run: npm test
+        working-directory: blog/blog-files
+      - name: Medium yazilarini al
+        if: github.event_name != 'push'
+        run: npm run sync
+        working-directory: blog/blog-files
+      - name: Makale sayfalarini olustur
+        run: npm run build
+        working-directory: blog/blog-files
+      - name: Arsiv degisikliklerini kaydet
+        run: |
+          git add -- blog/blog-files/data blog/yazi blog/blog-files/yazilar blog/index.html
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: update Medium article archive"
+            git push origin HEAD:main
+          fi
+      - name: Pages ayarlarini oku
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - name: Sitenin tamamini paketle
+        run: |
+          mkdir -p "$RUNNER_TEMP/pages-site"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/pages-site"
+          node blog/blog-files/scripts/build-redirects.mjs "$RUNNER_TEMP/pages-site/blog"
+      - name: Pages paketini yukle
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: ${{ runner.temp }}/pages-site
+          include-hidden-files: true
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: GitHub Pages uzerinde yayinla
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

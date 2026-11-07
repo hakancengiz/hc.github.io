@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IEnumerable vs IQueryable — Performansı Sessizce Bozan Kritik Fark — Hakan Cengiz</title>
+  <meta name="description" content="Neden önemli? Çoğu geliştirici IEnumerable ile IQueryable arasındaki farkı görmezden gelir; fakat fark, sorgunun nerede çalıştığını (memory mi yoksa database mi) belirler"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="IEnumerable vs IQueryable — Performansı Sessizce Bozan Kritik Fark"><meta property="og:description" content="Neden önemli? Çoğu geliştirici IEnumerable ile IQueryable arasındaki farkı görmezden gelir; fakat fark, sorgunun nerede çalıştığını (memory mi yoksa database mi) belirler">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*sUaDcCK1fAsg-16JmF-x5A.png"><meta property="article:published_time" content="2026-03-15T01:21:00.518Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/ienumerable-vs-iqueryable-performans%C4%B1-sessizce-bozan-kritik-fark-bf0e3a650212"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">10<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="Neden önemli?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Neden önemli?</span></a><a href="#bolum-2" aria-label="Temel kavramlar"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Temel kavramlar</span></a><a href="#bolum-3" aria-label="Kritik performans tuzağı: ToList()’i erken çağırma"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Kritik performans tuzağı: ToList()’i erken çağırma</span></a><a href="#bolum-4" aria-label="AsEnumerable / Cast / AsQueryable: yanlış dönüşümlere dikkat"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">AsEnumerable / Cast / AsQueryable: yanlış dönüşümlere dikkat</span></a><a href="#bolum-5" aria-label="Expression Tree — Tam olarak ne oluyor?"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Expression Tree — Tam olarak ne oluyor?</span></a><a href="#bolum-6" aria-label="Örnek: Custom C# metodu kullanmanın sonucu"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Örnek: Custom C# metodu kullanmanın sonucu</span></a><a href="#bolum-7" aria-label="Performans ölçümü: küçük benchmark"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Performans ölçümü: küçük benchmark</span></a><a href="#bolum-8" aria-label="API/Service katmanında IQueryable döndürmeli miyim?"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">API/Service katmanında IQueryable döndürmeli miyim?</span></a><a href="#bolum-9" aria-label="Özet — Pratik kurallar"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Özet — Pratik kurallar</span></a><a href="#bolum-10" aria-label="Kapanış — Hızlı checklist"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Kapanış — Hızlı checklist</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*sUaDcCK1fAsg-16JmF-x5A.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>IEnumerable vs IQueryable — Performansı Sessizce Bozan Kritik Fark</h1>
+          <div class="reader-meta"><span>csharp</span><i aria-hidden="true">·</i><time datetime="2026-03-15T01:21:00.518Z">15 Mart 2026</time><i aria-hidden="true">·</i><span>~5 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*sUaDcCK1fAsg-16JmF-x5A.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><h3 id="bolum-1">Neden önemli?</h3><p>Çoğu geliştirici <code>IEnumerable</code> ile <code>IQueryable</code> arasındaki farkı görmezden gelir; fakat fark, sorgunun <strong>nerede</strong> çalıştığını (memory mi yoksa database mi) belirler. Yanlış yerde filtre uygulamak, büyük veritabanı tablolarını istemeden client tarafına çekmene ve performans felaketine yol açar.</p><h3 id="bolum-2">Temel kavramlar</h3><ul><li><strong>IEnumerable&lt;T&gt;</strong>: Veriyi bellekte (in-memory) işler. <code>LINQ to Objects</code> burada çalışır. Sorguların çoğu <strong>C# kodu</strong> tarafından işletilir.</li><li><strong>IQueryable&lt;T&gt;</strong>: Sorguyu temsil eden bir ifade ağacıdır (expression tree). Provider (ör. Entity Framework Core) bu ağacı alır ve SQL gibi hedef dile çevirir. Yani sorgu <strong>veritabanında</strong> çalışabilir.</li><li><strong>Deferred execution (ertelenmiş yürütme)</strong>: <code>Where</code>, <code>Select</code> gibi operasyonlar genelde hemen çalışmaz; yalnızca <code>ToList()</code>, <code>ToArray()</code>, <code>First()</code> gibi "materialize" eden çağrılarda gerçek yürütme başlar.</li><li><strong>Expression Tree (İfade Ağacı)</strong>: <code>IQueryable</code> sorgusunu temsil eden ağaçtır; EF Core bu ağacı parse edip SQL'e çevirir.</li></ul><h4>Basit örnek: LINQ to Objects (IEnumerable)</h4><pre><code class="hljs language-javascript"><span class="hljs-comment">// Örnek veri: bellekte bir liste</span>
+<span class="hljs-keyword">var</span> users = <span class="hljs-keyword">new</span> <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">User</span>&gt;
+{
+    <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span> { <span class="hljs-title class_">Id</span> = <span class="hljs-number">1</span>, <span class="hljs-title class_">Name</span> = <span class="hljs-string">"Ayşe"</span>, <span class="hljs-title class_">Age</span> = <span class="hljs-number">25</span> },
+    <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span> { <span class="hljs-title class_">Id</span> = <span class="hljs-number">2</span>, <span class="hljs-title class_">Name</span> = <span class="hljs-string">"Mehmet"</span>, <span class="hljs-title class_">Age</span> = <span class="hljs-number">30</span> },
+    <span class="hljs-comment">// ...</span>
+};
+
+<span class="hljs-comment">// IEnumerable üzerinde Where ve Select çalışır — tüm liste bellekte</span>
+<span class="hljs-keyword">var</span> adults = users
+    .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> u.<span class="hljs-property">Age</span> &gt;= <span class="hljs-number">18</span>) <span class="hljs-comment">// → LINQ to Objects: C# kodu ile filtrelenir</span>
+    .<span class="hljs-title class_">Select</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> u.<span class="hljs-property">Name</span>)     <span class="hljs-comment">// → yine C# tarafında projection yapılır</span>
+    .<span class="hljs-title class_">ToList</span>();               <span class="hljs-comment">// → buraya kadar çalıştırma (materialize) gerçekleşir</span>
+
+<span class="hljs-comment">// Açıklama: users zaten bellekte olduğu için sorgu doğrudan uygulama tarafından işletilir.</span></code></pre><h4>Basit örnek: EF Core ile IQueryable (veritabanında çalıştırılabilir)</h4><pre><code class="hljs language-javascript"><span class="hljs-comment">// _context bir EF Core DbContext örneği varsayalım</span>
+<span class="hljs-title class_">IQueryable</span>&lt;<span class="hljs-title class_">User</span>&gt; query = _context.<span class="hljs-property">Users</span>; <span class="hljs-comment">// DbSet&lt;User&gt; IQueryable döner</span>
+
+<span class="hljs-comment">// Bu sorgu henüz DB'ye gitmez — expression tree oluşturulur</span>
+<span class="hljs-keyword">var</span> adultsQuery = query
+    .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> u.<span class="hljs-property">Age</span> &gt;= <span class="hljs-number">18</span>)   <span class="hljs-comment">// Expression tree'ine Where eklenir</span>
+    .<span class="hljs-title class_">Select</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> <span class="hljs-keyword">new</span> { u.<span class="hljs-property">Name</span>, u.<span class="hljs-property">Age</span> }); <span class="hljs-comment">// projection da ifade ağacına eklenir</span>
+
+<span class="hljs-comment">// Gerçek SQL yürütme ancak aşağıdaki çağrıda olur:</span>
+<span class="hljs-keyword">var</span> results = <span class="hljs-keyword">await</span> adultsQuery.<span class="hljs-title class_">ToListAsync</span>(); <span class="hljs-comment">// → EF Core SQL üretip DB'ye gönderir</span>
+
+<span class="hljs-comment">// Açıklama: filtre ve projection DB tarafında çalıştığından sadece gerekli satırlar/kolonlar çekilir.</span></code></pre><h3 id="bolum-3">Kritik performans tuzağı: <code>ToList()</code>’i erken&#160;çağırma</h3><pre><code class="hljs language-javascript"><span class="hljs-comment">// KÖTÜ: önce ToList() ile tüm veriyi çekiyoruz, sonra filtre uyguluyoruz — client-side filter</span>
+<span class="hljs-keyword">var</span> bad = _context.<span class="hljs-property">Users</span>
+    .<span class="hljs-title class_">ToList</span>()                   <span class="hljs-comment">// → tüm Users tablosu belleğe çekilir (kötü)</span>
+    .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> u.<span class="hljs-property">Age</span> &gt;= <span class="hljs-number">18</span>)    <span class="hljs-comment">// → filtre client tarafında yapılır</span>
+    .<span class="hljs-title class_">ToList</span>();                  <span class="hljs-comment">// → gereksiz bellek ve network trafiği</span>
+
+<span class="hljs-comment">// İYİ: filtre DB tarafında çalışır</span>
+<span class="hljs-keyword">var</span> good = <span class="hljs-keyword">await</span> _context.<span class="hljs-property">Users</span>
+    .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> u.<span class="hljs-property">Age</span> &gt;= <span class="hljs-number">18</span>)    <span class="hljs-comment">// → expression tree DB'ye çevrilecek</span>
+    .<span class="hljs-title class_">ToListAsync</span>();             <span class="hljs-comment">// → sadece gerekli satırlar çekilecek</span></code></pre><p><strong>Kural:</strong> <code>ToList</code>, <code>ToArray</code>, <code>First</code> gibi çağrıları <strong>sorgunun sonuna</strong> bırak — aksi halde istemeden büyük veri çekersin.</p><h3 id="bolum-4">AsEnumerable / Cast / AsQueryable: yanlış dönüşümlere dikkat</h3><p><code>AsEnumerable()</code> çağrısı sorgu tipini <code>IQueryable</code> → <code>IEnumerable</code> yapar. Bu, sonrasında gelen filtrelerin <strong>client-side</strong> çalışmasına neden olur.</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// Kötü örnek: AsEnumerable sonrası filtre client'ta çalışır</span>
+<span class="hljs-keyword">var</span> list = _context.<span class="hljs-property">Products</span>
+    .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-property">IsActive</span>)        <span class="hljs-comment">// DB tarafında çalışır</span>
+    .<span class="hljs-title class_">AsEnumerable</span>()                <span class="hljs-comment">// artık IQueryable'dan IEnumerable'a geçildi</span>
+    .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> <span class="hljs-title class_">ExpensiveCheck</span>(p)) <span class="hljs-comment">// ExpensiveCheck C# metodu → client-side çalışır</span>
+    .<span class="hljs-title class_">ToList</span>();</code></pre><p>Eğer <code>ExpensiveCheck</code> gibi C# metodu DB'ye çevrilemiyorsa, <code>AsEnumerable()</code> veya <code>ToList()</code>'den önce kullanmazsan DB tarafında çalıştırılamaz.</p><p><strong>İpucu:</strong> Translatible (SQL’e çevrilebilen) fonksiyonlar kullan — EF Core için <code>EF.Functions.Like</code>, <code>DateTime</code> üyeleri, matematiksel operatörler gibi.</p><h3 id="bolum-5">Expression Tree — Tam olarak ne&#160;oluyor?</h3><p><code>IQueryable</code> kullandığında C# derleyicisi, lambda ifadeleri <code>Expression&lt;Func&lt;T,bool&gt;&gt;</code> olarak temsil edilir. Bu ifade ağacı (ağaç yapısı) provider (EF Core) tarafından okunur ve uygun SQL oluşturulur.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Lambda: u =&gt; u.Age &gt; 18</span>
+Expression&lt;Func&lt;User, <span class="hljs-built_in">bool</span>&gt;&gt; expr = u =&gt; u.Age &gt; <span class="hljs-number">18</span>;
+<span class="hljs-comment">// Bu ifade ağacı provider tarafından parse edilir ve SQL WHERE clause'a çevrilir.</span></code></pre><p>Eğer lambda içinde C# fonksiyonu çağırırsan (örn. <code>IsPrime(u.Id)</code>), provider bunu SQL'e çeviremez — sonuç: ya client evaluation olur ya da EF Core sürümüne göre hata fırlatılır.</p><h3 id="bolum-6">Örnek: Custom C# metodu kullanmanın sonucu</h3><pre><code class="hljs language-csharp"><span class="hljs-function"><span class="hljs-built_in">bool</span> <span class="hljs-title">IsOdd</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> x</span>)</span> =&gt; x % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>;
+
+<span class="hljs-comment">// Kötü: IsOdd C# metodu, EF Core bunu SQL'e çeviremez — client-side evaluation olur veya hata</span>
+<span class="hljs-keyword">var</span> q = _context.Numbers.Where(n =&gt; IsOdd(n.Value)).ToList();
+
+<span class="hljs-comment">// İyi: SQL tarafında çalıştırılabilir ifade kullan</span>
+<span class="hljs-keyword">var</span> q2 = _context.Numbers.Where(n =&gt; n.Value % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>).ToList();</code></pre><h3 id="bolum-7">Performans ölçümü: küçük benchmark</h3><pre><code class="hljs language-csharp"><span class="hljs-comment">// Stopwatch kullanarak basit ölçüm</span>
+<span class="hljs-keyword">var</span> sw = Stopwatch.StartNew();
+<span class="hljs-keyword">var</span> a = _context.Users.Where(u =&gt; u.IsActive).ToList(); <span class="hljs-comment">// DB roundtrip</span>
+sw.Stop();
+Console.WriteLine(<span class="hljs-string">$"DB sorgu süresi: <span class="hljs-subst">{sw.ElapsedMilliseconds}</span> ms"</span>);
+
+<span class="hljs-comment">// Eğer ToList()'ü kaldırıp Where'i sonradan uygulasaydık,</span>
+<span class="hljs-comment">// network+memory maliyeti artacaktı.</span></code></pre><h3 id="bolum-8">API/Service katmanında <code>IQueryable</code> döndürmeli miyim?</h3><ul><li><code>IQueryable</code> döndürmek <strong>esnek</strong> ama riskli: çağıran katman sorguyu değiştirebilir, provider bağımlılığı sızar (leaky abstraction) ve yanlış kullanım performans sorunlarına yol açar.</li><li>Güvenli yol: servis katmanında <code>IEnumerable&lt;T&gt;</code> veya DTO döndür ve sorguyu <strong>servis içinde</strong> optimize et. Eğer gerçekten ihtiyaç varsa, <code>IQueryable</code> döndürmeden önce kullanım sözleşmesini netleştir.</li></ul><p>Örnek pattern:</p><pre><code class="hljs language-typescript"><span class="hljs-comment">// Rehber: repository/service içinde IQueryable kullan, ama dışa DTO ile materialize et</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> <span class="hljs-title class_">Task</span>&lt;<span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">UserDto</span>&gt;&gt; <span class="hljs-title class_">GetAdultUsersAsync</span>()
+{
+    <span class="hljs-comment">// IQueryable üzerinde filtrelenir ve projection DB tarafında yapılır</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> _context.<span class="hljs-property">Users</span>
+        .<span class="hljs-title class_">Where</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> u.<span class="hljs-property">Age</span> &gt;= <span class="hljs-number">18</span>)
+        .<span class="hljs-title class_">Select</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserDto</span> { <span class="hljs-title class_">Id</span> = u.<span class="hljs-property">Id</span>, <span class="hljs-title class_">Name</span> = u.<span class="hljs-property">Name</span> })
+        .<span class="hljs-title class_">ToListAsync</span>();
+}</code></pre><h3 id="bolum-9">Özet — Pratik&#160;kurallar</h3><ul><li><code><strong>ToList()</strong></code><strong>/</strong><code><strong>ToArray()</strong></code><strong>/</strong><code><strong>First()</strong></code>'ü gereksiz yere önce çağırma.</li><li><strong>IQueryable</strong>: provider’a (EF Core) ifade ağacı verir — DB tarafında çalıştırılabilir.</li><li><strong>IEnumerable</strong>: bellekte çalışır — büyük tablolar için tehlikeli.</li><li><code>AsEnumerable()</code>/<code>AsQueryable()</code> ile tip dönüştürürken niyetini bil.</li><li><strong>Custom C# metotları</strong> kullanma (Where içinde) → SQL’e çevrilemediği için client-side çalışır.</li><li>Servis/Repository sınırında <strong>materialize</strong> et (DTO’ya çevir) — <code>IQueryable</code>'ı dışa sızdırma.</li></ul><h3 id="bolum-10">Kapanış — Hızlı checklist</h3><ul><li>Sorgular DB tarafında mı çalışıyor? (SQL log / EF Core logging ile doğrula)</li><li><code>ToList()</code>'ü erken çağırıyor muyum?</li><li>Where/Select sırası doğru mu? (Where önce, sonra Select projection)</li><li>Custom C# fonksiyonları Where içinde yok mu?</li><li>Service boundary’de <code>IQueryable</code> döndürmüyor muyum?</li></ul>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/ienumerable-vs-iqueryable-performans%C4%B1-sessizce-bozan-kritik-fark-bf0e3a650212" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/entity-framework-performans-tuzaklari/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*U53weqf9VvgIiui4aTWM8Q.jpeg" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*U53weqf9VvgIiui4aTWM8Q.jpeg" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-03-03T19:48:01.553Z">3 Mar 2026</time><h3 class="article-title">Entity Framework Performans Tuzakları</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*_4ZX9-qTcDrH4-Y-XfaA3A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-18T20:31:50.631Z">18 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #03 Veri Katmanı ve ORM (Entity Framework Core)</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:58:01.853Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #04 Web API Geliştirme</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

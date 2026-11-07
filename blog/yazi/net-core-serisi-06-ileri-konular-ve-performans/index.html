@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.Net Core Serisi — #06 İleri Konular ve Performans — Hakan Cengiz</title>
+  <meta name="description" content="Uygulama büyüdükçe sorunlar da büyür: Sorgular yavaşlar Gereksiz bellek kullanımı oluşur Servis bağımlılıkları artar Bu yazıda, .NET Core’da performansı artırmak için kul"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content=".Net Core Serisi — #06 İleri Konular ve Performans"><meta property="og:description" content="Uygulama büyüdükçe sorunlar da büyür: Sorgular yavaşlar Gereksiz bellek kullanımı oluşur Servis bağımlılıkları artar Bu yazıda, .NET Core’da performansı artırmak için kul">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*5KswOq1EyOW3d7Lrekw1Gg.png"><meta property="article:published_time" content="2025-10-19T21:00:05.442Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/net-core-serisi-06-i%CC%87leri-konular-ve-performans-4aa46a38e89a"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">8<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1. Asenkron (Async/Await) Operasyonlar"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Asenkron (Async/Await) Operasyonlar</span></a><a href="#bolum-2" aria-label="2. Caching (Bellek Tabanlı Önbellekleme)"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Caching (Bellek Tabanlı Önbellekleme)</span></a><a href="#bolum-3" aria-label="3. Redis Cache (Dağıtık Önbellek)"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Redis Cache (Dağıtık Önbellek)</span></a><a href="#bolum-4" aria-label="4. Dependency Injection (DI) Optimizasyonu"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Dependency Injection (DI) Optimizasyonu</span></a><a href="#bolum-5" aria-label="5. Logging (Performans Analizi İçin)"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">Logging (Performans Analizi İçin)</span></a><a href="#bolum-6" aria-label="6. Entity Framework Performans İpuçları"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Entity Framework Performans İpuçları</span></a><a href="#bolum-7" aria-label="8. Garbage Collector (GC) ve Bellek Yönetimi"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Garbage Collector (GC) ve Bellek Yönetimi</span></a><a href="#bolum-8" aria-label="9. Parallel ve Background Services"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Parallel ve Background Services</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*5KswOq1EyOW3d7Lrekw1Gg.png" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>.Net Core Serisi — #06 İleri Konular ve Performans</h1>
+          <div class="reader-meta"><span>aspnetcore</span><i aria-hidden="true">·</i><time datetime="2025-10-19T21:00:05.442Z">20 Ekim 2025</time><i aria-hidden="true">·</i><span>~5 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          <details class="reader-series" style="--series-progress:60%">
+    <summary><span class="series-symbol" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg></span><span class="series-summary-title"><span>.Net Core Serisi</span><span aria-hidden="true">·</span><span class="series-position">6/10</span></span><span class="series-toggle-label"><span>Bölümler</span><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></summary>
+    <nav aria-label=".Net Core Serisi bölümleri"><ol class="series-chapters"><li><a data-article-link href="../../yazi/net-core-serisi-01-giris-ve-temeller/"><span class="series-chapter-number" aria-hidden="true">01</span><span>Giriş ve Temeller</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-02-katmanli-yapi-ve-uygulama-mimarisi/"><span class="series-chapter-number" aria-hidden="true">02</span><span>Katmanlı Yapı ve Uygulama Mimarisi</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-03-veri-katmani-ve-orm-entity-framework-core/"><span class="series-chapter-number" aria-hidden="true">03</span><span>Veri Katmanı ve ORM (Entity Framework Core)</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><span class="series-chapter-number" aria-hidden="true">04</span><span>Web API Geliştirme</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-chapter-number" aria-hidden="true">05</span><span>Güvenlik ve Kimlik Doğrulama</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-06-ileri-konular-ve-performans/" aria-current="page"><span class="series-chapter-number" aria-hidden="true">06</span><span>İleri Konular ve Performans</span><span class="sr-only">Şu an okuduğun bölüm</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-chapter-number" aria-hidden="true">07</span><span>Yayınlama, Test ve DevOps Süreçleri</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-08-gercek-hayat-senaryolari-ve-en-iyi-uygulamalar/"><span class="series-chapter-number" aria-hidden="true">08</span><span>Gerçek Hayat Senaryoları ve En İyi Uygulamalar</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><span class="series-chapter-number" aria-hidden="true">09</span><span>Bonus: İleri Seviye .NET Core Konuları</span></a></li><li><a data-article-link href="../../yazi/net-core-serisi-10-final-mvc-api-identity-ve-middleware-ile-genel-pratikler/"><span class="series-chapter-number" aria-hidden="true">10</span><span>Final: MVC, API, Identity ve Middleware ile Genel Pratikler</span></a></li></ol></nav>
+  </details>
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*5KswOq1EyOW3d7Lrekw1Gg.png" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Uygulama büyüdükçe sorunlar da büyür:</p><ul><li>Sorgular yavaşlar</li><li>Gereksiz bellek kullanımı oluşur</li><li>Servis bağımlılıkları artar</li></ul><p>Bu yazıda,&#160;.NET Core’da performansı artırmak için kullanabileceğin<br><strong>en etkili teknikleri</strong> adım adım işleyeceğiz.</p><h3 id="bolum-1">1. Asenkron (Async/Await) Operasyonlar</h3><p><strong>Problem:</strong> Uzun süren işlemler (örneğin veritabanı veya API çağrıları), thread’i bloke eder.<br><strong>Çözüm:</strong> <code>async</code> ve <code>await</code> ile bu işlemleri <em>non-blocking</em> hale getirmek.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Business/Services/UserService.cs</span>
+<span class="hljs-comment">// Asenkron çalışan kullanıcı servis örneği</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserService</span> : <span class="hljs-title">IUserService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IUserRepository _userRepository;
+
+    <span class="hljs-comment">// Repository bağımlılığı constructor ile alınır</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserService</span>(<span class="hljs-params">IUserRepository userRepository</span>)</span>
+    {
+        _userRepository = userRepository;
+    }
+
+    <span class="hljs-comment">// Asenkron çalışan metot: thread bloke etmez</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;List&lt;User&gt;&gt; GetAllUsersAsync()
+    {
+        <span class="hljs-comment">// Veritabanı sorgusunu asenkron çalıştırır</span>
+        <span class="hljs-keyword">var</span> users = <span class="hljs-keyword">await</span> _userRepository.GetAllAsync();
+
+        <span class="hljs-comment">// Listeyi geri döner</span>
+        <span class="hljs-keyword">return</span> users;
+    }
+}</code></pre><p><strong>Avantaj:</strong></p><ul><li>Thread boşa çıkar, başka istekleri işleyebilir.</li><li>Özellikle yüksek trafikli API’lerde <em>scalability</em> (ölçeklenebilirlik) artar.</li></ul><h3 id="bolum-2">2. Caching (Bellek Tabanlı Önbellekleme)</h3><p><strong>Amaç:</strong> Sık erişilen veriyi bellekte tutarak veritabanı yükünü azaltmak.</p><h4>MemoryCache Kullanımı</h4><pre><code class="hljs language-csharp"><span class="hljs-comment">// Business/Services/ProductService.cs</span>
+<span class="hljs-comment">// Ürün listesini önbelleğe alan servis sınıfı</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ProductService</span> : <span class="hljs-title">IProductService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IProductRepository _productRepository;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IMemoryCache _cache;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProductService</span>(<span class="hljs-params">IProductRepository productRepository, IMemoryCache cache</span>)</span>
+    {
+        _productRepository = productRepository;
+        _cache = cache;
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;List&lt;Product&gt;&gt; GetAllProductsAsync()
+    {
+        <span class="hljs-comment">// 1️⃣ Cache içinde "products" anahtarı var mı kontrol edilir</span>
+        <span class="hljs-keyword">if</span> (_cache.TryGetValue(<span class="hljs-string">"products"</span>, <span class="hljs-keyword">out</span> List&lt;Product&gt; cachedProducts))
+        {
+            <span class="hljs-comment">// 2️⃣ Cache varsa doğrudan onu döner (veritabanına gitmez)</span>
+            <span class="hljs-keyword">return</span> cachedProducts;
+        }
+
+        <span class="hljs-comment">// 3️⃣ Yoksa veritabanından veri çekilir</span>
+        <span class="hljs-keyword">var</span> products = <span class="hljs-keyword">await</span> _productRepository.GetAllAsync();
+
+        <span class="hljs-comment">// 4️⃣ Veri cache'e eklenir (5 dakikalık ömür)</span>
+        _cache.Set(<span class="hljs-string">"products"</span>, products, TimeSpan.FromMinutes(<span class="hljs-number">5</span>));
+
+        <span class="hljs-keyword">return</span> products;
+    }
+}</code></pre><p><strong>Not:</strong></p><ul><li>Küçük ölçekli uygulamalarda <strong>MemoryCache</strong> idealdir.</li><li>Büyük sistemlerde Redis gibi dağıtık cache’ler tercih edilir.</li></ul><h3 id="bolum-3">3. Redis Cache (Dağıtık Önbellek)</h3><p>Çoklu sunucu ortamında (load balancing) <strong>MemoryCache</strong> yeterli olmaz.<br>Bu durumda <strong>Redis</strong> kullanılır.</p><pre><code class="hljs language-javascript"><span class="hljs-comment">// Program.cs</span>
+builder.<span class="hljs-property">Services</span>.<span class="hljs-title class_">AddStackExchangeRedisCache</span>(<span class="hljs-function"><span class="hljs-params">options</span> =&gt;</span>
+{
+    <span class="hljs-comment">// Redis bağlantı adresi</span>
+    options.<span class="hljs-property">Configuration</span> = <span class="hljs-string">"localhost:6379"</span>;
+    options.<span class="hljs-property">InstanceName</span> = <span class="hljs-string">"MyAppCache_"</span>;
+});</code></pre><p>Kullanımı:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Business/Services/UserService.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">UserService</span> : <span class="hljs-title">IUserService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IUserRepository _userRepository;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IDistributedCache _cache;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UserService</span>(<span class="hljs-params">IUserRepository userRepository, IDistributedCache cache</span>)</span>
+    {
+        _userRepository = userRepository;
+        _cache = cache;
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task&lt;List&lt;User&gt;&gt; GetCachedUsersAsync()
+    {
+        <span class="hljs-comment">// 1️⃣ Cache'te veri var mı kontrol edilir</span>
+        <span class="hljs-keyword">var</span> cachedData = <span class="hljs-keyword">await</span> _cache.GetStringAsync(<span class="hljs-string">"users"</span>);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">string</span>.IsNullOrEmpty(cachedData))
+        {
+            <span class="hljs-comment">// 2️⃣ Cache’te varsa deserialize edilip döner</span>
+            <span class="hljs-keyword">return</span> JsonSerializer.Deserialize&lt;List&lt;User&gt;&gt;(cachedData);
+        }
+
+        <span class="hljs-comment">// 3️⃣ Yoksa DB’den veri alınır</span>
+        <span class="hljs-keyword">var</span> users = <span class="hljs-keyword">await</span> _userRepository.GetAllAsync();
+
+        <span class="hljs-comment">// 4️⃣ JSON’a çevrilip cache’e eklenir</span>
+        <span class="hljs-keyword">var</span> jsonData = JsonSerializer.Serialize(users);
+        <span class="hljs-keyword">await</span> _cache.SetStringAsync(<span class="hljs-string">"users"</span>, jsonData,
+            <span class="hljs-keyword">new</span> DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(<span class="hljs-number">10</span>) });
+
+        <span class="hljs-keyword">return</span> users;
+    }
+}</code></pre><p><strong>Avantaj:</strong></p><ul><li>Tüm sunucular aynı cache’i kullanır.</li><li>Performans dramatik şekilde artar.</li></ul><h3 id="bolum-4">4. Dependency Injection (DI) Optimizasyonu</h3><p>Fazla <strong>Transient</strong> servis kullanımı, gereksiz nesne üretimi anlamına gelir.<br>Bu da CPU ve GC yükünü artırır.</p><pre><code class="hljs language-sql"><span class="hljs-operator">|</span> Lifetime      <span class="hljs-operator">|</span> Ne Zaman Oluşur    <span class="hljs-operator">|</span> Kullanım                         <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-comment">------------- | ------------------ | -------------------------------- |</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Transient<span class="hljs-operator">*</span><span class="hljs-operator">*</span> <span class="hljs-operator">|</span> Her çağrıda        <span class="hljs-operator">|</span> Hafif, kısa ömürlü servisler     <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Scoped<span class="hljs-operator">*</span><span class="hljs-operator">*</span>    <span class="hljs-operator">|</span> Her HTTP isteğinde <span class="hljs-operator">|</span> Web API servisleri               <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> <span class="hljs-operator">*</span><span class="hljs-operator">*</span>Singleton<span class="hljs-operator">*</span><span class="hljs-operator">*</span> <span class="hljs-operator">|</span> Uygulama boyunca   <span class="hljs-operator">|</span> Log, Cache gibi kalıcı servisler <span class="hljs-operator">|</span></code></pre><p>Örnek:</p><pre><code class="hljs language-plaintext">builder.Services.AddSingleton&lt;ILogger, FileLogger&gt;();
+builder.Services.AddScoped&lt;IUserService, UserService&gt;();
+builder.Services.AddTransient&lt;IEmailService, EmailService&gt;();</code></pre><p>Gereksiz yere Transient kullanmak, performansı ciddi düşürür.</p><h3 id="bolum-5">5. Logging (Performans Analizi&#160;İçin)</h3><p>Uygulamanın performansını izlemek için loglama şarttır.<br>ASP.NET Core’da yerleşik <strong>ILogger</strong> arayüzü bulunur.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Business/Services/OrderService.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">OrderService</span> : <span class="hljs-title">IOrderService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ILogger&lt;OrderService&gt; _logger;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">OrderService</span>(<span class="hljs-params">ILogger&lt;OrderService&gt; logger</span>)</span>
+    {
+        _logger = logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">CreateOrder</span>(<span class="hljs-params">Order order</span>)</span>
+    {
+        <span class="hljs-keyword">try</span>
+        {
+            _logger.LogInformation(<span class="hljs-string">"Sipariş oluşturuluyor..."</span>);
+
+            <span class="hljs-comment">// İş mantığı</span>
+            <span class="hljs-comment">// ...</span>
+
+            _logger.LogInformation(<span class="hljs-string">"Sipariş başarıyla oluşturuldu."</span>);
+        }
+        <span class="hljs-keyword">catch</span> (Exception ex)
+        {
+            <span class="hljs-comment">// Hataları loglar</span>
+            _logger.LogError(ex, <span class="hljs-string">"Sipariş oluşturulurken hata oluştu!"</span>);
+        }
+    }
+}</code></pre><p><strong>Not: </strong><code>LogInformation</code>, <code>LogWarning</code>, <code>LogError</code> seviyeleri sayesinde loglar kolay filtrelenebilir.</p><h3 id="bolum-6">6. Entity Framework Performans İpuçları</h3><h4>Gereksiz sorgulardan kaçın</h4><pre><code class="hljs language-javascript"><span class="hljs-comment">// Kötü: Tüm tabloyu çekiyor</span>
+<span class="hljs-keyword">var</span> users = _context.<span class="hljs-property">Users</span>.<span class="hljs-title class_">ToList</span>();
+
+<span class="hljs-comment">// İyi: Sadece ihtiyacın olan alanı çek</span>
+<span class="hljs-keyword">var</span> names = _context.<span class="hljs-property">Users</span>.<span class="hljs-title class_">Select</span>(<span class="hljs-function"><span class="hljs-params">u</span> =&gt;</span> u.<span class="hljs-property">Name</span>).<span class="hljs-title class_">ToList</span>();</code></pre><h4>Lazy Loading yerine Eager Loading&#160;kullan</h4><pre><code class="hljs language-javascript"><span class="hljs-comment">// Gereksiz sorgular açabilir</span>
+<span class="hljs-keyword">var</span> orders = _context.<span class="hljs-property">Orders</span>.<span class="hljs-title class_">ToList</span>();
+
+<span class="hljs-comment">// Daha verimli: Include ile ilişkili veriyi tek sorguda çek</span>
+<span class="hljs-keyword">var</span> orders = _context.<span class="hljs-property">Orders</span>.<span class="hljs-title class_">Include</span>(<span class="hljs-function"><span class="hljs-params">o</span> =&gt;</span> o.<span class="hljs-property">Customer</span>).<span class="hljs-title class_">ToList</span>();</code></pre><h4>AsNoTracking kullan (Okuma senaryolarında)</h4><pre><code class="hljs language-csharp"><span class="hljs-keyword">var</span> products = _context.Products
+    .AsNoTracking() <span class="hljs-comment">// EF değişiklikleri izlemez → daha hızlı</span>
+    .ToList();</code></pre><h4>Middleware Performans Takibi</h4><p>İstek süresini ölçmek için özel middleware ekleyebilirsin;</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Middleware/RequestTimingMiddleware.cs</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">RequestTimingMiddleware</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> RequestDelegate _next;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ILogger&lt;RequestTimingMiddleware&gt; _logger;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">RequestTimingMiddleware</span>(<span class="hljs-params">RequestDelegate next, ILogger&lt;RequestTimingMiddleware&gt; logger</span>)</span>
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> Task <span class="hljs-title">InvokeAsync</span>(<span class="hljs-params">HttpContext context</span>)</span>
+    {
+        <span class="hljs-keyword">var</span> stopwatch = Stopwatch.StartNew();
+
+        <span class="hljs-comment">// Sonraki middleware'e geç</span>
+        <span class="hljs-keyword">await</span> _next(context);
+
+        stopwatch.Stop();
+        _logger.LogInformation(<span class="hljs-string">$"İstek süresi: <span class="hljs-subst">{stopwatch.ElapsedMilliseconds}</span> ms"</span>);
+    }
+}</code></pre><p>Kaydet:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Program.cs</span>
+app.UseMiddleware&lt;RequestTimingMiddleware&gt;();</code></pre><p>Bu sayede her API isteğinin çalışma süresini loglayabilirsin.</p><h3 id="bolum-7">8. Garbage Collector (GC) ve Bellek&#160;Yönetimi</h3><p>C# otomatik bellek yönetimi sunsa da, bazı hatalı kullanımlar performansı etkiler.</p><h4><svg aria-label="Uyarı" role="img" viewBox="0 0 24 24" class="icon prose-icon"><path d="M12 3 2 21h20L12 3Zm0 6v5m0 3v.1" /></svg> Kaçınılması gereken&#160;durumlar</h4><ul><li>Gereksiz büyük nesne oluşturmak (örneğin her istek için 100MB list)</li><li>IDisposable nesneleri <code>using</code> bloğu olmadan bırakmak</li><li>Static değişkenlerde referansları temizlememek</li></ul><p>Öneri:</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// IDisposable örnek</span>
+<span class="hljs-keyword">using</span> (<span class="hljs-keyword">var</span> stream = <span class="hljs-keyword">new</span> FileStream(<span class="hljs-string">"log.txt"</span>, FileMode.Create))
+{
+    <span class="hljs-comment">// İşlem tamamlanınca otomatik dispose edilir</span>
+}</code></pre><h3 id="bolum-8">9. Parallel ve Background Services</h3><p>CPU-bound işlemler için <code>Parallel.ForEach</code> veya <code>BackgroundService</code> kullanılabilir.</p><pre><code class="hljs language-csharp"><span class="hljs-comment">// Services/ReportService.cs</span>
+<span class="hljs-comment">// Raporlama işlemini arka planda çalıştıran servis</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ReportBackgroundService</span> : <span class="hljs-title">BackgroundService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ILogger&lt;ReportBackgroundService&gt; _logger;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ReportBackgroundService</span>(<span class="hljs-params">ILogger&lt;ReportBackgroundService&gt; logger</span>)</span>
+    {
+        _logger = logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">async</span> Task <span class="hljs-title">ExecuteAsync</span>(<span class="hljs-params">CancellationToken stoppingToken</span>)</span>
+    {
+        <span class="hljs-keyword">while</span> (!stoppingToken.IsCancellationRequested)
+        {
+            _logger.LogInformation(<span class="hljs-string">"Rapor servisi çalışıyor..."</span>);
+
+            <span class="hljs-comment">// Ağır raporlama işlemleri burada yapılır</span>
+            <span class="hljs-keyword">await</span> Task.Delay(TimeSpan.FromMinutes(<span class="hljs-number">5</span>), stoppingToken);
+        }
+    }
+}</code></pre><p>Kayıt:</p><pre><code class="hljs language-xml">builder.Services.AddHostedService<span class="hljs-tag">&lt;<span class="hljs-name">ReportBackgroundService</span>&gt;</span>();</code></pre>
+</div>
+          
+          <nav class="reader-series-nav" aria-label="Seride gezin"><a class="series-previous" data-article-link href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><span class="series-nav-direction"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg>Önceki bölüm</span><strong>Güvenlik ve Kimlik Doğrulama</strong></a><a class="series-next" data-article-link href="../../yazi/net-core-serisi-07-yayinlama-test-ve-devops-surecleri/"><span class="series-nav-direction">Sonraki bölüm<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span><strong>Yayınlama, Test ve DevOps Süreçleri</strong></a></nav>
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/net-core-serisi-06-i%CC%87leri-konular-ve-performans-4aa46a38e89a" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/net-core-serisi-09-bonus-ileri-seviye-net-core-konulari/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*3CKBZ8ko6-q4xNKC5K6faw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-20T21:45:42.211Z">21 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #09 Bonus: İleri Seviye .NET Core Konuları</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-04-web-api-gelistirme/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*DRgU-07x1eMrxZJHkCggfw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:58:01.853Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #04 Web API Geliştirme</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/net-core-serisi-05-guvenlik-ve-kimlik-dogrulama/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*bMMuhjfg0RSjSoTGbPxACA.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-19T20:59:09.527Z">19 Eki 2025</time><h3 class="article-title">.Net Core Serisi — #05 Güvenlik ve Kimlik Doğrulama</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>

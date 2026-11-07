@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="tr" data-theme="dark"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Supabase vs Firebase — Backend Kurmadan Backend Kurmak — Hakan Cengiz</title>
+  <meta name="description" content="Kısa versiyon: eğer Postgres, SQL ve tam kontrol istiyorsan Supabase; eğer tam entegre Google ekosistemi, güçlü SDK’lar ve otomatik ölçeklenebilir NoSQL istiyorsan Fireba"><meta name="theme-color" content="#111822">
+  <meta property="og:type" content="article"><meta property="og:title" content="Supabase vs Firebase — Backend Kurmadan Backend Kurmak"><meta property="og:description" content="Kısa versiyon: eğer Postgres, SQL ve tam kontrol istiyorsan Supabase; eğer tam entegre Google ekosistemi, güçlü SDK’lar ve otomatik ölçeklenebilir NoSQL istiyorsan Fireba">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*NMmoZ57yj2DAvrGQyJXiSw.jpeg"><meta property="article:published_time" content="2026-03-16T16:47:26.810Z">
+  <link rel="canonical" href="https://medium.com/@hakancengiz/supabase-vs-firebase-backend-kurmadan-backend-kurmak-691f637d97f1"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
+  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+</head><body id="top">
+  <a class="skip-link" href="#makale">Makaleye geç</a><svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-up" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-2.4-6.1M21 3v6h-6" />
+      </symbol>
+      <symbol id="i-up-right" viewBox="0 0 24 24">
+        <path d="M6 18 18 6M6 6h12v12" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M15 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4 4" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.5 13.5A9 9 0 0 1 10.5 3a9 9 0 1 0 10 10.5Z" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <rect x="14" y="14" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div><header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../" aria-label="Hakan Cengiz, ana sayfa"><span class="brand-avatar"><img class="avatar-light" src="../../blog-files/img/profile-site.webp" alt="" width="80" height="80"><img class="avatar-dark" src="../../blog-files/img/profile-site-dark.webp" alt="" width="80" height="80"></span><span class="brand-copy">Hakan Cengiz<span class="brand-sub">KİŞİSEL BLOG</span></span></a>
+        <nav aria-label="Ana menü">
+          <a class="nav-linkedin" href="https://www.linkedin.com/in/hakancengiz/" target="_blank" rel="noopener noreferrer"><svg class="icon linkedin-icon" aria-hidden="true">
+              <use href="#i-linkedin" />
+            </svg>
+            LinkedIn <span class="sr-only"> (yeni sekmede)</span></a>
+        </nav>
+        <div class="header-actions">
+          <button id="theme-button" class="icon-button" type="button" aria-label="Koyu temaya geç" aria-pressed="false">
+            <svg class="icon moon"><use href="#i-moon" /></svg><svg class="icon sun"><use href="#i-sun" /></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  <main class="container reader-main" id="makale">
+    <div class="reader-toolbar-anchor" id="reader-toolbar-anchor"><div class="reader-toolbar" id="reader-toolbar"><a class="reader-back" href="../../"><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span>Tüm yazılara dön</span></a><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-expanded="false" aria-controls="reader-toc-panel"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Bu yazıda</span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><div class="reader-toolbar-theme" id="reader-toolbar-theme"></div></div></div>
+    <article class="reader-layout">
+      <div class="reader-toc-panel" id="reader-toc-panel"><div class="reader-toc-panel-inner"><aside class="reader-toc"><details open>
+    <summary><span class="toc-symbol" aria-hidden="true"><svg class="icon"><use href="#i-list"></use></svg></span><span class="toc-label">Bu yazıda</span><span class="toc-count">12<span class="sr-only"> bölüm</span></span><svg class="icon toc-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <nav aria-label="İçindekiler"><a href="#bolum-1" aria-label="1) Temel mimari fark — ne alırsın?"><span class="toc-number" aria-hidden="true">01</span><span class="toc-title">Temel mimari fark — ne alırsın?</span></a><a href="#bolum-2" aria-label="2) Authentication &amp; Authorization"><span class="toc-number" aria-hidden="true">02</span><span class="toc-title">Authentication &amp; Authorization</span></a><a href="#bolum-3" aria-label="3) Gerçek zamanlı (realtime) ve offline davranış"><span class="toc-number" aria-hidden="true">03</span><span class="toc-title">Gerçek zamanlı (realtime) ve offline davranış</span></a><a href="#bolum-4" aria-label="4) Sorgulama gücü ve limitler"><span class="toc-number" aria-hidden="true">04</span><span class="toc-title">Sorgulama gücü ve limitler</span></a><a href="#bolum-5" aria-label="5) SDK’lar, geliştirme hızı ve geliştirici deneyimi"><span class="toc-number" aria-hidden="true">05</span><span class="toc-title">SDK’lar, geliştirme hızı ve geliştirici deneyimi</span></a><a href="#bolum-6" aria-label="6) Fiyatlandırma ve ölçeklenebilirlik"><span class="toc-number" aria-hidden="true">06</span><span class="toc-title">Fiyatlandırma ve ölçeklenebilirlik</span></a><a href="#bolum-7" aria-label="7) Migration &amp; vendor-lock"><span class="toc-number" aria-hidden="true">07</span><span class="toc-title">Migration &amp; vendor-lock</span></a><a href="#bolum-8" aria-label="8) Kod örnekleri — hızlı karşılaştırma (JS/TS)"><span class="toc-number" aria-hidden="true">08</span><span class="toc-title">Kod örnekleri — hızlı karşılaştırma (JS/TS)</span></a><a href="#bolum-9" aria-label="9) Hızlı seçim rehberi — hangi duruma hangi platform?"><span class="toc-number" aria-hidden="true">09</span><span class="toc-title">Hızlı seçim rehberi — hangi duruma hangi platform?</span></a><a href="#bolum-10" aria-label="10) Gerçek dünya uyarıları (yapılmaması gerekenler)"><span class="toc-number" aria-hidden="true">10</span><span class="toc-title">Gerçek dünya uyarıları (yapılmaması gerekenler)</span></a><a href="#bolum-11" aria-label="11) Örnek proje fikri — 30 dakikada canlı prototip (adımlar)"><span class="toc-number" aria-hidden="true">11</span><span class="toc-title">Örnek proje fikri — 30 dakikada canlı prototip (adımlar)</span></a><a href="#bolum-12" aria-label="Sonuç — senin için kısa takeaways"><span class="toc-number" aria-hidden="true">12</span><span class="toc-title">Sonuç — senin için kısa takeaways</span></a></nav>
+  </details></aside></div></div>
+      <div class="reader-content">
+      <header class="reader-hero">
+        <div class="reader-atmosphere" aria-hidden="true"><img class="reader-ambience" src="https://cdn-images-1.medium.com/max/800/1*NMmoZ57yj2DAvrGQyJXiSw.jpeg" alt="" decoding="async"></div>
+        <div class="reader-heading">
+          <h1>Supabase vs Firebase — Backend Kurmadan Backend Kurmak</h1>
+          <div class="reader-meta"><span>software-development</span><i aria-hidden="true">·</i><time datetime="2026-03-16T16:47:26.810Z">16 Mart 2026</time><i aria-hidden="true">·</i><span>~5 dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
+          
+        </div>
+        <div class="reader-cover"><img src="https://cdn-images-1.medium.com/max/800/1*NMmoZ57yj2DAvrGQyJXiSw.jpeg" alt="" fetchpriority="high" decoding="async"></div>
+      </header>
+        <div class="reader-article">
+          <div class="prose">
+<hr><p>Kısa versiyon: eğer <strong>Postgres, SQL ve tam kontrol</strong> istiyorsan <code>Supabase</code>; eğer <strong>tam entegre Google ekosistemi, güçlü SDK’lar ve otomatik ölçeklenebilir NoSQL</strong> istiyorsan <code>Firebase</code> daha hızlı yol aldırır. Aşağıda karar vermeyi kolaylaştıracak teknik farklar, kullanım örnekleri ve pratik tavsiyeler var.</p><h3 id="bolum-1">1) Temel mimari fark — ne&#160;alırsın?</h3><ul><li><strong>Supabase</strong>: Her proje için tam bir <strong>Postgres</strong> veritabanı (SQL), Row-Level Security (RLS), instant REST/Realtime API, Storage ve Edge Functions sunar. Yani verinin modelleme/ilişki (joins, SQL) tarafında tam kontrolün olur.</li><li><strong>Firebase</strong>: Genelde iki ana gerçek zamanlı DB sunar: <strong>Realtime Database</strong> (JSON ağaç) ve <strong>Cloud Firestore</strong> (document-based NoSQL). SDK’lar (Web/Android/iOS/Flutter) zengin, Google Cloud servisleriyle sıkı entegrasyon var.</li></ul><h4>Ne anlama&#160;geliyor?</h4><ul><li>İlişkisel veri, kompleks sorgular, ACID garantileri ve SQL çıktısı istiyorsan Supabase hızlıca “backend kurmuş” hissi verir.</li><li>Hızlı realtime sync, mobil-first offline sync ve Google Cloud ekosistemiyle doğrudan entegrasyon gerekliyse Firebase avantajlı.</li></ul><h3 id="bolum-2">2) Authentication &amp; Authorization</h3><ul><li><strong>Supabase</strong>: Email/password, OAuth sağlayıcıları, magic links ve Postgres RLS ile <strong>veritabanı seviyesinde</strong> veri erişim politikaları yazmana izin verir. RLS ile “kullanıcı sadece kendi satırını görsün” gibi kuralları DB düzeyinde enforce edebilirsin.</li><li><strong>Firebase</strong>: Çok güçlü hazır auth sağlayıcıları (email, phone auth, Google/Facebook/SAML vb.) ve client SDK’ları ile entegre çalışır. Firestore/Realtime DB için security rules ile erişim kontrolü sağlanır.</li></ul><p><strong>Pratik tavsiye:</strong> Eğer güvenlik kurallarını DB’de (SQL mantığıyla) ifade etmek istersen Supabase RLS güçlü bir silah. Eğer telefonla doğrulama, federated login vs. hızlı bir şekilde entegre etmek istiyorsan Firebase işini çabuk görür.</p><h3 id="bolum-3">3) Gerçek zamanlı (realtime) ve offline&#160;davranış</h3><ul><li><strong>Realtime</strong>: Her iki platform da realtime özellik sunar. Supabase, Postgres tabanlı değişiklikleri realtime olarak yayar; Firebase ise klasik olarak Realtime DB / Firestore ile client SDK’larda realtime ve offline sync sağlar.</li><li><strong>Offline</strong>: Firebase (özellikle Firestore) mobil/JS SDK’larında offline-first senaryoları native destekler; Supabase tarafında offline senkronizasyon için ek katman/çözüm gerekebilir.</li></ul><p><strong>Ne seçmeli?</strong> Offline-first mobil uygulama hedefliyorsan Firebase daha az sürpriz çıkarır.</p><h3 id="bolum-4">4) Sorgulama gücü ve&#160;limitler</h3><ul><li><strong>Supabase = SQL</strong>: JOIN, window functions, full-text search (Postgres eklentileri) gibi güçlü sorgular. Karmaşık raporlama/analiz gerekiyorsa SQL işini yapar.</li><li><strong>Firebase = NoSQL</strong>: Firestore sorguları güçlü ama ilişkisel sorgulardan farklı; JOIN yok, bazı sorgular “denormalize etme” ile çözülür.</li></ul><p><strong>Kural:</strong> Veriyi ilişkisel düşünüyorsan Supabase, belgeler/denormalize/özet veri uygunsa Firebase.</p><h3 id="bolum-5">5) SDK’lar, geliştirme hızı ve geliştirici deneyimi</h3><ul><li><strong>Firebase</strong>: Çok iyi dökümantasyon ve ilk parti SDK’lar (Web, Android, iOS, Flutter). Authentication, Cloud Functions, Hosting ve Analytics gibi entegre servisler hızlı prototipleme sağlar.</li><li><strong>Supabase</strong>: <code>supabase-js</code> gibi resmi SDK’lar, instant REST &amp; realtime ile hızlı başlanabilir; SQL ve DB yönetimi için dashboard güçlüdür. Postgres bilgisi varsa prodabilete geçiş daha kontrollü olur.</li></ul><h3 id="bolum-6">6) Fiyatlandırma ve ölçeklenebilirlik</h3><ul><li><strong>Supabase</strong>: Free katman ile başlayıp pro planlara geçiş var; disk/egress/invocation gibi metriklere göre ücretlendirme. Büyük veriler ve egress maliyeti önemli.</li><li><strong>Firebase</strong>: Spark (free) ve Blaze (pay-as-you-go) gibi planlar; birçok servis Google Cloud altyapısına dayandığı için faturalama bir hayli granular olur. Okuma/yazma/dep storage/egress bazlı ücretler dikkat ister.</li></ul><p><strong>Pratik:</strong> Her iki platformda da “ücretsizken problemsiz, production’dayken fatura sürprizleri” riski var — özellikle yoğun okuma/yazma/egress senaryolarında. Erken aşamada kullanım profiline göre kaba maliyet hesaplayıp test et.</p><h3 id="bolum-7">7) Migration &amp; vendor-lock</h3><ul><li><strong>Supabase</strong>: Postgres olduğu için taşınma (self-hosted veya başka Postgres) daha kolay; SQL dump/pg_restore ile migration nispeten standart.</li><li><strong>Firebase</strong>: NoSQL yapısı (Firestore, RealtimeDB) başka platforma taşınırken veri modeli yeniden düşünülmeli — migration maliyeti daha yüksek olabilir.</li></ul><p><strong>Kural:</strong> Eğer vendor-lock riskini minimize etmek istiyorsan ve veri taşınabilirliği önemliyse Supabase avantajlıdır.</p><h3 id="bolum-8">8) Kod örnekleri — hızlı karşılaştırma (JS/TS)</h3><h4>Supabase: kayıtlı kullanıcıyla not ekleme&#160;(JS)</h4><pre><code class="hljs language-javascript"><span class="hljs-comment">// supabase-client.js</span>
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">"@supabase/supabase-js"</span>;
+
+<span class="hljs-keyword">const</span> supabase = <span class="hljs-title function_">createClient</span>(<span class="hljs-string">"https://your.supabase.url"</span>, <span class="hljs-string">"public-anon-key"</span>);
+
+<span class="hljs-comment">// Not ekleme fonksiyonu</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">addNote</span>(<span class="hljs-params">content</span>) {
+  <span class="hljs-comment">// notes tablosuna insert atıyoruz (Postgres)</span>
+  <span class="hljs-keyword">const</span> { data, error } = <span class="hljs-keyword">await</span> supabase
+    .<span class="hljs-title function_">from</span>(<span class="hljs-string">"notes"</span>)            <span class="hljs-comment">// hedef tablo</span>
+    .<span class="hljs-title function_">insert</span>([{ content }])    <span class="hljs-comment">// eklenmek istenen satır</span>
+    .<span class="hljs-title function_">select</span>();                <span class="hljs-comment">// eklenen kaydı geri al</span>
+
+  <span class="hljs-keyword">if</span> (error) <span class="hljs-keyword">throw</span> error;
+  <span class="hljs-keyword">return</span> data[<span class="hljs-number">0</span>];            <span class="hljs-comment">// eklenen kayıt</span>
+}</code></pre><p>Açıklama: Supabase&#160;<code>.from("table")</code> ile Postgres tablolarına SQL benzeri işlemler yapar; sonuç SQL tabanlıdır.</p><h4>Firebase (Firestore): aynı senaryo (modular SDK&#160;v9+)</h4><pre><code class="hljs language-javascript"><span class="hljs-comment">// firebase-client.js</span>
+<span class="hljs-keyword">import</span> { initializeApp } <span class="hljs-keyword">from</span> <span class="hljs-string">"firebase/app"</span>;
+<span class="hljs-keyword">import</span> { getFirestore, collection, addDoc, serverTimestamp } <span class="hljs-keyword">from</span> <span class="hljs-string">"firebase/firestore"</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">initializeApp</span>({
+  <span class="hljs-attr">apiKey</span>: <span class="hljs-string">"..."</span>, <span class="hljs-attr">authDomain</span>: <span class="hljs-string">"..."</span>, <span class="hljs-attr">projectId</span>: <span class="hljs-string">"your-project"</span>
+});
+<span class="hljs-keyword">const</span> db = <span class="hljs-title function_">getFirestore</span>(app);
+
+<span class="hljs-comment">// Not ekleme fonksiyonu</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">addNote</span>(<span class="hljs-params">content</span>) {
+  <span class="hljs-comment">// Firestore collection'ına document ekliyoruz</span>
+  <span class="hljs-keyword">const</span> docRef = <span class="hljs-keyword">await</span> <span class="hljs-title function_">addDoc</span>(<span class="hljs-title function_">collection</span>(db, <span class="hljs-string">"notes"</span>), {
+    content,
+    <span class="hljs-attr">createdAt</span>: <span class="hljs-title function_">serverTimestamp</span>()
+  });
+
+  <span class="hljs-keyword">return</span> { <span class="hljs-attr">id</span>: docRef.<span class="hljs-property">id</span> };
+}</code></pre><p>Açıklama: Firestore’da veriler collection/document şeklinde saklanır; SQL JOIN yok, sorgu modeline göre denormalize gerekir.</p><h3 id="bolum-9">9) Hızlı seçim rehberi — hangi duruma hangi platform?</h3><ul><li><strong>Hızlı MVP, mobil offline sync, tight Google ekosistemi (Analytics/FCM)</strong> → <strong>Firebase</strong>.</li><li><strong>Complex queries, relational data, SQL expertise, taşınabilirlik</strong> → <strong>Supabase</strong>.</li><li><strong>Realtime + SQL garanti isteniyorsa</strong> → <strong>Supabase</strong> (Postgres değişiklik yayınlama).</li></ul><h3 id="bolum-10">10) Gerçek dünya uyarıları (yapılmaması gerekenler)</h3><ul><li>Firebase/Firestore kullanıp ilişkisel veri modelini NoSQL gibi zorlamak → sorgu/kopyalama patlaması.</li><li>Supabase’de dashboard’da her şeyi client-side’a doğrudan bırakmak (RLS konfigurasyonu yapılmadan) → güvenlik riski.</li><li>Fiyat testlerini atlamadan prod’a geçmek — okuma/yazma/egress kalemleri hızla fatura oluşturabilir.</li></ul><h3 id="bolum-11">11) Örnek proje fikri — 30 dakikada canlı prototip (adımlar)</h3><ul><li>Supabase/Firebase hesabı aç (ücretsiz plan).</li><li>Basit <code>notes</code> tablosu/collection oluştur.</li><li>Frontend: Vite + React + Supabase/Firebase SDK — temel CRUD UI.</li><li>Auth ekle: email/login (hazır provider).</li><li>Deploy: Vercel/Netlify.</li><li>İzleme: gerçek read/write metriklerini 24–48 saat test et, maliyet profilini çıkar.</li></ul><h3 id="bolum-12">Sonuç — senin için kısa takeaways</h3><ul><li><strong>Supabase</strong>: SQL, RLS, taşınabilirlik, güçlü sorgular; backend kurmadan backend isteyenler için ideal.</li><li><strong>Firebase</strong>: Entegre SDK’lar, offline-first mobil deneyimi, Google hizmetleriyle seamless entegrasyon; hızlı prototipleme ve mobil uygulamalar için güçlü.</li></ul>
+</div>
+          
+          
+          <footer class="reader-source"><div class="reader-author"><img src="../../blog-files/img/profile-site.webp" width="40" height="40" alt="" loading="lazy" decoding="async"><span>Hakan Cengiz</span></div><a href="https://medium.com/@hakancengiz/supabase-vs-firebase-backend-kurmadan-backend-kurmak-691f637d97f1" target="_blank" rel="noopener noreferrer">Medium'da görüntüle <svg class="icon" aria-hidden="true"><use href="#i-up-right"></use></svg></a></footer>
+        </div>
+      </div>
+    </article>
+    <section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div><a class="article-card" href="../../yazi/ienumerable-vs-iqueryable-performansi-sessizce-bozan-kritik-fark/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*sUaDcCK1fAsg-16JmF-x5A.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*sUaDcCK1fAsg-16JmF-x5A.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2026-03-15T01:21:00.518Z">15 Mar 2026</time><h3 class="article-title">IEnumerable vs IQueryable — Performansı Sessizce Bozan Kritik Fark</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-01-react-nedir-neden-kullanilir/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*aTvOVWH3OSitdQtyZwaw-Q.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:16:28.490Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #01 React Nedir? Neden Kullanılır?</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a><a class="article-card" href="../../yazi/react-serisi-02-react-ile-uygulama-mantigi/"><img class="article-ambience" src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="https://cdn-images-1.medium.com/max/800/1*nNtY6jHDdQgIT7YT9cMttw.png" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="2025-10-24T06:17:14.115Z">24 Eki 2025</time><h3 class="article-title">React Serisi — #02 React ile Uygulama Mantığı</h3><div class="article-footer"><span>Yazıyı oku</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></div></div></a></div></section>
+  </main>
+  <footer class="container site-footer"><span>© 2026 Hakan Cengiz</span><a href="#top" aria-label="Sayfanın başına dön">Başa dön <svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></a></footer>
+</body></html>
