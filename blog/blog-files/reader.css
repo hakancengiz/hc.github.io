@@ -9,9 +9,6 @@
   .reader-heading {
     animation: page-enter 520ms cubic-bezier(0.2, 0.7, 0.2, 1) 100ms backwards;
   }
-  .reader-cover {
-    animation: page-enter 580ms cubic-bezier(0.2, 0.7, 0.2, 1) 180ms backwards;
-  }
   .prose > :nth-child(-n + 3) {
     animation: page-enter 480ms cubic-bezier(0.2, 0.7, 0.2, 1) 240ms backwards;
   }
@@ -352,18 +349,6 @@
   border-color: var(--accent);
   color: var(--accent);
 }
-.reader-cover {
-  margin: 0 0 38px;
-  max-height: 480px;
-  overflow: hidden;
-  border-radius: 13px;
-}
-.reader-cover img {
-  width: 100%;
-  height: auto;
-  max-height: 480px;
-  object-fit: contain;
-}
 .reader-layout {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
@@ -580,6 +565,45 @@
   height: auto;
   margin: 25px auto;
   border-radius: 10px;
+}
+.prose .reader-image {
+  position: relative;
+  display: block;
+  isolation: isolate;
+  width: fit-content;
+  max-width: 100%;
+  margin: 25px auto;
+}
+.prose figure .reader-image {
+  margin-block: 0;
+}
+.prose .reader-image > .reader-content-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+}
+.reader-image-atmosphere {
+  position: absolute;
+  inset: -40px -16px;
+  z-index: -1;
+  border-radius: 24px;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse, #000 40%, transparent 72%);
+  mask-image: radial-gradient(ellipse, #000 40%, transparent 72%);
+}
+.prose .reader-image-atmosphere img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  border-radius: 0;
+  object-fit: cover;
+  filter: blur(30px) saturate(1.4);
+  opacity: 0.26;
 }
 .prose figcaption {
   color: var(--muted);
@@ -1007,10 +1031,6 @@
   .reader-meta {
     font-size: 10px;
     gap: 8px;
-  }
-  .reader-cover {
-    margin: 0 0 28px;
-    border-radius: 8px;
   }
   .prose {
     font-size: 15px;

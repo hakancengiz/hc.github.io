@@ -24,55 +24,29 @@ export function embedIndexData(html, data) {
   return pattern.test(html) ? html.replace(pattern, () => block) : html.replace("</head>", `  ${block}\n  </head>`);
 }
 
-function imageIdentity(value, base) {
-  try {
-    const url = new URL(value, base);
-    // Medium's export and RSS use different hosts/resize paths for one asset.
-    if (url.hostname === "miro.medium.com" || /^cdn-images-\d+\.medium\.com$/.test(url.hostname)) {
-      const asset = decodeURIComponent(url.pathname.split("/").at(-1));
-      if (/^[01]\*[\w.-]+$/.test(asset)) return `medium:${asset}`;
-    }
-    return url.href;
-  } catch {
-    return "";
-  }
-}
-
-function isOpeningImage(image, body) {
-  for (let node = image; node && node !== body; node = node.parentNode) {
-    for (let previous = node.previousSibling; previous; previous = previous.previousSibling) {
-      if (previous.textContent.trim() || previous.nodeType === 1 &&
-        (previous.matches("img,pre,table") || previous.querySelector("img,pre,table"))) return false;
-    }
-  }
-  return true;
-}
-
 export function articleBody(post) {
   const doc = htmlDocument(cleanContent(post.content, post.link));
-  const firstImage = doc.querySelector("img");
-  if (post.thumbnail && firstImage && isOpeningImage(firstImage, doc.body) &&
-    imageIdentity(firstImage.getAttribute("src"), post.link) === imageIdentity(post.thumbnail, post.link)) {
-    const figure = firstImage.closest("figure");
-    if (
-      figure &&
-      figure.querySelectorAll("img").length === 1 &&
-      !figure.textContent.trim() &&
-      !figure.querySelector("figcaption")
-    )
-      figure.remove();
-    else {
-      let container = firstImage.parentElement;
-      firstImage.remove();
-      while (container && container !== doc.body && !container.textContent.trim() && !container.querySelector("img")) {
-        const parent = container.parentElement;
-        container.remove();
-        container = parent;
-      }
+  // Keep every article image at its source position; the header adds no cover.
+  doc.querySelectorAll("img").forEach((image, index) => {
+    const frame = doc.createElement("span");
+    frame.className = "reader-image";
+    const atmosphere = doc.createElement("span");
+    atmosphere.className = "reader-image-atmosphere";
+    atmosphere.setAttribute("aria-hidden", "true");
+    const palette = doc.createElement("img");
+    palette.src = image.getAttribute("src");
+    palette.alt = "";
+    palette.setAttribute("loading", "lazy");
+    palette.setAttribute("decoding", "async");
+    atmosphere.append(palette);
+    image.replaceWith(frame);
+    image.classList.add("reader-content-image");
+    if (index === 0) {
+      image.setAttribute("loading", "eager");
+      image.setAttribute("fetchpriority", "high");
     }
-    // Medium sometimes inserts a separator before its opening cover.
-    while (doc.body.firstElementChild?.tagName === "HR") doc.body.firstElementChild.remove();
-  }
+    frame.append(atmosphere, image);
+  });
   const toc = [];
   // Some RSS entries lose inline-code tags. Restore only unambiguous definition prefixes.
   doc.querySelectorAll("h2,h3,h4,h5,h6").forEach(heading => {
@@ -177,7 +151,7 @@ export function renderArticle(post, sourceHtml, related = [], series = null) {
   <link rel="canonical" href="${escape(post.link)}"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fonts}
   <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
-  <link rel="stylesheet" href="../../blog-files/styles.css?v=20261108-intro"><link rel="stylesheet" href="../../blog-files/reader.css?v=20261108-intro"><script src="../../blog-files/reader.js" defer></script>
+  <link rel="stylesheet" href="../../blog-files/styles.css?v=20261108-intro"><link rel="stylesheet" href="../../blog-files/reader.css?v=20261108-images"><script src="../../blog-files/reader.js" defer></script>
 </head><body id="top">
   <a class="skip-link" href="#makale">Makaleye geç</a>${symbols}
   <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>${header.outerHTML}
@@ -193,7 +167,6 @@ export function renderArticle(post, sourceHtml, related = [], series = null) {
           <div class="reader-meta">${visibleCategory ? `<span>${escape(visibleCategory)}</span><i aria-hidden="true">·</i>` : ""}<time datetime="${post.pubDate}">${date}</time><i aria-hidden="true">·</i><span>~${minutes} dk okuma</span><button class="share-button" id="share-button" type="button" aria-label="Bağlantıyı kopyala" title="Bağlantıyı kopyala"><svg class="icon share-copy-icon" aria-hidden="true"><use href="#i-copy"></use></svg><svg class="icon share-check-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"></path></svg></button><span id="share-status" class="sr-only" role="status"></span></div>
           ${seriesMarkup}
         </div>
-        <div class="reader-cover"><img src="${image}" alt="" fetchpriority="high" decoding="async"></div>
       </header>
         <div class="reader-article">
           <div class="prose">${html}</div>

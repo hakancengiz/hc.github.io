@@ -55,17 +55,26 @@ test("Kod renklendirmesi C# sözdizimini ve RSS satır sonlarını korur", () =>
   assert.ok(code.classList.contains("language-csharp"));
 });
 
-test("Medium kapağının farklı boyut/host adresi gövdede tekrarlanmaz; diğer görsel ve açıklama korunur", () => {
+test("Üst kapak eklenmez; içerik görselleri kendi konumunda, bağlantıları ve açıklamalarıyla korunur", async () => {
   const thumbnail = "https://cdn-images-1.medium.com/max/1024/1*VWEZ7P4eH0Oxo4VNRucpog.png";
   for (const opening of [
     "https://cdn-images-1.medium.com/max/800/1*VWEZ7P4eH0Oxo4VNRucpog.png",
     "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*VWEZ7P4eH0Oxo4VNRucpog.png?width=800",
   ]) {
-    const result = articleBody({ ...post, thumbnail, content: `<hr><figure><img src="${opening}"></figure><h3>Başlık</h3><p>Yazı.</p><figure><img src="https://example.com/diagram.png"><figcaption>Diyagram açıklaması</figcaption></figure>` });
+    const current = { ...post, thumbnail, content: `<hr><figure><a href="https://example.com/original"><img src="${opening}" alt="Kapak açıklaması"></a></figure><h3>Başlık</h3><p>Yazı.</p><figure><img src="https://example.com/diagram.png"><figcaption>Diyagram açıklaması</figcaption></figure>` };
+    const result = articleBody(current);
     const { document } = parseHTML(`<html><body>${result.html}</body></html>`);
-    assert.equal(document.body.firstElementChild.tagName, "H3");
-    assert.deepEqual([...document.querySelectorAll("img")].map(img => img.getAttribute("src")), ["https://example.com/diagram.png"]);
+    assert.equal(document.body.firstElementChild.tagName, "HR");
+    assert.deepEqual([...document.querySelectorAll(".reader-content-image")].map(img => img.getAttribute("src")), [opening, "https://example.com/diagram.png"]);
+    assert.equal(document.querySelector(".reader-content-image").alt, "Kapak açıklaması");
+    assert.equal(document.querySelector(".reader-image").closest("a").getAttribute("href"), "https://example.com/original");
+    assert.equal(document.querySelectorAll('.reader-image-atmosphere[aria-hidden="true"]').length, 2);
+    assert.equal(document.querySelector(".reader-image-atmosphere img").alt, "");
     assert.equal(document.querySelector("figcaption").textContent, "Diyagram açıklaması");
+    const template = await readFile(resolve(BLOG_ROOT, "index.html"), "utf8");
+    const rendered = parseHTML(renderArticle(current, template)).document;
+    assert.equal(rendered.querySelector(".reader-cover"), null);
+    assert.equal(rendered.querySelectorAll(".prose .reader-content-image").length, 2);
   }
   const captioned = articleBody({ ...post, thumbnail, content: `<figure><img src="${thumbnail}"><figcaption>Kapak açıklaması</figcaption></figure><p>Yazı.</p>` });
   assert.ok(captioned.html.includes("Kapak açıklaması"));
@@ -80,17 +89,22 @@ test("Gövde içindeki sonraki görseller ve farklı kaynaklardaki aynı adlı d
     '<figure><img src="https://cdn-images-1.medium.com.evil.example/max/800/1*cover.png"></figure><p>Yazı.</p>',
   ]) {
     const { html } = articleBody({ ...post, thumbnail, content });
-    assert.equal(parseHTML(`<html><body>${html}</body></html>`).document.querySelectorAll("img").length, 1);
+    assert.equal(parseHTML(`<html><body>${html}</body></html>`).document.querySelectorAll(".reader-content-image").length, 1);
   }
 });
 
-test("Gerçek arşivdeki mülakat makalesinin gövdesi doğrudan ilk bölümle başlar", async () => {
+test("Arşivdeki bütün görsellerin kaynak sırası ve adresleri korunur; GUID görseli girişten sonra kalır", async () => {
   const archive = await readArchive();
-  const interview = archive.posts.find(item => item.id === "76c652ea7585");
-  const { html } = articleBody(interview);
-  const { document } = parseHTML(`<html><body>${html}</body></html>`);
-  assert.equal(document.body.firstElementChild.textContent, "1. String vs StringBuilder");
-  assert.equal(document.querySelectorAll("img").length, 0);
+  for (const item of archive.posts) {
+    const original = parseHTML(`<html><body>${cleanContent(item.content, item.link)}</body></html>`).document;
+    const rendered = parseHTML(`<html><body>${articleBody(item).html}</body></html>`).document;
+    assert.deepEqual([...rendered.querySelectorAll(".reader-content-image")].map(img => img.getAttribute("src")), [...original.querySelectorAll("img")].map(img => img.getAttribute("src")), item.title);
+    assert.equal(rendered.querySelectorAll(".reader-image-atmosphere").length, original.querySelectorAll("img").length);
+  }
+  const guid = archive.posts.find(item => item.id === "3a952a49b79c");
+  const { document } = parseHTML(`<html><body>${articleBody(guid).html}</body></html>`);
+  assert.equal(document.querySelectorAll(".reader-content-image").length, 1);
+  assert.ok(document.querySelector("figure").previousElementSibling.textContent.startsWith("Bu cümle o kadar sık"));
 });
 
 test("HTML örneği kod olarak kalır ve renklendirme sırasında çalıştırılabilir öğeye dönüşmez", () => {
@@ -233,7 +247,8 @@ test("Yinelenen aktarım dosyaları değiştirmez; kalıcı sayfa güvenli ve do
     const page = await readFile(join(root, localUrl, "index.html"), "utf8");
     const { document } = parseHTML(page);
     assert.equal(document.querySelector("h1").textContent, post.title);
-    assert.equal(document.querySelectorAll(".prose img").length, 0);
+    assert.equal(document.querySelector(".reader-cover"), null);
+    assert.equal(document.querySelectorAll(".prose .reader-content-image").length, 1);
     assert.equal(document.querySelectorAll(".reader-toc a").length, 2);
     assert.equal(
       document.querySelector(".brand-avatar img").getAttribute("src"),
