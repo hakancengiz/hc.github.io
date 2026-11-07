@@ -1,5 +1,4 @@
 import { readFile } from "node:fs/promises";
-import { writeRssCheck } from "./lib/rss-check.mjs";
 import {
   parseFeed,
   normalizePost,
@@ -39,8 +38,6 @@ async function main() {
   if (!posts.length)
     throw new Error("Yayımlanmış yazı bulunamadı; mevcut arşiv korunuyor.");
   const result = await savePosts(posts);
-  const latest = await writeRssCheck(posts);
-  console.log(`RSS kontrol: ${latest.title}`);
   console.log(
     `${posts.length} yazı kontrol edildi. Arşiv: ${result.count} yazı. ${result.changed ? "Güncellendi." : "Değişiklik yok."}`,
   );
