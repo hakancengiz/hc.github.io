@@ -51,5 +51,33 @@ try{
     if(width<761)assert.equal(await page.locator('.ambient-glyph').first().evaluate(node=>getComputedStyle(node).animationName),'none');
     assert.deepEqual(errors,[]);assert.deepEqual(failures,[]);report.push({width,...initial});await context.close();
   }
+  // New, uncached articles must replace the saved cards without any manual refresh.
+  const items=[1,6,3,2,5,4].map(day=>({title:day===6?'Fresh RSS <script>window.__rssInjected=true</script>':'Fresh RSS '+day,link:'https://medium.com/@hakancengiz/rss-test-'+day,pubDate:'2026-11-0'+day+'T10:00:00Z',content:'<img src="https://rss-covers.example/cover-'+day+'.webp?a=1&amp;b=2">'}));
+  items.unshift({...items.find(post=>post.link.endsWith('-6')),title:'Older duplicate',pubDate:'2020-01-01 00:00:00'});
+  items.push({title:'Unsafe link',link:'javascript:alert(1)',pubDate:'2099-01-01 00:00:00'});
+  items.find(post=>post.link.endsWith('-5')).enclosure={link:'https://rss-covers.example/enclosure-5.webp'};
+  items.find(post=>post.link.endsWith('-4')).content='<img width="1" height="1" src="https://medium.com/_/stat?tracking=1"><img src="https://rss-covers.example/content-4.webp">';
+  items.find(post=>post.link.endsWith('-3')).thumbnail='javascript:alert(1)';
+  for(const scenario of ['fresh','failed-cover','offline','empty','malformed']){
+    const context=await browser.newContext({viewport:{width:390,height:900},reducedMotion:'reduce'}),page=await context.newPage(),pageErrors=[];
+    page.on('pageerror',error=>pageErrors.push(error.message));
+    await context.route('**/googletagmanager.com/**',route=>route.fulfill({contentType:'text/javascript',body:''}));
+    await context.route('https://rss-covers.example/**',route=>scenario==='failed-cover'&&route.request().url().includes('cover-6.')?route.abort():route.fulfill({contentType:'image/webp',body:fs.readFileSync(path.join(root,'universe-portfolio-assets/universe-images/article-1-small.webp'))}));
+    await context.route('**/api.rss2json.com/**',route=>scenario==='offline'?route.abort():route.fulfill({contentType:'application/json',body:scenario==='malformed'?'{':JSON.stringify({status:'ok',items:scenario==='empty'?[]:items})}));
+    if(scenario==='fresh')await page.addInitScript(()=>Object.defineProperty(navigator,'connection',{value:{saveData:true}}));
+    await page.goto(base,{waitUntil:'load'});await page.waitForFunction(()=>document.querySelector('#blog-posts').getAttribute('aria-busy')==='false');
+    if(['fresh','failed-cover'].includes(scenario)){
+      assert.equal(await page.locator('#blog-posts .post').count(),4);assert.deepEqual(await page.locator('#blog-posts .post').evaluateAll(cards=>cards.map(card=>Number(new URL(card.href).pathname.split('-').at(-1)))),[6,5,4,3]);
+      assert.equal(await page.locator('#blog-posts h3').first().textContent(),'Fresh RSS <script>window.__rssInjected=true</script>');assert.equal(await page.evaluate(()=>window.__rssInjected),undefined);assert.equal(await page.locator('#blog-posts script').count(),0);
+      await page.locator('#blog-posts .post').last().scrollIntoViewIfNeeded();
+      await page.waitForFunction(expected=>{const images=[...document.querySelectorAll('#blog-posts img')];return images.length===expected&&images.every(image=>image.complete&&image.naturalWidth>0);},scenario==='failed-cover'?3:4);
+      assert.ok((await page.locator('#blog-posts img').evaluateAll(images=>images.map(image=>image.src))).every(url=>url.startsWith('https://rss-covers.example/')));
+      assert.equal(await page.locator('#blog-note').evaluate(note=>note.hidden),true);
+    }else{
+      assert.equal(await page.locator('#blog-posts .post').count(),4);assert.ok(!(await page.locator('#blog-posts h3').first().textContent()).startsWith('Fresh RSS'));assert.equal(await page.locator('#blog-note').evaluate(note=>note.hidden),false);
+    }
+    assert.deepEqual(pageErrors,[]);await context.close();
+  }
+  console.log('RSS checks passed: latest four, uncached covers, thumbnail/enclosure/content extraction, deduplication, text safety, Save-Data, broken cover and offline/empty/malformed fallback.');
   fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}
