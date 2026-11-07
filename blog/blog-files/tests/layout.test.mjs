@@ -11,9 +11,9 @@ import { buildRedirects } from "../scripts/build-redirects.mjs";
 
 const data = JSON.parse(await readFile(resolve(FILES_ROOT, "data/posts.json"), "utf8"));
 
-test("Blog kökünde ana sayfa, yazi ve blog-files bulunur; sayfaların yerel yolları mevcut dosyalara gider", async () => {
-  assert.deepEqual((await readdir(BLOG_ROOT)).sort(), ["blog-files", "index.html", "yazi"]);
-  for (const page of ["index.html", ...data.items.map(item => `${item.localUrl}index.html`)]) {
+test("Blog kökünde ana sayfa, RSS kontrolü, yazi ve blog-files bulunur; yerel yollar mevcut dosyalara gider", async () => {
+  assert.deepEqual((await readdir(BLOG_ROOT)).sort(), ["blog-files", "index.html", "rsskontrol.html", "yazi"]);
+  for (const page of ["index.html", "rsskontrol.html", ...data.items.map(item => `${item.localUrl}index.html`)]) {
     const path = resolve(BLOG_ROOT, page);
     const { document } = parseHTML(await readFile(path, "utf8"));
     for (const node of document.querySelectorAll("a[href],img[src],script[src],link[href]")) {

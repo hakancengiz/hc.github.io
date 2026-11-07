@@ -46,7 +46,7 @@ jobs:
         working-directory: blog/blog-files
       - name: Arsiv degisikliklerini kaydet
         run: |
-          git add -- blog/blog-files/data blog/yazi blog/blog-files/yazilar blog/index.html
+          git add -- blog/blog-files/data blog/yazi blog/blog-files/yazilar blog/index.html blog/rsskontrol.html
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
