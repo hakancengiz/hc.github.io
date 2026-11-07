@@ -1,22 +1,22 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-07T21:39:06.002Z",
+  "updatedAt": "2026-11-07T22:19:15.637Z",
   "items": [
     {
       "id": "76c652ea7585",
       "title": "Mülakatlarda En Çok Sorulan 20 Yazılım Farkı (C#/.NET)",
       "link": "https://medium.com/@hakancengiz/m%C3%BClakatlarda-en-%C3%A7ok-sorulan-20-yaz%C4%B1l%C4%B1m-fark%C4%B1-c-net-76c652ea7585",
       "localUrl": "yazi/mulakatlarda-en-cok-sorulan-20-yazilim-farki-csharp-net/",
-      "pubDate": "2026-07-19T19:54:59.769Z",
+      "pubDate": "2026-07-19T19:54:59.000Z",
       "categories": [
-        "yazılım",
+        "interview",
         "türkçe",
         "csharp",
-        "dotnet",
-        "interview"
+        "yazılım",
+        "dotnet"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*VWEZ7P4eH0Oxo4VNRucpog.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*VWEZ7P4eH0Oxo4VNRucpog.png",
       "description": "1. String vs StringBuilder Bu konu neredeyse her C# mülakatında sorulur. String nedir? string, metin saklamak için kullanılan bir referans tipidir. Ancak en önemli özelliği immutable (değiştirilemez) olmasıdır. Immutable, oluşturulan bir nesnenin içeriğinin sonradan değiştirilememesi anlamına gelir. Bir string değiştiriliyormuş gibi görünse de aslında bellekte yeni bir string nesnesi oluşturulur. string text = \"Merhaba\"; text += \" Dünya\"; Yukarıdaki kodda mevcut string değişmez. \"Merhaba Dünya\" ",
       "wordCount": 1097
     },
@@ -25,16 +25,16 @@
       "title": "GUID Kullanmak Gerçekten Performansı Düşürüyor mu?",
       "link": "https://medium.com/@hakancengiz/guid-kullanmak-ger%C3%A7ekten-performans%C4%B1-d%C3%BC%C5%9F%C3%BCr%C3%BCyor-mu-3a952a49b79c",
       "localUrl": "yazi/guid-kullanmak-gercekten-performansi-dusuruyor-mu/",
-      "pubDate": "2026-07-10T20:15:47.989Z",
+      "pubDate": "2026-07-10T20:15:47.000Z",
       "categories": [
-        "guid",
+        "yazılım",
         "software-development",
         "software-engineering",
-        "yazılım",
+        "guid",
         "türkçe"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*ApvrruP7xuoXIyKpHwIhyQ.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*ApvrruP7xuoXIyKpHwIhyQ.png",
       "description": "Yazılım geliştirmeye yeni başlayanların en sık duyduğu tavsiyelerden biri şudur: “GUID kullanma, performansı düşürür.” Bu cümle o kadar sık tekrarlanır ki, zamanla sorgulanmadan kabul edilen bir kurala dönüşür. Hatta bazı ekiplerde proje başlamadan önce bile “Primary Key kesinlikle INT olacak.” kararı alınır. Peki bu yaklaşım gerçekten doğru mu? Kısa cevap: Hayır. Uzun cevap ise biraz daha ilginç. Çünkü GUID’in performansı düşürdüğü doğru olabilir; ancak bu her zaman, her platformda ve her senar",
       "wordCount": 877
     },
@@ -43,16 +43,16 @@
       "title": "Repository Pattern Nedir? Gerçekte Ne İşe Yarar?",
       "link": "https://medium.com/@hakancengiz/repository-pattern-nedir-ger%C3%A7ekte-ne-i%CC%87%C5%9Fe-yarar-6ed7e09daa85",
       "localUrl": "yazi/repository-pattern-nedir-gercekte-ne-ise-yarar/",
-      "pubDate": "2026-05-12T19:38:42.093Z",
+      "pubDate": "2026-05-12T19:38:42.000Z",
       "categories": [
-        "repository-pattern",
-        "design-patterns",
-        "software-development",
         "csharp",
-        "türkçe"
+        "software-development",
+        "türkçe",
+        "repository-pattern",
+        "design-patterns"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*0240ppJUIJZw---KFVd0EA.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*0240ppJUIJZw---KFVd0EA.png",
       "description": "Repository Pattern, en basit tanımıyla: Veri erişim (data access) kodunu, iş mantığından (business logic) ayıran bir tasarım yaklaşımıdır. Buradaki bazı terimleri netleştirelim: Data Access (Veri Erişimi): Veritabanına gidip veri okuma/yazma işlemleri Business Logic (İş Mantığı): Uygulamanın karar verme kısmı (örneğin “kullanıcı aktif mi?” gibi kurallar) Neden Repository Pattern Kullanılır? Bir projede doğrudan şöyle kod yazarsan: var user = db.Users.First(x => x.Id == 1); Bu kod: Veritabanına b",
       "wordCount": 557
     },
@@ -61,16 +61,16 @@
       "title": "DNS Nedir? Bir Siteye Erişmek İstendiğinde Arka Planda Ne Olur?",
       "link": "https://medium.com/@hakancengiz/dns-nedir-bir-siteye-eri%C5%9Fmek-i%CC%87stendi%C4%9Finde-arka-planda-ne-olur-5166f3ed70e3",
       "localUrl": "yazi/dns-nedir-bir-siteye-erismek-istendiginde-arka-planda-ne-olur/",
-      "pubDate": "2026-05-09T20:09:31.471Z",
+      "pubDate": "2026-05-09T20:09:31.000Z",
       "categories": [
-        "dns",
         "web",
         "https",
         "internet",
-        "türkçe"
+        "türkçe",
+        "dns"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*cghSgv2lCeSvTRaMh4YvHA.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*cghSgv2lCeSvTRaMh4YvHA.png",
       "description": "Tarayıcıya bir site yazarsın: www.google.com Enter’a basarsın ve sayfa açılır. Basit gibi görünür ama aslında o küçük hareketin arkasında birden fazla sistem katmanı çalışır. İşte bu sürecin adı: DNS çözümleme süreci + HTTP isteği yolculuğu DNS Nedir? DNS, İngilizce açılımıyla Domain Name System demektir. Türkçesiyle: Alan adı sistemi DNS’in görevi şudur: İnsanların yazdığı site adını (örneğin google.com), bilgisayarların anlayacağı IP adresine çevirmek. Çünkü bilgisayarlar “google.com” anlamaz.",
       "wordCount": 552
     },
@@ -79,16 +79,16 @@
       "title": "JWT Authentication Nedir? Token Üretme ve Doğrulama",
       "link": "https://medium.com/@hakancengiz/jwt-authentication-nedir-token-%C3%BCretme-ve-do%C4%9Frulama-f7d80c5b394e",
       "localUrl": "yazi/jwt-authentication-nedir-token-uretme-ve-dogrulama/",
-      "pubDate": "2026-05-04T18:01:46.115Z",
+      "pubDate": "2026-05-04T18:01:46.000Z",
       "categories": [
+        "token",
         "jwt",
         "authentication",
-        "security",
-        "token",
-        "türkçe"
+        "türkçe",
+        "security"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*c4xQ6wPtgt8lU715WrYAGw.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*c4xQ6wPtgt8lU715WrYAGw.png",
       "description": "Modern web uygulamalarında en sık kullanılan kimlik doğrulama yöntemlerinden biri JWT (JSON Web Token) yapısıdır. JWT’yi sadece “login olunca verilen bir token” gibi düşünmek eksik olur. Asıl mesele şu: Sunucu, kullanıcıyı her istekte tekrar tekrar kontrol etmek zorunda kalmadan güveni nasıl sürdürüyor? JWT burada devreye girer. JWT Nedir? JWT, açılımıyla JSON Web Token, iki taraf arasında güvenli bilgi taşıyan bir token formatıdır. Basitçe: Kullanıcı giriş yapar Sunucu bir token üretir Kullanıc",
       "wordCount": 881
     },
@@ -97,16 +97,16 @@
       "title": "Flexbox Nedir? Ortalamaya Çalışırken Neden Deliriyorsun?",
       "link": "https://medium.com/@hakancengiz/flexbox-nedir-ortalamaya-%C3%A7al%C4%B1%C5%9F%C4%B1rken-neden-deliriyorsun-6054ec5a572f",
       "localUrl": "yazi/flexbox-nedir-ortalamaya-calisirken-neden-deliriyorsun/",
-      "pubDate": "2026-05-01T18:04:57.135Z",
+      "pubDate": "2026-05-01T18:04:57.000Z",
       "categories": [
-        "flexbox",
-        "css",
-        "html",
         "software-development",
-        "türkçe"
+        "türkçe",
+        "flexbox",
+        "html",
+        "css"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*yyUEmYP6mnXBt9apOdpJcg.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*yyUEmYP6mnXBt9apOdpJcg.png",
       "description": "CSS öğrenen çoğu kişi şu noktada takılır: “Bir şeyi ortaya almak neden bu kadar zor?” Aslında sorun senin yanlış yapman değil. Sorun, sayfanın yerleşim mantığını tam oturtmadan ilerlemen olabilir. İşte Flexbox tam burada devreye girer. Flexbox, Türkçesiyle kabaca esnek kutu düzeni demektir. Bu sistem, bir kapsayıcının içindeki öğeleri hizalamayı, dağıtmayı ve sıralamayı kolaylaştırır. En önemli fark şu: Flexbox, her şeyi bir anda sihirli şekilde çözmez. Ama doğru mantıkla kullanıldığında, özelli",
       "wordCount": 2295
     },
@@ -115,16 +115,16 @@
       "title": "Load Balancer Nedir? Trafik Nasıl Dağıtılır?",
       "link": "https://medium.com/@hakancengiz/load-balancer-nedir-trafik-nas%C4%B1l-da%C4%9F%C4%B1t%C4%B1l%C4%B1r-2f8cdd72b84c",
       "localUrl": "yazi/load-balancer-nedir-trafik-nasil-dagitilir/",
-      "pubDate": "2026-04-29T16:58:04.794Z",
+      "pubDate": "2026-04-29T16:58:04.000Z",
       "categories": [
-        "load-balancing",
         "servers",
+        "türkçe",
+        "load-balancing",
         "api",
-        "software-development",
-        "türkçe"
+        "software-development"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*jsFCJDFSiDjpPVabCa5Cvg.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*jsFCJDFSiDjpPVabCa5Cvg.png",
       "description": "Bir uygulama ilk başta tek sunucuda çalışır. Her şey basittir. Tüm istekler tek bir yere gelir, işlenir ve cevap döner. Ama kullanıcı sayısı arttığında işler değişir. Sunucu yavaşlar CPU dolar RAM yetmez İstekler gecikir Kullanıcı bekler İşte tam bu noktada kritik bir soru ortaya çıkar: “Tüm kullanıcılar neden tek bir sunucuya gelsin?” Cevap: Gelmemeli. Burada devreye load balancer, yani yük dengeleyici girer. Load Balancer Nedir? Load balancer, gelen istekleri birden fazla sunucuya dağıtan sist",
       "wordCount": 918
     },
@@ -133,16 +133,16 @@
       "title": "Eventually Consistent Nedir? Verinin Bir Süre Yanlış Olması Nasıl Doğru Olabilir?",
       "link": "https://medium.com/@hakancengiz/eventually-consistent-nedir-verinin-bir-s%C3%BCre-yanl%C4%B1%C5%9F-olmas%C4%B1-nas%C4%B1l-do%C4%9Fru-olabilir-ccfdcef9383e",
       "localUrl": "yazi/eventually-consistent-nedir-verinin-bir-sure-yanlis-olmasi-nasil-dogru-olabilir/",
-      "pubDate": "2026-04-27T19:28:54.102Z",
+      "pubDate": "2026-04-27T19:28:54.000Z",
       "categories": [
-        "data",
         "software-development",
         "api",
+        "türkçe",
         "yazılım",
-        "türkçe"
+        "data"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*1HExMfwYDL-NP8rBABxctA.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*1HExMfwYDL-NP8rBABxctA.png",
       "description": "Dağıtık sistemlerde en sarsıcı ama en gerçekçi fikirlerden biri şudur: Bir verinin bir süre boyunca farklı yerlerde farklı görünmesi normal olabilir. İlk duyduğunda bu kulağa hata gibi gelir. Hatta “veri yanlışsa sistem nasıl doğru olabilir?” diye düşünürsün. Ama büyük ölçekli sistemlerde bazen tam da bu yaklaşım, sistemi ayakta tutan şeydir. Bu yaklaşımın adı eventual consistency’dir. Türkçesiyle nihai tutarlılık diyebiliriz. Buradaki “nihai” kelimesi çok önemli. Çünkü sistem hemen tutarlı olma",
       "wordCount": 1984
     },
@@ -151,16 +151,16 @@
       "title": "Timeout Nedir? Bir İstek Ne Zaman Vazgeçmeli?",
       "link": "https://medium.com/@hakancengiz/timeout-nedir-bir-i%CC%87stek-ne-zaman-vazge%C3%A7meli-494a478e439b",
       "localUrl": "yazi/timeout-nedir-bir-istek-ne-zaman-vazgecmeli/",
-      "pubDate": "2026-04-24T21:24:24.916Z",
+      "pubDate": "2026-04-24T21:24:24.000Z",
       "categories": [
-        "time-out",
         "software-development",
         "api",
-        "yazılım",
-        "türkçe"
+        "time-out",
+        "türkçe",
+        "yazılım"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*FFmEHZvYX8T19OTcaSawMg.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*FFmEHZvYX8T19OTcaSawMg.png",
       "description": "Yazılımda en kritik sorulardan biri şudur: Bir istek ne kadar beklemeli, ne zaman bırakmalı? Bu sorunun cevabı timeout kavramında gizlidir. Türkçede zaman aşımı diyebiliriz. Timeout, bir işlemin belirlenen süre içinde tamamlanmaması durumunda sistemin o işlemi artık beklememesi demektir. Bu kavram basit görünür ama gerçekte çok önemlidir. Çünkü sonsuza kadar bekleyen sistemler yavaşlar, kilitlenir, kaynak tüketir ve sonunda kullanıcı deneyimini bozar. Asıl mesele şudur: Her istek tamamlanmak zor",
       "wordCount": 1485
     },
@@ -169,16 +169,16 @@
       "title": "Idempotency Nedir? Aynı İsteği 10 Kere Gönderirsen Ne Olur?",
       "link": "https://medium.com/@hakancengiz/idempotency-nedir-ayn%C4%B1-i%CC%87ste%C4%9Fi-10-kere-g%C3%B6nderirsen-ne-olur-19cd9e1e9feb",
       "localUrl": "yazi/idempotency-nedir-ayni-istegi-10-kere-gonderirsen-ne-olur/",
-      "pubDate": "2026-04-23T18:50:26.747Z",
+      "pubDate": "2026-04-23T18:50:26.000Z",
       "categories": [
-        "idempotency",
-        "idempotency-keys",
+        "türkçe",
         "software-development",
         "api",
-        "türkçe"
+        "idempotency",
+        "idempotency-keys"
       ],
       "series": null,
-      "thumbnail": "https://cdn-images-1.medium.com/max/800/1*htdMuwU4viKqmecJ4cwkdQ.png",
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*htdMuwU4viKqmecJ4cwkdQ.png",
       "description": "Bir API’ye aynı isteği bir kere göndermenle on kere göndermen aynı sonucu veriyorsa, orada idempotency vardır. Türkçede bunu en sade haliyle şöyle düşünebilirsin: Aynı işlemi tekrar tekrar yapınca sistemin son durumu değişmiyorsa, o işlem idempotenttir. Bu kavram ilk bakışta teorik gibi durur. Ama pratikte inanılmaz önemlidir. Özellikle ödeme sistemlerinde, sipariş oluşturma akışlarında, kullanıcı kayıtlarında, para transferlerinde ve genel olarak “bir şey oluştur” türü işlemlerde hayat kurtarır",
       "wordCount": 1406
     },
