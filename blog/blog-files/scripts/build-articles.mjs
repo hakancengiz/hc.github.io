@@ -177,7 +177,7 @@ export function renderArticle(post, sourceHtml, related = [], series = null) {
   <link rel="canonical" href="${escape(post.link)}"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fonts}
   <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
-  <link rel="stylesheet" href="../../blog-files/styles.css?v=20261108b"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+  <link rel="stylesheet" href="../../blog-files/styles.css?v=20261108-intro"><link rel="stylesheet" href="../../blog-files/reader.css?v=20261108-intro"><script src="../../blog-files/reader.js" defer></script>
 </head><body id="top">
   <a class="skip-link" href="#makale">Makaleye geç</a>${symbols}
   <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>${header.outerHTML}
