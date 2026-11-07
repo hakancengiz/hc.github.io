@@ -345,6 +345,7 @@ button:focus-visible {
   padding-top: 32px;
 }
 .spotlight-card {
+  --card-radius: 26px;
   position: relative;
   isolation: isolate;
   display: grid;
@@ -355,11 +356,21 @@ button:focus-visible {
   padding: 44px;
   overflow: hidden;
   border: 1px solid #ffffff18;
-  border-radius: 26px;
+  border-radius: var(--card-radius);
   background: #111923;
   color: #f8fafc;
   box-shadow: 0 18px 50px #17243712;
   animation: arrive 0.5s ease both;
+}
+.card-atmosphere {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  /* Clip the filtered layer itself, including in iOS WebKit compositing. */
+  clip-path: inset(0 round var(--card-radius));
+  pointer-events: none;
 }
 .spotlight-ambience {
   position: absolute;
@@ -649,12 +660,13 @@ button:focus-visible {
   gap: 27px 24px;
 }
 .article-card {
+  --card-radius: 13px;
   --card-ambience-opacity: 0.30;
   position: relative;
   isolation: isolate;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 13px;
+  border-radius: var(--card-radius);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1078,9 +1090,9 @@ button:focus-visible {
     padding-top: 22px;
   }
   .spotlight-card {
+    --card-radius: 19px;
     gap: 25px;
     padding: 21px;
-    border-radius: 19px;
   }
   .spotlight-art {
     aspect-ratio: 1.65;

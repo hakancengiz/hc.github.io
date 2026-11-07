@@ -24,18 +24,54 @@ export function embedIndexData(html, data) {
   return pattern.test(html) ? html.replace(pattern, () => block) : html.replace("</head>", `  ${block}\n  </head>`);
 }
 
+function imageIdentity(value, base) {
+  try {
+    const url = new URL(value, base);
+    // Medium's export and RSS use different hosts/resize paths for one asset.
+    if (url.hostname === "miro.medium.com" || /^cdn-images-\d+\.medium\.com$/.test(url.hostname)) {
+      const asset = decodeURIComponent(url.pathname.split("/").at(-1));
+      if (/^[01]\*[\w.-]+$/.test(asset)) return `medium:${asset}`;
+    }
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+
+function isOpeningImage(image, body) {
+  for (let node = image; node && node !== body; node = node.parentNode) {
+    for (let previous = node.previousSibling; previous; previous = previous.previousSibling) {
+      if (previous.textContent.trim() || previous.nodeType === 1 &&
+        (previous.matches("img,pre,table") || previous.querySelector("img,pre,table"))) return false;
+    }
+  }
+  return true;
+}
+
 export function articleBody(post) {
   const doc = htmlDocument(cleanContent(post.content, post.link));
   const firstImage = doc.querySelector("img");
-  if (firstImage?.getAttribute("src") === post.thumbnail) {
+  if (post.thumbnail && firstImage && isOpeningImage(firstImage, doc.body) &&
+    imageIdentity(firstImage.getAttribute("src"), post.link) === imageIdentity(post.thumbnail, post.link)) {
     const figure = firstImage.closest("figure");
     if (
       figure &&
       figure.querySelectorAll("img").length === 1 &&
+      !figure.textContent.trim() &&
       !figure.querySelector("figcaption")
     )
       figure.remove();
-    else firstImage.remove();
+    else {
+      let container = firstImage.parentElement;
+      firstImage.remove();
+      while (container && container !== doc.body && !container.textContent.trim() && !container.querySelector("img")) {
+        const parent = container.parentElement;
+        container.remove();
+        container = parent;
+      }
+    }
+    // Medium sometimes inserts a separator before its opening cover.
+    while (doc.body.firstElementChild?.tagName === "HR") doc.body.firstElementChild.remove();
   }
   const toc = [];
   // Some RSS entries lose inline-code tags. Restore only unambiguous definition prefixes.
@@ -129,7 +165,7 @@ export function renderArticle(post, sourceHtml, related = [], series = null) {
   const relatedMarkup = related.length ? `<section class="reader-related" aria-labelledby="related-heading"><h2 id="related-heading">Diğer yazılar</h2><div>${related.map(item => {
     const cover = escape(item.thumbnail || "../../blog-files/img/article-fallback.svg");
     const shortDate = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short", year: "numeric" }).format(new Date(item.pubDate));
-    return `<a class="article-card" href="../../${articlePath(item)}"><img class="article-ambience" src="${cover}" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="article-image"><img src="${cover}" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="${item.pubDate}">${shortDate}</time><h3 class="article-title">${escape(item.title)}</h3><div class="article-footer"><span>Yazıyı oku</span>${icon("arrow")}</div></div></a>`;
+    return `<a class="article-card" href="../../${articlePath(item)}"><div class="card-atmosphere" aria-hidden="true"><img class="article-ambience" src="${cover}" alt="" loading="lazy" decoding="async"></div><div class="article-image"><img src="${cover}" alt="" loading="lazy" decoding="async"></div><div class="article-body"><time class="article-meta" datetime="${item.pubDate}">${shortDate}</time><h3 class="article-title">${escape(item.title)}</h3><div class="article-footer"><span>Yazıyı oku</span>${icon("arrow")}</div></div></a>`;
   }).join("")}</div></section>` : "";
   return `<!doctype html>
 <html lang="tr" data-theme="dark"><head>
@@ -141,7 +177,7 @@ export function renderArticle(post, sourceHtml, related = [], series = null) {
   <link rel="canonical" href="${escape(post.link)}"><link rel="icon" href="../../blog-files/img/rss-img/blog-favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fonts}
   <script>try{const savedTheme=localStorage.getItem('theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme}catch{}document.querySelector('meta[name="theme-color"]').content=document.documentElement.dataset.theme==='dark'?'#111822':'#ffffff';</script>
-  <link rel="stylesheet" href="../../blog-files/styles.css"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
+  <link rel="stylesheet" href="../../blog-files/styles.css?v=20261108"><link rel="stylesheet" href="../../blog-files/reader.css"><script src="../../blog-files/reader.js" defer></script>
 </head><body id="top">
   <a class="skip-link" href="#makale">Makaleye geç</a>${symbols}
   <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>${header.outerHTML}

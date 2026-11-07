@@ -162,7 +162,7 @@
   }
 
   function cardAmbience(item) {
-    return `<img class="article-ambience" src="${escape(item.cover || "blog-files/img/article-fallback.svg")}" alt="" aria-hidden="true" loading="lazy" decoding="async">`;
+    return `<div class="card-atmosphere" aria-hidden="true"><img class="article-ambience" src="${escape(item.cover || "blog-files/img/article-fallback.svg")}" alt="" loading="lazy" decoding="async"></div>`;
   }
 
   function attachImageFallbacks(root) {
@@ -198,8 +198,10 @@
     const image = escape(item.cover || "blog-files/img/article-fallback.svg");
     $("spotlight").innerHTML = `
       <a class="spotlight-card" href="${escape(item.localUrl)}">
-        <img class="spotlight-ambience" src="${image}" alt="" aria-hidden="true" decoding="async">
-        <div class="spotlight-shade" aria-hidden="true"></div>
+        <div class="card-atmosphere" aria-hidden="true">
+          <img class="spotlight-ambience" src="${image}" alt="" decoding="async">
+          <div class="spotlight-shade"></div>
+        </div>
         <div class="spotlight-copy">
           <div class="spotlight-details">${articleCategory(item)}${meta(item)}</div>
           <h2 id="spotlight-title" class="spotlight-title">${escape(item.title)}</h2>

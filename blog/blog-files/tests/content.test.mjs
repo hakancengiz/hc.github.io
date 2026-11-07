@@ -55,6 +55,44 @@ test("Kod renklendirmesi C# sözdizimini ve RSS satır sonlarını korur", () =>
   assert.ok(code.classList.contains("language-csharp"));
 });
 
+test("Medium kapağının farklı boyut/host adresi gövdede tekrarlanmaz; diğer görsel ve açıklama korunur", () => {
+  const thumbnail = "https://cdn-images-1.medium.com/max/1024/1*VWEZ7P4eH0Oxo4VNRucpog.png";
+  for (const opening of [
+    "https://cdn-images-1.medium.com/max/800/1*VWEZ7P4eH0Oxo4VNRucpog.png",
+    "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*VWEZ7P4eH0Oxo4VNRucpog.png?width=800",
+  ]) {
+    const result = articleBody({ ...post, thumbnail, content: `<hr><figure><img src="${opening}"></figure><h3>Başlık</h3><p>Yazı.</p><figure><img src="https://example.com/diagram.png"><figcaption>Diyagram açıklaması</figcaption></figure>` });
+    const { document } = parseHTML(`<html><body>${result.html}</body></html>`);
+    assert.equal(document.body.firstElementChild.tagName, "H3");
+    assert.deepEqual([...document.querySelectorAll("img")].map(img => img.getAttribute("src")), ["https://example.com/diagram.png"]);
+    assert.equal(document.querySelector("figcaption").textContent, "Diyagram açıklaması");
+  }
+  const captioned = articleBody({ ...post, thumbnail, content: `<figure><img src="${thumbnail}"><figcaption>Kapak açıklaması</figcaption></figure><p>Yazı.</p>` });
+  assert.ok(captioned.html.includes("Kapak açıklaması"));
+});
+
+test("Gövde içindeki sonraki görseller ve farklı kaynaklardaki aynı adlı dosyalar silinmez", () => {
+  const thumbnail = "https://cdn-images-1.medium.com/max/1024/1*cover.png";
+  for (const content of [
+    `<p>Giriş metni.</p><figure><img src="${thumbnail}"></figure>`,
+    '<figure><img src="https://cdn-images-1.medium.com/max/800/1*different.png"></figure><p>Yazı.</p>',
+    '<figure><img src="https://example.com/1*cover.png"></figure><p>Yazı.</p>',
+    '<figure><img src="https://cdn-images-1.medium.com.evil.example/max/800/1*cover.png"></figure><p>Yazı.</p>',
+  ]) {
+    const { html } = articleBody({ ...post, thumbnail, content });
+    assert.equal(parseHTML(`<html><body>${html}</body></html>`).document.querySelectorAll("img").length, 1);
+  }
+});
+
+test("Gerçek arşivdeki mülakat makalesinin gövdesi doğrudan ilk bölümle başlar", async () => {
+  const archive = await readArchive();
+  const interview = archive.posts.find(item => item.id === "76c652ea7585");
+  const { html } = articleBody(interview);
+  const { document } = parseHTML(`<html><body>${html}</body></html>`);
+  assert.equal(document.body.firstElementChild.textContent, "1. String vs StringBuilder");
+  assert.equal(document.querySelectorAll("img").length, 0);
+});
+
 test("HTML örneği kod olarak kalır ve renklendirme sırasında çalıştırılabilir öğeye dönüşmez", () => {
   const source = '<img src="x" onerror="alert(1)">\n<script>alert(2)</script>';
   const escaped = source.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
