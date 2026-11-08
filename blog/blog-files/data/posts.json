@@ -1,7 +1,25 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-07T22:19:15.637Z",
+  "updatedAt": "2026-11-08T11:16:36.990Z",
   "items": [
+    {
+      "id": "0c73c5a4166e",
+      "title": "MCP Nedir ve Neyi Değiştiriyor?",
+      "link": "https://medium.com/@hakancengiz/mcp-nedir-ve-neyi-de%C4%9Fi%C5%9Ftiriyor-0c73c5a4166e",
+      "localUrl": "yazi/mcp-nedir-ve-neyi-degistiriyor/",
+      "pubDate": "2026-11-07T23:22:27.000Z",
+      "categories": [
+        "ai",
+        "yapay-zeka",
+        "mcp-server",
+        "api",
+        "ai-agent"
+      ],
+      "series": null,
+      "thumbnail": "https://cdn-images-1.medium.com/max/1024/1*8ylLr5SGhg5m1ikStNSPiQ.png",
+      "description": "Yapay zekâya bir soru sorduğunuzu düşünün: “Geçen ayın satışlarını incele, en çok gelir getiren ürünleri belirle ve bana kısa bir rapor hazırla.” Yapay zekâ bunu yapabilecek bilgiye sahip. Verileri analiz edebilir, karşılaştırmalar yapabilir ve sonuçları anlaşılır bir rapora dönüştürebilir. Fakat ortada küçük bir sorun var: Satış verilerinizin nerede olduğunu bilmiyor ve onlara doğrudan erişemiyor. Bu nedenle önce ilgili dosyaları bulmanız, verileri dışarı aktarmanız ve yapay zekâya iletmeniz ge",
+      "wordCount": 2314
+    },
     {
       "id": "76c652ea7585",
       "title": "Mülakatlarda En Çok Sorulan 20 Yazılım Farkı (C#/.NET)",
